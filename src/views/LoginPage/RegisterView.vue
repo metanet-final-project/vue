@@ -117,14 +117,13 @@ import { onMounted } from 'vue';
 import { ref } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
-//components
 import DefaultNavbar from '@/layouts/Navbar.vue';
 import Header from '@/examples/Header.vue';
-//material
-
 import MaterialButton from '@/components/MaterialButton.vue';
 import setMaterialInput from '@/assets/js/material-input';
+import Swal from 'sweetalert2';
 
+//images
 import headimage from '@/assets/img/busimage.png';
 
 const router = useRouter();
@@ -138,8 +137,27 @@ const saveMember = async () => {
 			router.push({ name: 'Login' });
 		}
 	} catch (error) {
-		alert('올바른 정보를 입력해주세요');
+		showToast('error', '올바른 정보를 입력하세요');
 	}
+};
+
+const Toast = Swal.mixin({
+	toast: true,
+	position: 'bottom-end',
+	showConfirmButton: false,
+	timer: 3000,
+	timerProgressBar: true,
+	didOpen: toast => {
+		toast.addEventListener('mouseenter', Swal.stopTimer);
+		toast.addEventListener('mouseleave', Swal.resumeTimer);
+	},
+});
+
+const showToast = (icon, title) => {
+	Toast.fire({
+		icon: icon,
+		title: title,
+	});
 };
 
 onMounted(() => {

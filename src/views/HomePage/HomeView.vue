@@ -1,14 +1,12 @@
 <template>
 	<!--  Header Start `-->
 	<DefaultNavbar
-		v-if="isLogin"
 		:action="{
 			route: '/login',
 			color: 'bg-light',
 			label: '로그인 | 회원가입',
 		}"
 		transparent
-		isLogin
 	/>
 	<DefaultNavbar
 		v-if="!isLogin"
@@ -65,7 +63,7 @@
 import { onMounted, onUnmounted } from 'vue';
 import DefaultNavbar from '@/layouts/Navbar.vue';
 import DefaultFooter from '@/layouts/Footer.vue';
-//import MaterialButton from '@/components/MaterialButton.vue';
+import MaterialButton from '@/components/MaterialButton.vue';
 
 //image
 import headimage from '@/assets/img/busimage.png';
@@ -76,7 +74,7 @@ import Typed from 'typed.js';
 //sections
 import Search from './Sections/HomeSearch.vue';
 
-//const goToBook = () => document.querySelector('#book').scrollIntoView(true);
+const goToBook = () => document.querySelector('#book').scrollIntoView(true);
 
 const body = document.getElementsByTagName('body')[0];
 

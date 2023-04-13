@@ -89,7 +89,9 @@ import DefaultNavbar from '@/layouts/Navbar.vue';
 import Header from '@/examples/Header.vue';
 import MaterialButton from '@/components/MaterialButton.vue';
 import setMaterialInput from '@/assets/js/material-input';
+import Swal from 'sweetalert2';
 
+//images
 import headimage from '@/assets/img/busimage.png';
 
 const router = useRouter();
@@ -101,18 +103,37 @@ const saveLoginId = loginId => localStorage.setItem('loginId', loginId);
 const tryLogin = async () => {
 	try {
 		const result = await axios.post('/api/login', loginRequest.value);
-		if (result != null) {
+		if (result.data.loginId != null) {
 			saveToken(result.data.token);
 			saveLoginId(result.data.loginId);
 
-			alert('로그인 성공');
+			showToast('success', '로그인 성공');
 			router.push({ name: 'Home' });
-		} else {
-			alert('올바른 정보를 입력해주세요');
 		}
 	} catch (error) {
+		showToast('error', '올바른 정보를 입력해주세요');
+
 		console.error(error);
 	}
+};
+
+const Toast = Swal.mixin({
+	toast: true,
+	position: 'bottom-end',
+	showConfirmButton: false,
+	timer: 3000,
+	timerProgressBar: true,
+	didOpen: toast => {
+		toast.addEventListener('mouseenter', Swal.stopTimer);
+		toast.addEventListener('mouseleave', Swal.resumeTimer);
+	},
+});
+
+const showToast = (icon, title) => {
+	Toast.fire({
+		icon: icon,
+		title: title,
+	});
 };
 
 onMounted(() => {
