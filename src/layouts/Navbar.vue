@@ -5,6 +5,7 @@ import { useWindowsWidth } from '@/assets/js/useWindowsWidth';
 import ArrDark from '@/assets/img/down-arrow-dark.svg';
 import DownArrWhite from '@/assets/img/down-arrow-white.svg';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const props = defineProps({
 	action: {
@@ -108,8 +109,28 @@ isLogin();
 const doLogout = () => {
 	console.log('click doLogout');
 	localStorage.removeItem('loginId');
-	alert('로그아웃 성공');
-	router.go(0);
+	router.replace({ name: 'Home' });
+	showToast('info', '잠시 후 로그아웃됩니다');
+	setTimeout(() => router.go(0), 2000);
+};
+
+const Toast = Swal.mixin({
+	toast: true,
+	position: 'bottom-end',
+	showConfirmButton: false,
+	timer: 2000,
+	timerProgressBar: true,
+	didOpen: toast => {
+		toast.addEventListener('mouseenter', Swal.stopTimer);
+		toast.addEventListener('mouseleave', Swal.resumeTimer);
+	},
+});
+
+const showToast = (icon, title) => {
+	Toast.fire({
+		icon: icon,
+		title: title,
+	});
 };
 </script>
 <template>

@@ -9,6 +9,7 @@
 						예매를 하실 수 있습니다. <br />시외버스 예매 시스템으로 안전하고
 						편리하게 여행하세요.
 					</p>
+					<Modal />
 					<div class="row">
 						<div class="col-6">
 							<MaterialInput
@@ -126,6 +127,7 @@ import MaterialInput from '@/components/MaterialInput.vue';
 import MaterialButton from '@/components/MaterialButton.vue';
 import setMaterialInput from '@/assets/js/material-input';
 import CenteredBlogCard from '@/examples/cards/blogCards/CenteredBlogCard.vue';
+import Modal from '@/components/SimpleModal.vue';
 
 onMounted(() => {
 	setMaterialInput();
