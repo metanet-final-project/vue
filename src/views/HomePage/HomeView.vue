@@ -1,14 +1,12 @@
 <template>
 	<!--  Header Start `-->
 	<DefaultNavbar
-		v-if="isLogin"
 		:action="{
 			route: '/login',
 			color: 'bg-light',
 			label: '로그인 | 회원가입',
 		}"
 		transparent
-		isLogin
 	/>
 	<DefaultNavbar
 		v-if="!isLogin"

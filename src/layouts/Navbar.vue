@@ -19,10 +19,6 @@ const props = defineProps({
 			// label: '로그인 | 회원가입',
 		}),
 	},
-	isLogin: {
-		type: Boolean,
-		default: false,
-	},
 	transparent: {
 		type: Boolean,
 		default: false,
@@ -112,6 +108,7 @@ isLogin();
 const doLogout = () => {
 	console.log('click doLogout');
 	localStorage.removeItem('loginId');
+	alert('로그아웃 성공');
 	router.go(0);
 };
 </script>
