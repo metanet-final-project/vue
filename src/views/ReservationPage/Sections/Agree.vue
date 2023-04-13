@@ -106,7 +106,7 @@
 <script setup>
 import MaterialButton from '@/components/MaterialButton.vue';
 </script>
-<style>
+<style scoped>
 .scroll-container {
 	height: 160px; /* 스크롤 가능한 영역의 높이 지정 */
 	overflow-y: scroll; /* y축 스크롤만 허용 */

@@ -25,7 +25,7 @@
 	</section>
 </template>
 <script setup></script>
-<style>
+<style scoped>
 .text {
 	text-align: center;
 	margin: auto;
