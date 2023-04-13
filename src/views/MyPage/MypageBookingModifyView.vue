@@ -69,7 +69,7 @@
 import Navbar from '@/layouts/Navbar.vue';
 import Footer from '@/layouts/Footer.vue';
 </script>
-<style>
+<style scoped>
 .routeBody {
 	border: 1px solid #e6e6e6;
 }

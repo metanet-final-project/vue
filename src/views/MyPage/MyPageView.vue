@@ -27,8 +27,8 @@
 			<div class="card text-center mx-3" style="width: 30rem">
 				<div class="card-body">
 					<h5 class="card-title">내 정보 수정</h5>
-					<p class="card-text">내 정보 수정</p>
-					<a href="/mypage/modify" class="btn btn-dark">조회</a>
+					<p class="card-text">비밀번호 변경</p>
+					<a href="/mypage/modify" class="btn btn-dark">수정</a>
 				</div>
 			</div>
 		</div>
@@ -44,7 +44,7 @@ import Footer from '@/layouts/Footer.vue';
 import image from '@/assets/img/busimage.png';
 </script>
 
-<style>
+<style scoped>
 .overlay-text {
 	position: absolute;
 	top: 50%;
