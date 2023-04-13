@@ -10,7 +10,7 @@
 		</h2>
 		<table class="table table-striped">
 			<thead>
-				<tr>
+				<tr style="text-align: center; margin: auto; width: 5%" type="text">
 					<th>순번</th>
 					<th>아이디</th>
 					<th>이름</th>
@@ -21,8 +21,15 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-for="(member, index) in members" :key="member.id">
-					<td>{{ index + 1 }}</td>
+				<tr
+					v-for="(member, index) in members"
+					:key="member.id"
+					style="text-align: center; margin: auto; width: 5%"
+					type="text"
+				>
+					<td>
+						{{ index + 1 }}
+					</td>
 					<td>{{ member.loginId }}</td>
 					<td>{{ member.name }}</td>
 					<td>{{ member.email }}</td>
@@ -42,7 +49,7 @@
 		</table>
 		<div class="search_wrap type2">
 			<p class="form-control">
-				<input type="text" v-model="NameId" placeholder="검색어를 입력하세요" />
+				<input type="text" v-model="NameId" placeholder="회원명 입력하세요" />
 				<button type="button" @click="searchMember">검색</button>
 			</p>
 		</div>
