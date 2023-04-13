@@ -6,6 +6,11 @@ import MyPageView from '../views/MyPage/MyPageView.vue';
 import AdminView from '../views/AdminPage/AdminView.vue';
 import BookingView from '../views/ReservationPage/BookingView.vue';
 import BookingConfirmView from '../views/ReservationPage/BookingConfirmView.vue';
+import AdminMemberView from '../views/AdminPage/Sections/AdminMember.vue';
+import AdminRouteView from '../views/AdminPage/Sections/AdminRoute.vue';
+import AdminScheduleView from '../views/AdminPage/Sections/AdminSchedule.vue';
+import AdminReservationView from '../views/AdminPage/Sections/AdminReservation.vue';
+import AdminHelpView from '../views/AdminPage/Sections/AdminHelp.vue';
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
@@ -44,6 +49,31 @@ const router = createRouter({
 			path: '/bookingconfirm',
 			name: 'BookingConfirm',
 			component: BookingConfirmView,
+		},
+		{
+			path: '/admin/member',
+			name: 'AdminMember',
+			component: AdminMemberView,
+		},
+		{
+			path: '/admin/route',
+			name: 'AdminRoute',
+			component: AdminRouteView,
+		},
+		{
+			path: '/admin/schedule',
+			name: 'AdminSchedule',
+			component: AdminScheduleView,
+		},
+		{
+			path: '/admin/reservation',
+			name: 'AdminResvation',
+			component: AdminReservationView,
+		},
+		{
+			path: '/admin/help',
+			name: 'AdminHelp',
+			component: AdminHelpView,
 		},
 	],
 });
