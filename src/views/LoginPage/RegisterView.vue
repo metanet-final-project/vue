@@ -26,7 +26,7 @@
 								</div>
 							</div>
 							<div class="card-body">
-								<form role="form" class="text-start" onsubmit="return false">
+								<form role="form" class="text-start">
 									<div class="input-group input-group-outline my-3">
 										<label class="form-label">아이디</label>
 										<input
@@ -127,10 +127,6 @@ import setMaterialInput from '@/assets/js/material-input';
 
 import headimage from '@/assets/img/busimage.png';
 
-onMounted(() => {
-	setMaterialInput();
-});
-
 const router = useRouter();
 const member = ref({});
 
@@ -142,7 +138,11 @@ const saveMember = async () => {
 			router.push({ name: 'Login' });
 		}
 	} catch (error) {
-		alert('회원가입 실패');
+		alert('올바른 정보를 입력해주세요');
 	}
 };
+
+onMounted(() => {
+	setMaterialInput();
+});
 </script>

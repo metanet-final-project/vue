@@ -17,6 +17,10 @@ const props = defineProps({
 			// label: '로그인 | 회원가입',
 		}),
 	},
+	isLogin: {
+		type: Boolean,
+		default: false,
+	},
 	transparent: {
 		type: Boolean,
 		default: false,
@@ -88,6 +92,9 @@ watch(
 
 const router = useRouter();
 const goToMyPage = () => router.push({ name: 'Mypage' });
+const doLogout = () => {
+	localStorage.removeItem('loginId');
+};
 </script>
 <template>
 	<nav
@@ -265,7 +272,7 @@ const goToMyPage = () => router.push({ name: 'Mypage' });
 					</li> -->
 				</ul>
 				<!--	login|register button start	-->
-				<ul class="navbar-nav d-lg-block d-none">
+				<ul v-if="!isLogin" class="navbar-nav d-lg-block d-none">
 					<li class="nav-item">
 						<RouterLink
 							:to="{ name: 'Login' }"
@@ -278,16 +285,17 @@ const goToMyPage = () => router.push({ name: 'Mypage' });
 				<!--	login|register button end	-->
 
 				<!-- 로그인 이후에 보여질 로그아웃 버튼 v-if 사용해서 구분 -->
-				<!-- <ul class="navbar-nav d-lg-block d-none">
+				<ul v-if="isLogin" class="navbar-nav d-lg-block d-none">
 					<li class="nav-item">
 						<RouterLink
-							:to="{ name: 'Login' }"
+							:to="{ name: 'Home' }"
 							class="btn btn-sm mb-0"
 							:class="action.color"
+							@click.prevent="doLogout"
 							>로그아웃
 						</RouterLink>
 					</li>
-				</ul> -->
+				</ul>
 				<!-- 로그아웃 버튼 -->
 			</div>
 		</div>

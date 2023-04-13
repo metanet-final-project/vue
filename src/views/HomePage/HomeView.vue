@@ -1,6 +1,17 @@
 <template>
 	<!--  Header Start `-->
 	<DefaultNavbar
+		v-if="isLogin"
+		:action="{
+			route: '/login',
+			color: 'bg-light',
+			label: '로그인 | 회원가입',
+		}"
+		transparent
+		isLogin
+	/>
+	<DefaultNavbar
+		v-if="!isLogin"
 		:action="{
 			route: '/login',
 			color: 'bg-light',
@@ -31,14 +42,14 @@
 						<p class="lead mb-4 text-white">
 							쉽고 빠른 시외버스 예매는 언제나 버스타요
 						</p>
-						<!-- <MaterialButton
+						<MaterialButton
 							class="my-4 mb-2"
 							variant="contained"
-							color="dark"
+							color="white"
 							@click="goToBook"
 						>
 							예매하기
-						</MaterialButton> -->
+						</MaterialButton>
 					</div>
 				</div>
 			</div>
@@ -52,8 +63,6 @@
 
 <script setup>
 import { onMounted, onUnmounted } from 'vue';
-
-//example components
 import DefaultNavbar from '@/layouts/Navbar.vue';
 import DefaultFooter from '@/layouts/Footer.vue';
 import MaterialButton from '@/components/MaterialButton.vue';
@@ -61,7 +70,7 @@ import MaterialButton from '@/components/MaterialButton.vue';
 //image
 import headimage from '@/assets/img/busimage.png';
 
-//dep
+//typed
 import Typed from 'typed.js';
 
 //sections
@@ -85,6 +94,17 @@ onMounted(() => {
 			loop: true,
 		});
 	}
+
+	const isLogin = () => {
+		if (localStorage.getItem('loginId')) {
+			alert('true');
+			return true;
+		} else {
+			alert('false');
+			return false;
+		}
+	};
+	isLogin;
 });
 
 onUnmounted(() => {
