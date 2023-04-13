@@ -11,6 +11,7 @@ import AdminRouteView from '../views/AdminPage/Sections/AdminRoute.vue';
 import AdminScheduleView from '../views/AdminPage/Sections/AdminSchedule.vue';
 import AdminReservationView from '../views/AdminPage/Sections/AdminReservation.vue';
 import AdminHelpView from '../views/AdminPage/Sections/AdminHelp.vue';
+import ScheduleSeatView from '../views/BookingPage/ScheduleSeat.vue';
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
@@ -74,6 +75,11 @@ const router = createRouter({
 			path: '/admin/help',
 			name: 'AdminHelp',
 			component: AdminHelpView,
+		},
+		{
+			path: '/schedule/seat',
+			name: 'ScheduleSeat',
+			component: ScheduleSeatView,
 		},
 	],
 });

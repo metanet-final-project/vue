@@ -10,6 +10,7 @@ const props = defineProps({
 		type: Object,
 		route: String,
 		color: String,
+
 		label: String,
 		default: () => ({
 			route: '/',
