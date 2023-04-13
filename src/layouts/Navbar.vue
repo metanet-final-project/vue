@@ -231,6 +231,12 @@ const showToast = (icon, title) => {
 											>
 												<span>관리자 페이지</span>
 											</RouterLink>
+											<RouterLink
+												:to="{ name: 'Booking' }"
+												class="dropdown-item border-radius-md"
+											>
+												<span>예약 페이지</span>
+											</RouterLink>
 										</div>
 									</div>
 								</div>
