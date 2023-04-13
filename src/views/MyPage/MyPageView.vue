@@ -44,7 +44,7 @@ import Footer from '@/layouts/Footer.vue';
 import image from '@/assets/img/busimage.png';
 </script>
 
-<style>
+<style scoped>
 .overlay-text {
 	position: absolute;
 	top: 50%;

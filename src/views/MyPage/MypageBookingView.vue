@@ -22,10 +22,10 @@
 				<table class="table table-bordered">
 					<thead style="background-color: #f3f4f6">
 						<tr>
-							<th>
+							<th style="width: 50%">
 								<span class="arrival_time">2023.04.27(목) 08:10 출발</span>
 							</th>
-							<th>
+							<th style="width: 50%">
 								<div class="price">
 									<span style="font-weight: lighter">총 결제금액</span>
 									<span
@@ -130,7 +130,7 @@ import Navbar from '@/layouts/Navbar.vue';
 import Footer from '@/layouts/Footer.vue';
 </script>
 
-<style>
+<style scoped>
 .table-container {
 	margin-top: 100px;
 	display: block;
@@ -185,7 +185,7 @@ import Footer from '@/layouts/Footer.vue';
 }
 
 .table-bordered {
-	border: 2px solid #000;
+	border: 1px solid #b8becc;
 }
 
 .desc-list {
