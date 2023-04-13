@@ -132,10 +132,9 @@ const getMemberInfo = async () => {
 getMemberInfo();
 
 const UpdateMember = async () => {
-	const res = await axios.put(
-		`/api/member/update`,
-		localStorage.getItem('loginId'),
-	);
+	const res = await axios.put(`/api/member/update`, {
+		loginId: localStorage.getItem('loginId'),
+	});
 	try {
 		if (res != null) {
 			alert('회원정보가 변경되었습니다.');
