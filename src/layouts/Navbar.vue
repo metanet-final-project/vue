@@ -4,6 +4,7 @@ import { ref, watch } from 'vue';
 import { useWindowsWidth } from '@/assets/js/useWindowsWidth';
 import ArrDark from '@/assets/img/down-arrow-dark.svg';
 import DownArrWhite from '@/assets/img/down-arrow-white.svg';
+import axios from 'axios';
 
 const props = defineProps({
 	action: {
@@ -93,8 +94,25 @@ watch(
 
 const router = useRouter();
 const goToMyPage = () => router.push({ name: 'Mypage' });
+
+let login = ref();
+const member = ref(null);
+const isLogin = async () => {
+	const result = await axios.get(
+		`/api/member/findByLoginId/${localStorage.getItem('loginId')}`,
+	);
+	if (result.data.loginId != null) {
+		member.value = result.data;
+		login.value = true;
+	} else login.value = false;
+	console.log(member.value, login.value);
+};
+isLogin();
+
 const doLogout = () => {
+	console.log('click doLogout');
 	localStorage.removeItem('loginId');
+	router.go(0);
 };
 </script>
 <template>
@@ -273,8 +291,17 @@ const doLogout = () => {
 					</li> -->
 				</ul>
 				<!--	login|register button start	-->
-				<ul v-if="!isLogin" class="navbar-nav d-lg-block d-none">
-					<li class="nav-item">
+				<ul class="navbar-nav d-lg-block d-none">
+					<li class="nav-item" v-if="login">
+						<RouterLink
+							:to="{ name: 'Home' }"
+							class="btn btn-sm mb-0"
+							:class="action.color"
+							@click.prevent="doLogout"
+							>로그아웃
+						</RouterLink>
+					</li>
+					<li class="nav-item" v-if="!login">
 						<RouterLink
 							:to="{ name: 'Login' }"
 							class="btn btn-sm mb-0"
@@ -284,20 +311,6 @@ const doLogout = () => {
 					</li>
 				</ul>
 				<!--	login|register button end	-->
-
-				<!-- 로그인 이후에 보여질 로그아웃 버튼 v-if 사용해서 구분 -->
-				<ul v-if="isLogin" class="navbar-nav d-lg-block d-none">
-					<li class="nav-item">
-						<RouterLink
-							:to="{ name: 'Home' }"
-							class="btn btn-sm mb-0"
-							:class="action.color"
-							@click.prevent="doLogout"
-							>로그아웃
-						</RouterLink>
-					</li>
-				</ul>
-				<!-- 로그아웃 버튼 -->
 			</div>
 		</div>
 	</nav>

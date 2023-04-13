@@ -101,7 +101,7 @@ const saveLoginId = loginId => localStorage.setItem('loginId', loginId);
 const tryLogin = async () => {
 	try {
 		const result = await axios.post('/api/login', loginRequest.value);
-		if (result != null) {
+		if (result.data.loginId != null) {
 			saveToken(result.data.token);
 			saveLoginId(result.data.loginId);
 
