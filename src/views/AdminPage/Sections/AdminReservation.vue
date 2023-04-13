@@ -131,4 +131,8 @@ const deleteMember = list => {
 	border-collapse: collapse;
 	margin-top: 20px;
 }
+
+.btn-primary {
+	background-color: #00ff00;
+}
 </style>
