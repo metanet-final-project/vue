@@ -27,36 +27,67 @@
 							</div>
 							<div class="card-body">
 								<form role="form" class="text-start">
-									<MaterialInput
-										id="email"
-										class="input-group-outline my-3"
-										:label="{ text: '이메일', class: 'form-label' }"
-										type="email"
-									/>
-									<MaterialInput
-										id="password"
-										class="input-group-outline my-3"
-										:label="{ text: '비밀번호', class: 'form-label' }"
-										type="password"
-									/>
-									<MaterialInput
-										id="password"
-										class="input-group-outline my-3"
-										:label="{ text: '비밀번호 확인', class: 'form-label' }"
-										type="password"
-									/>
-									<MaterialInput
-										id="username"
-										class="input-group-outline my-3"
-										:label="{ text: '사용자 이름', class: 'form-label' }"
-										type="text"
-									/>
+									<div class="input-group input-group-outline my-3">
+										<label class="form-label">아이디</label>
+										<input
+											type="text"
+											class="form-control"
+											id="loginId"
+											v-model="member.loginId"
+										/>
+									</div>
+									<div class="input-group input-group-outline my-3">
+										<label class="form-label">비밀번호</label>
+										<input
+											type="password"
+											class="form-control"
+											id="password"
+											v-model="member.password"
+										/>
+									</div>
+									<div class="input-group input-group-outline my-3">
+										<label class="form-label">이메일</label>
+										<input
+											type="email"
+											class="form-control"
+											id="email"
+											v-model="member.email"
+										/>
+									</div>
+									<div class="input-group input-group-outline my-3">
+										<label class="form-label">이름</label>
+										<input
+											type="text"
+											class="form-control"
+											id="name"
+											v-model="member.name"
+										/>
+									</div>
+									<div class="input-group input-group-outline my-3">
+										<label class="form-label">전화번호</label>
+										<input
+											type="text"
+											class="form-control"
+											id="phone"
+											v-model="member.phone"
+										/>
+									</div>
+									<div class="input-group input-group-static my-3">
+										<label>생년월일</label>
+										<input
+											type="date"
+											class="form-control"
+											id="birth"
+											v-model="member.birth"
+										/>
+									</div>
 									<div class="text-center">
 										<MaterialButton
 											class="my-4 mb-2"
 											variant="contained"
 											color="dark"
 											fullWidth
+											@click.prevent="saveMember"
 											>회원가입</MaterialButton
 										>
 									</div>
@@ -83,15 +114,33 @@
 
 <script setup>
 import { onMounted } from 'vue';
+import { ref } from 'vue';
+import axios from 'axios';
+import { useRouter } from 'vue-router';
 //components
 import DefaultNavbar from '@/layouts/Navbar.vue';
 import Header from '@/examples/Header.vue';
 //material
-import MaterialInput from '@/components/MaterialInput.vue';
+
 import MaterialButton from '@/components/MaterialButton.vue';
 import setMaterialInput from '@/assets/js/material-input';
 
 import headimage from '@/assets/img/busimage.png';
+
+const router = useRouter();
+const member = ref({});
+
+const saveMember = async () => {
+	try {
+		const result = await axios.post('/api/save', member.value);
+		if (result != null) {
+			alert('회원가입 완료');
+			router.push({ name: 'Login' });
+		}
+	} catch (error) {
+		alert('올바른 정보를 입력해주세요');
+	}
+};
 
 onMounted(() => {
 	setMaterialInput();

@@ -27,24 +27,31 @@
 							</div>
 							<div class="card-body">
 								<form role="form" class="text-start">
-									<MaterialInput
-										id="email"
-										class="input-group-outline my-3"
-										:label="{ text: '이메일', class: 'form-label' }"
-										type="email"
-									/>
-									<MaterialInput
-										id="password"
-										class="input-group-outline my-3"
-										:label="{ text: '비밀번호', class: 'form-label' }"
-										type="password"
-									/>
+									<div class="input-group input-group-outline my-3">
+										<label class="form-label">아이디</label>
+										<input
+											type="text"
+											class="form-control"
+											id="loginId"
+											v-model="loginRequest.loginId"
+										/>
+									</div>
+									<div class="input-group input-group-outline my-3">
+										<label class="form-label">비밀번호</label>
+										<input
+											type="password"
+											class="form-control"
+											id="password"
+											v-model="loginRequest.password"
+										/>
+									</div>
 									<div class="text-center">
 										<MaterialButton
 											class="my-4 mb-2"
 											variant="contained"
 											color="dark"
 											fullWidth
+											@click.prevent="tryLogin"
 											>로그인</MaterialButton
 										>
 									</div>
@@ -76,20 +83,39 @@
 <script setup>
 import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-//components
+import { ref } from 'vue';
+import axios from 'axios';
 import DefaultNavbar from '@/layouts/Navbar.vue';
 import Header from '@/examples/Header.vue';
-//material
-import MaterialInput from '@/components/MaterialInput.vue';
 import MaterialButton from '@/components/MaterialButton.vue';
 import setMaterialInput from '@/assets/js/material-input';
 
 import headimage from '@/assets/img/busimage.png';
 
+const router = useRouter();
+const loginRequest = ref({});
+const goRegisterView = () => router.push({ name: 'Register' });
+const saveToken = token => localStorage.setItem('token', token);
+const saveLoginId = loginId => localStorage.setItem('loginId', loginId);
+
+const tryLogin = async () => {
+	try {
+		const result = await axios.post('/api/login', loginRequest.value);
+		if (result != null) {
+			saveToken(result.data.token);
+			saveLoginId(result.data.loginId);
+
+			alert('로그인 성공');
+			router.push({ name: 'Home' });
+		} else {
+			alert('올바른 정보를 입력해주세요');
+		}
+	} catch (error) {
+		console.error(error);
+	}
+};
+
 onMounted(() => {
 	setMaterialInput();
 });
-
-const router = useRouter();
-const goRegisterView = () => router.push({ name: 'Register' });
 </script>
