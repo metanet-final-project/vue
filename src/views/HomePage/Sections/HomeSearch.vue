@@ -9,17 +9,8 @@
 						예매를 하실 수 있습니다. <br />시외버스 예매 시스템으로 안전하고
 						편리하게 여행하세요.
 					</p>
-					<Modal />
 					<div class="row">
-						<div class="col-6">
-							<MaterialInput
-								id="searchString"
-								class="input-group-static"
-								label="출발지"
-								type="text"
-								icon="search"
-							/>
-						</div>
+						<ModalStarting />
 						<div class="col-6">
 							<MaterialInput
 								id="searchString"
@@ -98,15 +89,6 @@
 						</div>
 					</div>
 				</div>
-				<!-- <div class="col-md-5 ms-auto mt-6 md-mt-0">
-					<div class="position-relative">
-						<img
-							src="@/assets/img/booking.jpeg"
-							alt="image"
-							class="max-width-50 w-100 position-relative z-index-2"
-						/>
-					</div>
-				</div> -->
 				<div class="col-md-5 ms-auto mt-6 md-mt-0">
 					<CenteredBlogCard
 						image="https://i0.wp.com/www.areyouawakening.com/wp-content/uploads/2020/02/lostitem1.jpg?fit=999%2C666&ssl=1"
@@ -127,7 +109,7 @@ import MaterialInput from '@/components/MaterialInput.vue';
 import MaterialButton from '@/components/MaterialButton.vue';
 import setMaterialInput from '@/assets/js/material-input';
 import CenteredBlogCard from '@/examples/cards/blogCards/CenteredBlogCard.vue';
-import Modal from '@/components/SimpleModal.vue';
+import ModalStarting from '@/components/ModalStarting.vue';
 
 onMounted(() => {
 	setMaterialInput();

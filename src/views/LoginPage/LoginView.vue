@@ -107,8 +107,8 @@ const tryLogin = async () => {
 			saveToken(result.data.token);
 			saveLoginId(result.data.loginId);
 
-			showToast('success', '로그인 성공');
-			router.push({ name: 'Home' });
+			showToast('success', '로그인되었습니다');
+			router.go(-1);
 		}
 	} catch (error) {
 		showToast('error', '올바른 정보를 입력해주세요');
@@ -123,10 +123,6 @@ const Toast = Swal.mixin({
 	showConfirmButton: false,
 	timer: 3000,
 	timerProgressBar: true,
-	didOpen: toast => {
-		toast.addEventListener('mouseenter', Swal.stopTimer);
-		toast.addEventListener('mouseleave', Swal.resumeTimer);
-	},
 });
 
 const showToast = (icon, title) => {

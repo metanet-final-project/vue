@@ -8,15 +8,6 @@
 		}"
 		transparent
 	/>
-	<DefaultNavbar
-		v-if="!isLogin"
-		:action="{
-			route: '/login',
-			color: 'bg-light',
-			label: '로그인 | 회원가입',
-		}"
-		transparent
-	/>
 	<!--  Header End  -->
 
 	<header class="bg-gradient-dark">
@@ -40,14 +31,6 @@
 						<p class="lead mb-4 text-white">
 							쉽고 빠른 시외버스 예매는 언제나 버스타요
 						</p>
-						<MaterialButton
-							class="my-4 mb-2"
-							variant="contained"
-							color="white"
-							@click="goToBook"
-						>
-							예매하기
-						</MaterialButton>
 					</div>
 				</div>
 			</div>
@@ -63,7 +46,6 @@
 import { onMounted, onUnmounted } from 'vue';
 import DefaultNavbar from '@/layouts/Navbar.vue';
 import DefaultFooter from '@/layouts/Footer.vue';
-import MaterialButton from '@/components/MaterialButton.vue';
 
 //image
 import headimage from '@/assets/img/busimage.png';
@@ -73,8 +55,6 @@ import Typed from 'typed.js';
 
 //sections
 import Search from './Sections/HomeSearch.vue';
-
-const goToBook = () => document.querySelector('#book').scrollIntoView(true);
 
 const body = document.getElementsByTagName('body')[0];
 
@@ -92,17 +72,6 @@ onMounted(() => {
 			loop: true,
 		});
 	}
-
-	const isLogin = () => {
-		if (localStorage.getItem('loginId')) {
-			alert('true');
-			return true;
-		} else {
-			alert('false');
-			return false;
-		}
-	};
-	isLogin;
 });
 
 onUnmounted(() => {
