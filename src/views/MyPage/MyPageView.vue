@@ -20,7 +20,7 @@
 			<div class="card text-center mx-3" style="width: 30rem">
 				<div class="card-body">
 					<h5 class="card-title">나의 예매내역</h5>
-					<p class="card-text">0건</p>
+					<p class="card-text">{{ myBookingList.length }}건</p>
 					<a href="/mypage/booking" class="btn btn-dark">조회</a>
 				</div>
 			</div>
@@ -42,6 +42,22 @@ import Header from '@/examples/Header.vue';
 import Footer from '@/layouts/Footer.vue';
 // import Profile from './Sections/Profile.vue';
 import image from '@/assets/img/busimage.png';
+import axios from 'axios';
+import { ref } from 'vue';
+
+// import { useRouter } from 'vue-router';
+
+// const router = useRouter();
+let myBookingList = ref('');
+
+const getMyBookingList = async () => {
+	const res = await axios.get(
+		`/api/booking/find/findByLoginId/${localStorage.getItem('loginId')}`,
+	);
+	myBookingList.value = res.data;
+	console.log(myBookingList.value);
+};
+getMyBookingList();
 </script>
 
 <style scoped>

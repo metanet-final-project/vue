@@ -86,7 +86,11 @@
 					</tbody>
 				</table>
 				<div class="btn-area">
-					<button type="button" class="btn-print2" @click="UpdateMember">
+					<button
+						type="button"
+						class="btn-print2"
+						@click="UpdateMember(loginId, name, phone, email)"
+					>
 						변경
 					</button>
 				</div>
@@ -101,10 +105,11 @@ import Navbar from '@/layouts/Navbar.vue';
 import Footer from '@/layouts/Footer.vue';
 import axios from 'axios';
 import { ref } from 'vue';
+
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
-// const loginRequest = ref({});
+
 const loginId = ref('');
 const name = ref('');
 const email = ref('');
@@ -131,17 +136,22 @@ const getMemberInfo = async () => {
 };
 getMemberInfo();
 
-const UpdateMember = async () => {
-	const res = await axios.put(`/api/member/update`, {
-		loginId: localStorage.getItem('loginId'),
-	});
+const UpdateMember = async (loginId, name, phone, email) => {
 	try {
+		const res = await axios.put(`/api/member/update`, {
+			loginId: localStorage.getItem('loginId'),
+			name: name,
+			phone: phone,
+			email: email,
+		});
+
 		if (res != null) {
-			alert('회원정보가 변경되었습니다.');
+			alert('회원정보가 수정되었습니다.');
 			router.push({ name: 'Mypage' });
 		}
 	} catch (error) {
-		alert('error');
+		alert('회원정보 저장에 실패했습니다. 정보를 다시 확인해주세요.');
+		console.log(error);
 	}
 };
 </script>
