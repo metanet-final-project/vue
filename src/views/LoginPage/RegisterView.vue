@@ -133,7 +133,7 @@ const saveMember = async () => {
 	try {
 		const result = await axios.post('/api/save', member.value);
 		if (result != null) {
-			alert('회원가입 완료');
+			showToast('success', '회원가입에 성공했습니다');
 			router.push({ name: 'Login' });
 		}
 	} catch (error) {
@@ -147,10 +147,6 @@ const Toast = Swal.mixin({
 	showConfirmButton: false,
 	timer: 3000,
 	timerProgressBar: true,
-	didOpen: toast => {
-		toast.addEventListener('mouseenter', Swal.stopTimer);
-		toast.addEventListener('mouseleave', Swal.resumeTimer);
-	},
 });
 
 const showToast = (icon, title) => {
