@@ -45,7 +45,8 @@
 										id="carnumber"
 										class="input-group-outline my-1"
 										:label="{ text: '카드번호', class: 'form-label' }"
-										type="carnumber"
+										type="number"
+										v-model.number="cardNumber"
 									/>
 								</div>
 							</div>
@@ -57,8 +58,7 @@
 										class="input-group-outline my-1"
 										:label="{ text: '월', class: 'form-label' }"
 										type="number"
-										min="1"
-										max="12"
+										v-model="cardExpiration"
 									/>
 								</div>
 								<div class="col-6">
@@ -68,8 +68,6 @@
 										class="input-group-outline my-1"
 										:label="{ text: '년', class: 'form-label' }"
 										type="number"
-										min="2022"
-										max="2042"
 									/>
 								</div>
 							</div>
@@ -81,9 +79,7 @@
 										class="input-group-outline my-1"
 										:label="{ text: '비밀번호', class: 'form-label' }"
 										type="password"
-										min="1"
-										max="2"
-										v-model="cardPassword"
+										v-model.number="cardPassword"
 									/>
 								</div>
 								<div class="col-6">
@@ -99,7 +95,38 @@
 									</div>
 								</div>
 							</div>
+							<div class="row">
+								<div class="col-12">
+									<small class="font-weight-bold">생년월일</small>
+									<MaterialInput
+										id="birth"
+										class="input-group-outline my-1"
+										:label="{ text: 'YYYY-MM-DD', class: 'form-label' }"
+										v-model="birth"
+									/>
+								</div>
+							</div>
 						</div>
+						<section class="py-5 position-relative">
+							<div class="row py-4">
+								<h3 class="mb-0">결제금액</h3>
+								<table>
+									<tr>
+										<th>총결제금액</th>
+										<td>{{ totalPrice }}원</td>
+									</tr>
+								</table>
+								<MaterialButton
+									class="my-4 mb-2 col-12"
+									variant="contained"
+									color="dark"
+									fullWidth
+									@click="submitForm"
+								>
+									결제하기
+								</MaterialButton>
+							</div>
+						</section>
 					</div>
 				</div>
 			</div>
@@ -108,10 +135,50 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
+import axios from 'axios';
 //material
 import MaterialInput from '@/components/MaterialInput.vue';
 import setMaterialInput from '@/assets/js/material-input';
+import MaterialButton from '@/components/MaterialButton.vue';
+//import { useRouter } from 'vue-router';
+//const router = useRouter();
+
+const cardNumber = ref('');
+const cardPassword = ref('');
+const birth = ref('');
+const cardExpiration = ref('');
+const totalPrice = ref(5000);
+
+// const goBookingConfirm = () => {
+// 	router.push('/bookingconfirm');
+// };
+
+// const submitForm = async () => {
+// 	const data = {
+// 		card_number: cardNumber.value,
+// 		card_password: cardPassword.value,
+// 		birth: birth.value,
+// 		card_expiration: cardExpiration.value,
+// 	};
+
+// 	await axios
+// 		.post('/api/pay/save', data)
+// 		.then(response => {
+// 			console.log(response.data);
+// 		})
+// 		.catch(error => {
+// 			console.log(error);
+// 		});
+// };
+const submitForm = async () => {
+	await axios.post('/api/pay/save', {
+		card_number: cardNumber.value,
+		card_password: cardPassword.value,
+		birth: birth.value,
+		card_expiration: cardExpiration.value,
+	});
+};
 
 onMounted(() => {
 	setMaterialInput();
@@ -129,5 +196,23 @@ img {
 	padding: 77px 15px 15px 15px;
 	box-shadow: 12px 12px 2px 1px #344767;
 	margin-top: -75px; /* 아랫부분과 겹치도록 조정 */
+}
+table {
+	height: 50px;
+}
+th {
+	color: white;
+	background-color: #344767;
+	font-size: 20px;
+	text-align: center;
+	width: 50%;
+}
+td {
+	font-size: 20px;
+	text-align: center;
+	border: 1px solid #344767;
+	color: #344767;
+	font-weight: bold;
+	width: 50%;
 }
 </style>

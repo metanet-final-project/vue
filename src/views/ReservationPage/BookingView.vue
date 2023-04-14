@@ -23,7 +23,6 @@
 		<Agree />
 		<Ticket />
 		<Card />
-		<Pay />
 	</div>
 	<Footer />
 </template>
@@ -35,7 +34,6 @@ import Footer from '@/layouts/Footer.vue';
 import Ticket from './Sections/Ticket.vue';
 import Card from './Sections/Card.vue';
 import Agree from './Sections/Agree.vue';
-import Pay from './Sections/Pay.vue';
 import image from '@/assets/img/busimage.png';
 </script>
 
