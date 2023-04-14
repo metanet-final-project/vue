@@ -220,14 +220,17 @@
 									<strong class="txt_tit">선택좌석</strong>
 								</div>
 								<div class="sel_seatNum">
-									<template
-										v-for="seatInfo in seatSelectInfo"
-										:key="seatInfo.idx"
+									<span class="txt_selSeat" v-if="seatSelectInfo.length == 0">
+										좌석을 선택해 주세요.
+									</span>
+									<span
+										v-else
+										class="txt_selSeat"
+										v-for="seatNum in seatSelectInfo"
+										:key="seatNum.idx"
 									>
-										<span class="txt_selSeat" style="display: none">
-											{{ seatInfo.idx + ',' }}
-										</span>
-									</template>
+										{{ seatNum.idx + '번 ' }}
+									</span>
 								</div>
 								<div class="tbl_type3">
 									<table class="taR">
@@ -239,7 +242,7 @@
 														>{{ seat.adlt.selectCount }}명</span
 													>
 												</th>
-												<td id="adltTotAmt">0원</td>
+												<td id="adltTotAmt">{{ adltPrice }}원</td>
 											</tr>
 
 											<tr>
@@ -249,7 +252,7 @@
 														>{{ seat.teen.selectCount }}명</span
 													>
 												</th>
-												<td id="chldTotAmt">0원</td>
+												<td id="chldTotAmt">{{ teenPrice }}원</td>
 											</tr>
 
 											<tr>
@@ -259,7 +262,7 @@
 														>{{ seat.child.selectCount }}명</span
 													>
 												</th>
-												<td id="bohnTotAmt">0원</td>
+												<td id="bohnTotAmt">{{ childPrice }}원</td>
 											</tr>
 										</tbody>
 									</table>
@@ -275,7 +278,9 @@
 								<!-- 총 결재금액일 시 class="total_price" 추가 -->
 								<div class="box_title">
 									<strong class="txt_tit">총 결제금액</strong>
-									<span class="sel_price" id="allTotAmtLocD">0원</span>
+									<span class="sel_price" id="allTotAmtLocD"
+										>{{ totalPrice }}원</span
+									>
 								</div>
 							</section>
 							<!-- //총 결제금액 -->
@@ -295,7 +300,7 @@ import Header from '@/examples/Header.vue';
 import Footer from '@/layouts/Footer.vue';
 import image from '@/assets/img/busimage.png';
 
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import axios from 'axios';
 
 const schedule = ref({
@@ -336,14 +341,17 @@ const seat = ref({
 	adlt: {
 		count: 0,
 		selectCount: 0,
+		price: 1,
 	},
 	teen: {
 		count: 0,
 		selectCount: 0,
+		price: 1,
 	},
 	child: {
 		count: 0,
 		selectCount: 0,
+		price: 1,
 	},
 });
 
@@ -427,7 +435,19 @@ const seatSelected = idx => {
 	console.log(seatSelectInfo.value);
 };
 
-// 체크박스에 적용될 클래스를 계산하는 computed 속성
+const adltPrice = computed(() => {
+	return seat.value.adlt.selectCount * scheduleInfo.value.price;
+});
+const teenPrice = computed(() => {
+	return seat.value.teen.selectCount * 0.8 * scheduleInfo.value.price;
+});
+const childPrice = computed(() => {
+	return seat.value.child.selectCount * 0.5 * scheduleInfo.value.price;
+});
+
+const totalPrice = computed(() => {
+	return adltPrice.value + teenPrice.value + childPrice.value;
+});
 </script>
 
 <style scoped>
@@ -759,6 +779,10 @@ strong {
 }
 .tbl_type3 p {
 	font-size: 12px;
+}
+
+.box_title span {
+	margin: 5px;
 }
 
 .btn_selectSeat {
