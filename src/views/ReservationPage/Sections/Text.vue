@@ -9,10 +9,6 @@
 
 					<div class="row py-4 pt-8">
 						<div class="text col-6">
-							<h3 class="mb-0">
-								예매번호
-								<span class="number">45648454313</span>
-							</h3>
 							<h3 class="mb-0">시외버스 예매가 완료되었습니다.</h3>
 							<span class="mypageconfirm"
 								>마이페이지에서 승차권 조회가 가능합니다.</span
