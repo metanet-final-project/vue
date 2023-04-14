@@ -11,6 +11,7 @@ import AdminRouteView from '../views/AdminPage/Sections/AdminRoute.vue';
 import AdminScheduleView from '../views/AdminPage/Sections/AdminSchedule.vue';
 import AdminReservationView from '../views/AdminPage/Sections/AdminReservation.vue';
 import AdminHelpView from '../views/AdminPage/Sections/AdminHelp.vue';
+import ScheduleSearchView from '../views/BookingPage/ScheduleSearch.vue';
 import ScheduleSeatView from '../views/BookingPage/ScheduleSeat.vue';
 import MypageModifyView from '../views/MyPage/MypageModifyView.vue';
 import MypageBookingView from '../views/MyPage/MypageBookingView.vue';
@@ -94,6 +95,11 @@ const router = createRouter({
 			path: '/admin/help',
 			name: 'AdminHelp',
 			component: AdminHelpView,
+		},
+		{
+			path: '/schedule/search',
+			name: 'ScheduleSearch',
+			component: ScheduleSearchView,
 		},
 		{
 			path: '/schedule/seat',
