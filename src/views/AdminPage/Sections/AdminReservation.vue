@@ -7,7 +7,7 @@
 		<h2>예약관리</h2>
 		<table class="table table-striped">
 			<thead>
-				<tr>
+				<tr style="text-align: center; margin: auto; width: 5%" type="text">
 					<th>번호</th>
 					<th>이름</th>
 					<th>예약날짜</th>
@@ -18,7 +18,12 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-for="list in booking" :key="list.id">
+				<tr
+					v-for="list in booking"
+					:key="list.id"
+					style="text-align: center; margin: auto; width: 5%"
+					type="text"
+				>
 					<td scope="row">{{ list.id }}</td>
 					<td>{{ list.name }}</td>
 					<td>{{ list.date }}</td>
@@ -130,5 +135,9 @@ const deleteMember = list => {
 	width: 100%;
 	border-collapse: collapse;
 	margin-top: 20px;
+}
+
+.btn-primary {
+	background-color: #00ff00;
 }
 </style>

@@ -10,7 +10,7 @@
 		</h2>
 		<table class="table table-striped">
 			<thead>
-				<tr>
+				<tr style="text-align: center; margin: auto; width: 5%" type="text">
 					<th>배차번호</th>
 					<th>날짜</th>
 					<th>버스번호</th>
@@ -21,7 +21,12 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-for="schedule in schedules" :key="schedule.id">
+				<tr
+					v-for="schedule in schedules"
+					:key="schedule.id"
+					style="text-align: center; margin: auto; width: 5%"
+					type="text"
+				>
 					<td scope="row">{{ schedule.id }}</td>
 					<td>{{ schedule.date }}</td>
 					<td>{{ schedule.busNo }}</td>
@@ -99,5 +104,9 @@ const deleteSchedule = schedules => {
 	width: 100%;
 	border-collapse: collapse;
 	margin-top: 20px;
+}
+
+.btn-primary {
+	background-color: #00ff00;
 }
 </style>

@@ -41,7 +41,8 @@ const currentPath = route.path;
 	height: 100%;
 	width: 120px;
 	background-color: #555;
-	position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+	position: fixed;
+	/* Fixed Sidebar (stay in place on scroll) */
 	/*z-index: 1;*/ /* Stay on top */
 	/* top: 0; Stay at the top */
 	left: 0;
