@@ -17,19 +17,24 @@
 			<div class="compare_wrap">
 				<!-- 좌측 infoBox -->
 				<div class="infoBox">
-					<p class="date" id="satsDeprDtm">2023. 4. 11. 화</p>
+					<p class="date" id="satsDeprDtm">{{ scheduleInfo.startTime }}. 화</p>
 
 					<div class="route_wrap" id="satsRotInfo">
 						<div class="inner">
-							<p class="roundBox departure" id="satsDeprTmlNm">고양화정</p>
+							<p class="roundBox departure" id="satsDeprTmlNm">
+								{{ scheduleInfo.routeDTO.startTerminal.name }}
+							</p>
 							<!-- 출발지 -->
 
-							<p class="roundBox arrive" id="satsArvlTmlNm">횡성(휴)하행</p>
+							<p class="roundBox arrive" id="satsArvlTmlNm">
+								{{ scheduleInfo.routeDTO.endTerminal.name }}
+							</p>
 							<!-- 도착지 -->
 						</div>
 						<div class="detail_info">
-							<span id="satsTakeDrtm">3시간 20분 소요</span>
-							<span id="satsDist">290.8 Km</span>
+							<span id="satsTakeDrtm"
+								>{{ scheduleInfo.routeDTO.travelTime }}분 예정</span
+							>
 						</div>
 					</div>
 
@@ -39,11 +44,11 @@
 								<tbody>
 									<tr>
 										<th scope="row">고속사</th>
-										<td>(주)중앙고속</td>
+										<td>{{ scheduleInfo.busDTO.companyDTO.name }}</td>
 									</tr>
 									<tr>
 										<th scope="row">등급</th>
-										<td>우등</td>
+										<td>{{ scheduleInfo.busDTO.grade }}</td>
 									</tr>
 									<tr>
 										<th scope="row">출발</th>
@@ -60,7 +65,7 @@
 			<!-- 우측 detailBox -->
 			<div class="main_box">
 				<div class="seat">
-					<span class="count_num">잔여 25석 / 전체 28석</span>
+					<span class="count_num">잔여 {{ seatTotal }}석 / 전체 22석</span>
 				</div>
 				<div class="box">
 					<div class="detailBox">
@@ -71,17 +76,27 @@
 										<p class="division">
 											<em>일반</em>
 
-											<span class="text_num count" id="adltCntMob">1</span>
+											<span class="text_num count" id="adltCntMob">{{
+												seat.adlt.count
+											}}</span>
 										</p>
 										<div class="btn_wrap">
 											<ul>
 												<li>
-													<button type="button" class="btn btn_add">
+													<button
+														type="button"
+														class="btn btn_add"
+														@click="add(1)"
+													>
 														<span class="ico_plus">+</span>
 													</button>
 												</li>
 												<li>
-													<button type="button" class="btn btn_minus">
+													<button
+														type="button"
+														class="btn btn_minus"
+														@click="minus(1)"
+													>
 														<span class="ico_minus">-</span>
 													</button>
 												</li>
@@ -95,17 +110,27 @@
 										<p class="division">
 											<em>청소년</em>
 
-											<span class="text_num count" id="chldCntMob">0</span>
+											<span class="text_num count" id="teenCntMob">{{
+												seat.teen.count
+											}}</span>
 										</p>
 										<div class="btn_wrap">
 											<ul>
 												<li>
-													<button type="button" class="btn btn_add">
+													<button
+														type="button"
+														class="btn btn_add"
+														@click="add(2)"
+													>
 														<span class="ico_plus">+</span>
 													</button>
 												</li>
 												<li>
-													<button type="button" class="btn btn_minus">
+													<button
+														type="button"
+														class="btn btn_minus"
+														@click="minus(2)"
+													>
 														<span class="ico_minus">-</span>
 													</button>
 												</li>
@@ -119,17 +144,27 @@
 										<p class="division">
 											<em>아동</em>
 
-											<span class="text_num count" id="bohnCntMob">0</span>
+											<span class="text_num count" id="childCntMob">{{
+												seat.child.count
+											}}</span>
 										</p>
 										<div class="btn_wrap">
 											<ul>
 												<li>
-													<button type="button" class="btn btn_add">
+													<button
+														type="button"
+														class="btn btn_add"
+														@click="add(3)"
+													>
 														<span class="ico_plus">+</span>
 													</button>
 												</li>
 												<li>
-													<button type="button" class="btn btn_minus">
+													<button
+														type="button"
+														class="btn btn_minus"
+														@click="minus(3)"
+													>
 														<span class="ico_minus">-</span>
 													</button>
 												</li>
@@ -145,225 +180,28 @@
 							<div class="selectSeat_box">
 								<div class="bg_seatBox" style="display: block">
 									<div class="seatList">
-										<span class="seatBox">
+										<span
+											class="seatBox"
+											v-for="seat in seatNum"
+											:key="seat.idx"
+											:class="{ last_seat: seat.idx >= 19 }"
+										>
 											<input
 												type="checkbox"
 												name="seatBoxDtl"
-												id="seatNum_28_01"
-												value="1"
-												onclick="fnSeatChc(this, 'seatNum_28_01');"
+												:id="'seatNum_22_' + seat.idx"
+												:value="seat.idx"
+												@click="seatSelected(seat.idx)"
+												v-if="seat.state === 'Y'"
 											/>
-											<label class="disabled" for="seatNum_28_01">1</label>
-										</span>
-										<span class="seatBox">
-											<input
-												type="checkbox"
-												name="seatBoxDtl"
-												id="seatNum_28_01"
-												value="1"
-												onclick="fnSeatChc(this, 'seatNum_28_01');"
-											/>
-											<label for="seatNum_28_01">2</label>
-										</span>
-										<span class="seatBox">
-											<input
-												type="checkbox"
-												name="seatBoxDtl"
-												id="seatNum_28_01"
-												value="1"
-												onclick="fnSeatChc(this, 'seatNum_28_01');"
-											/>
-											<label for="seatNum_28_01">3</label>
-										</span>
-										<span class="seatBox">
-											<input
-												type="checkbox"
-												name="seatBoxDtl"
-												id="seatNum_28_01"
-												value="1"
-												onclick="fnSeatChc(this, 'seatNum_28_01');"
-											/>
-											<label for="seatNum_28_01">4</label>
-										</span>
-										<span class="seatBox">
-											<input
-												type="checkbox"
-												name="seatBoxDtl"
-												id="seatNum_28_01"
-												value="1"
-												onclick="fnSeatChc(this, 'seatNum_28_01');"
-											/>
-											<label for="seatNum_28_01">5</label>
-										</span>
-										<span class="seatBox">
-											<input
-												type="checkbox"
-												name="seatBoxDtl"
-												id="seatNum_28_01"
-												value="1"
-												onclick="fnSeatChc(this, 'seatNum_28_01');"
-											/>
-											<label for="seatNum_28_01">6</label>
-										</span>
-										<span class="seatBox">
-											<input
-												type="checkbox"
-												name="seatBoxDtl"
-												id="seatNum_28_01"
-												value="1"
-												onclick="fnSeatChc(this, 'seatNum_28_01');"
-											/>
-											<label for="seatNum_28_01">7</label>
-										</span>
-										<span class="seatBox">
-											<input
-												type="checkbox"
-												name="seatBoxDtl"
-												id="seatNum_28_01"
-												value="1"
-												onclick="fnSeatChc(this, 'seatNum_28_01');"
-											/>
-											<label for="seatNum_28_01">8</label>
-										</span>
-										<span class="seatBox">
-											<input
-												type="checkbox"
-												name="seatBoxDtl"
-												id="seatNum_28_01"
-												value="1"
-												onclick="fnSeatChc(this, 'seatNum_28_01');"
-											/>
-											<label for="seatNum_28_01">9</label>
-										</span>
-										<span class="seatBox">
-											<input
-												type="checkbox"
-												name="seatBoxDtl"
-												id="seatNum_28_01"
-												value="1"
-												onclick="fnSeatChc(this, 'seatNum_28_01');"
-											/>
-											<label for="seatNum_28_01">10</label>
-										</span>
-										<span class="seatBox">
-											<input
-												type="checkbox"
-												name="seatBoxDtl"
-												id="seatNum_28_01"
-												value="1"
-												onclick="fnSeatChc(this, 'seatNum_28_01');"
-											/>
-											<label for="seatNum_28_01">11</label>
-										</span>
-										<span class="seatBox">
-											<input
-												type="checkbox"
-												name="seatBoxDtl"
-												id="seatNum_28_01"
-												value="1"
-												onclick="fnSeatChc(this, 'seatNum_28_01');"
-											/>
-											<label for="seatNum_28_01">12</label>
-										</span>
-										<span class="seatBox">
-											<input
-												type="checkbox"
-												name="seatBoxDtl"
-												id="seatNum_28_01"
-												value="1"
-												onclick="fnSeatChc(this, 'seatNum_28_01');"
-											/>
-											<label for="seatNum_28_01">13</label>
-										</span>
-										<span class="seatBox">
-											<input
-												type="checkbox"
-												name="seatBoxDtl"
-												id="seatNum_28_01"
-												value="1"
-												onclick="fnSeatChc(this, 'seatNum_28_01');"
-											/>
-											<label for="seatNum_28_01">14</label>
-										</span>
-										<span class="seatBox">
-											<input
-												type="checkbox"
-												name="seatBoxDtl"
-												id="seatNum_28_01"
-												value="1"
-												onclick="fnSeatChc(this, 'seatNum_28_01');"
-											/>
-											<label for="seatNum_28_01">15</label>
-										</span>
-										<span class="seatBox">
-											<input
-												type="checkbox"
-												name="seatBoxDtl"
-												id="seatNum_28_01"
-												value="1"
-												onclick="fnSeatChc(this, 'seatNum_28_01');"
-											/>
-											<label for="seatNum_28_01">16</label>
-										</span>
-										<span class="seatBox">
-											<input
-												type="checkbox"
-												name="seatBoxDtl"
-												id="seatNum_28_01"
-												value="1"
-												onclick="fnSeatChc(this, 'seatNum_28_01');"
-											/>
-											<label for="seatNum_28_01">17</label>
-										</span>
-										<span class="seatBox">
-											<input
-												type="checkbox"
-												name="seatBoxDtl"
-												id="seatNum_28_01"
-												value="1"
-												onclick="fnSeatChc(this, 'seatNum_28_01');"
-											/>
-											<label for="seatNum_28_01">18</label>
-										</span>
-										<span class="seatBox last_seat">
-											<input
-												type="checkbox"
-												name="seatBoxDtl"
-												id="seatNum_28_01"
-												value="1"
-												onclick="fnSeatChc(this, 'seatNum_28_01');"
-											/>
-											<label for="seatNum_28_01">19</label>
-										</span>
-										<span class="seatBox last_seat">
-											<input
-												type="checkbox"
-												name="seatBoxDtl"
-												id="seatNum_28_01"
-												value="1"
-												onclick="fnSeatChc(this, 'seatNum_28_01');"
-											/>
-											<label for="seatNum_28_01">20</label>
-										</span>
-										<span class="seatBox last_seat">
-											<input
-												type="checkbox"
-												name="seatBoxDtl"
-												id="seatNum_28_01"
-												value="1"
-												onclick="fnSeatChc(this, 'seatNum_28_01');"
-											/>
-											<label for="seatNum_28_01">21</label>
-										</span>
-										<span class="seatBox last_seat">
-											<input
-												type="checkbox"
-												name="seatBoxDtl"
-												id="seatNum_28_01"
-												value="1"
-												onclick="fnSeatChc(this, 'seatNum_28_01');"
-											/>
-											<label for="seatNum_28_01">22</label>
+											<label
+												:class="{
+													disabled: seat.state === 'N',
+													selected: seat.select && seat.state === 'Y',
+												}"
+												:for="'seatNum_22_' + seat.idx"
+												>{{ seat.idx }}</label
+											>
 										</span>
 									</div>
 								</div>
@@ -382,36 +220,49 @@
 									<strong class="txt_tit">선택좌석</strong>
 								</div>
 								<div class="sel_seatNum">
-									<span class="txt_selSeat" style="display: none"
-										>좌석을 선택해주세요</span
+									<span class="txt_selSeat" v-if="seatSelectInfo.length == 0">
+										좌석을 선택해 주세요.
+									</span>
+									<span
+										v-else
+										class="txt_selSeat"
+										v-for="seatNum in seatSelectInfo"
+										:key="seatNum.idx"
 									>
-									<span class="txt_selSeat selected" id="selSeatView"
-										>좌석을 선택해주세요</span
-									><!-- 좌석번호 선택시 class="selected" 추가 -->
+										{{ seatNum.idx + '번 ' }}
+									</span>
 								</div>
 								<div class="tbl_type3">
 									<table class="taR">
 										<tbody>
 											<tr>
 												<th scope="row">
-													일반 <span id="adltSeatCnt">0명</span>
+													일반
+													<span id="adltSeatCnt"
+														>{{ seat.adlt.selectCount }}명</span
+													>
 												</th>
-												<td id="adltTotAmt">0원</td>
+												<td id="adltTotAmt">{{ adltPrice }}원</td>
 											</tr>
 
 											<tr>
 												<th scope="row">
-													초등생 <span id="chldSeatCnt">0명</span>
+													청소년
+													<span id="chldSeatCnt"
+														>{{ seat.teen.selectCount }}명</span
+													>
 												</th>
-												<td id="chldTotAmt">0원</td>
+												<td id="chldTotAmt">{{ teenPrice }}원</td>
 											</tr>
 
 											<tr>
 												<th scope="row">
-													보훈<span class="bohnDcRate"></span>
-													<span id="bohnSeatCnt">0명</span>
+													아동
+													<span id="bohnSeatCnt"
+														>{{ seat.child.selectCount }}명</span
+													>
 												</th>
-												<td id="bohnTotAmt">0원</td>
+												<td id="bohnTotAmt">{{ childPrice }}원</td>
 											</tr>
 										</tbody>
 									</table>
@@ -427,7 +278,9 @@
 								<!-- 총 결재금액일 시 class="total_price" 추가 -->
 								<div class="box_title">
 									<strong class="txt_tit">총 결제금액</strong>
-									<span class="sel_price" id="allTotAmtLocD">0원</span>
+									<span class="sel_price" id="allTotAmtLocD"
+										>{{ totalPrice }}원</span
+									>
 								</div>
 							</section>
 							<!-- //총 결제금액 -->
@@ -446,6 +299,155 @@ import Navbar from '@/layouts/Navbar.vue';
 import Header from '@/examples/Header.vue';
 import Footer from '@/layouts/Footer.vue';
 import image from '@/assets/img/busimage.png';
+
+import { computed, ref } from 'vue';
+import axios from 'axios';
+
+const schedule = ref({
+	id: 1,
+	routeId: 3,
+});
+const scheduleInfo = ref();
+const seatInfo = ref();
+const seatNum = ref(
+	[...Array(22)].map((_, idx) => {
+		return { idx: idx + 1, state: 'Y', select: false };
+	}),
+); // 좌석 정보
+const seatTotal = ref(22);
+const getSchedule = async () => {
+	console.log(schedule.value);
+	const result = await axios.get(
+		`/api/schedule/find/${schedule.value.id}/${schedule.value.routeId}`,
+	);
+	scheduleInfo.value = result.data;
+	console.log(result.data);
+}; // 배차 정보
+
+const getSeatInfo = async () => {
+	const result = await axios.get('/api/booking/find/seat/' + schedule.value.id);
+	seatInfo.value = result.data;
+	result.data.forEach(seat => {
+		seatNum.value[seat.seatNum - 1].state = 'N';
+		seatTotal.value--;
+	});
+	console.log(result.data);
+}; // 예매된 좌석 정보
+
+getSchedule();
+getSeatInfo();
+
+const seat = ref({
+	adlt: {
+		count: 0,
+		selectCount: 0,
+		price: 1,
+	},
+	teen: {
+		count: 0,
+		selectCount: 0,
+		price: 1,
+	},
+	child: {
+		count: 0,
+		selectCount: 0,
+		price: 1,
+	},
+});
+
+const seatSelectInfo = ref([]);
+const add = age => {
+	if (
+		seat.value.adlt.count == seat.value.adlt.selectCount &&
+		seat.value.teen.count == seat.value.teen.selectCount &&
+		seat.value.child.count == seat.value.child.selectCount
+	) {
+		if (age === 1) {
+			console.log(age);
+			seat.value.adlt.count++;
+		} else if (age === 2) {
+			console.log(age);
+			seat.value.teen.count++;
+		} else if (age === 3) {
+			console.log(age);
+			seat.value.child.count++;
+		}
+	} else {
+		alert('좌석을 먼저 선택해주세요.');
+	}
+};
+
+const minus = age => {
+	if (age === 1 && seat.value.adlt.count != 0) {
+		console.log(age);
+		seat.value.adlt.count--;
+	} else if (age === 2 && seat.value.teen.count != 0) {
+		console.log(age);
+		seat.value.teen.count--;
+	} else if (age === 3 && seat.value.child.count != 0) {
+		console.log(age);
+		seat.value.child.count--;
+	}
+};
+
+const seatSelected = idx => {
+	let on = true;
+	seatSelectInfo.value.forEach((item, index) => {
+		// item 객체의 속성에 접근하여 처리
+		if (item.idx == idx) {
+			seatSelectInfo.value.splice(index, 1);
+			seatNum.value[idx - 1].select = !seatNum.value[idx - 1].select;
+			if (item.age == '어른') {
+				seat.value.adlt.count--;
+				seat.value.adlt.selectCount--;
+			} else if (item.age == '청소년') {
+				seat.value.teen.count--;
+				seat.value.teen.selectCount--;
+			} else if (item.age == '아동') {
+				seat.value.child.count--;
+				seat.value.child.selectCount--;
+			}
+			on = false;
+			return;
+		}
+	});
+	if (
+		on &&
+		(seat.value.adlt.count != seat.value.adlt.selectCount ||
+			seat.value.teen.count != seat.value.teen.selectCount ||
+			seat.value.child.count != seat.value.child.selectCount)
+	) {
+		seatNum.value[idx - 1].select = !seatNum.value[idx - 1].select;
+		if (seat.value.adlt.count - seat.value.adlt.selectCount != 0) {
+			seat.value.adlt.selectCount++;
+			seatSelectInfo.value.push({ idx: idx, age: '어른' });
+		} else if (seat.value.teen.count - seat.value.teen.selectCount != 0) {
+			seat.value.teen.selectCount++;
+			seatSelectInfo.value.push({ idx: idx, age: '청소년' });
+		} else if (seat.value.child.count - seat.value.child.selectCount != 0) {
+			seat.value.child.selectCount++;
+			seatSelectInfo.value.push({ idx: idx, age: '아동' });
+		}
+	} else if (on) {
+		alert('매수를 먼저 선택해주세요.');
+	}
+
+	console.log(seatSelectInfo.value);
+};
+
+const adltPrice = computed(() => {
+	return seat.value.adlt.selectCount * scheduleInfo.value.price;
+});
+const teenPrice = computed(() => {
+	return seat.value.teen.selectCount * 0.8 * scheduleInfo.value.price;
+});
+const childPrice = computed(() => {
+	return seat.value.child.selectCount * 0.5 * scheduleInfo.value.price;
+});
+
+const totalPrice = computed(() => {
+	return adltPrice.value + teenPrice.value + childPrice.value;
+});
 </script>
 
 <style scoped>
@@ -576,6 +578,9 @@ import image from '@/assets/img/busimage.png';
 	padding-bottom: 10px;
 }
 
+.tbl_type2 td {
+	padding-left: 20px;
+}
 .detailBox {
 	width: 70%;
 	display: flex;
@@ -704,9 +709,34 @@ span.last_seat:nth-child(3n + 3) {
 	opacity: 0;
 }
 
-.disabled {
-	background-color: green;
-	border-radius: 15px;
+.disabled::before,
+.disabled::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	margin: auto;
+	width: 8px;
+	height: 60%;
+	background-color: #f00;
+}
+
+.disabled::before {
+	transform: rotate(45deg);
+}
+
+.disabled::after {
+	transform: rotate(-45deg);
+}
+
+.selected {
+	background-color: #0f0; /* 초록색 배경색 */
+	position: relative;
+	border-radius: 50%; /* 동그라미 모양을 위한 border-radius 설정 */
+	width: 40px; /* 동그라미의 가로 크기 */
+	height: 40px; /* 동그라미의 세로 크기 */
 }
 
 .box_detail {
@@ -749,6 +779,10 @@ strong {
 }
 .tbl_type3 p {
 	font-size: 12px;
+}
+
+.box_title span {
+	margin: 5px;
 }
 
 .btn_selectSeat {
