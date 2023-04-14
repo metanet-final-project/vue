@@ -172,19 +172,12 @@ const totalPrice = ref(5000);
 // 		});
 // };
 const submitForm = async () => {
-	const res = await axios.post('/api/pay/save', {
+	await axios.post('/api/pay/save', {
 		card_number: cardNumber.value,
 		card_password: cardPassword.value,
 		birth: birth.value,
 		card_expiration: cardExpiration.value,
 	});
-	try {
-		if (res != null) {
-			alert('회원정보가 변경되었습니다.');
-		}
-	} catch (error) {
-		alert('error');
-	}
 };
 
 onMounted(() => {
