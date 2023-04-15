@@ -8,34 +8,38 @@
 		<table class="table table-striped">
 			<thead>
 				<tr style="text-align: center; margin: auto; width: 5%" type="text">
-					<th>번호</th>
-					<th>이름</th>
+					<th>순번</th>
+					<th>회원ID</th>
+					<th>회원명</th>
+					<th>출발지</th>
+					<th>도착지</th>
 					<th>예약날짜</th>
-					<th>회원구분</th>
-					<th>전화번호</th>
-					<th>수정</th>
+					<th>좌석번호</th>
+					<!-- <th>수정</th> -->
 					<th>삭제</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr
-					v-for="list in booking"
+					v-for="(list, index) in booking"
 					:key="list.id"
 					style="text-align: center; margin: auto; width: 5%"
 					type="text"
 				>
-					<td scope="row">{{ list.id }}</td>
-					<td>{{ list.name }}</td>
-					<td>{{ list.date }}</td>
-					<td>{{ list.type }}</td>
-					<td>{{ list.phone }}</td>
-					<td>
-						<button class="btn btn-primary" @click="editMember(list)">
+					<td scope="row">{{ index + 1 }}</td>
+					<td>{{ list.memberDTO.loginId }}</td>
+					<td>{{ list.memberDTO.name }}</td>
+					<td>{{ list.routeDTO.startTerminal.name }}</td>
+					<td>{{ list.routeDTO.endTerminal.name }}</td>
+					<td>{{ list.scheduleDTO.startTime }}</td>
+					<td>{{ list.seatNum }}</td>
+					<!-- <td>
+						<button class="btn btn-primary" @click="editBooking(list)">
 							수정
 						</button>
-					</td>
+					</td> -->
 					<td>
-						<button class="btn btn-danger" @click="deleteMember(list)">
+						<button class="btn btn-danger" @click="deleteBooking(list.id)">
 							삭제
 						</button>
 					</td>
@@ -46,13 +50,10 @@
 			<p class="form-control">
 				<input
 					type="text"
-					id="srchNtcTlNm"
-					name="srchNtcTlNm"
-					placeholder="검색어를 입력하세요"
-					value=""
-					onkeydown="fnSubmit();"
+					v-model="loginId"
+					placeholder="회원ID를 입력하세요"
 				/>
-				<button type="button" onclick="fnSrchBtnClick();">검색</button>
+				<button type="button" @click="searchBooking">검색</button>
 			</p>
 		</div>
 	</div>
@@ -60,62 +61,57 @@
 </template>
 
 <script setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import SideBar from '../SideBar.vue';
 import Footer from '@/layouts/Footer.vue';
 import Navbar from '@/layouts/Navbar.vue';
 import Page from '@/layouts/Page.vue';
+import axios from 'axios';
 
-const booking = [
-	{
-		id: 1,
-		name: 'ddd',
-		date: '2023-04-12 12:25:32',
-		type: '회원',
-		phone: '010-1231-2412',
-	},
-	{
-		id: 2,
-		name: 'sss',
-		date: '2023-04-14 17:45:32',
-		type: '비회원',
-		phone: '010-1231-2412',
-	},
-	{
-		id: 3,
-		name: 'aaa',
-		date: '2023-04-12 18:25:32',
-		type: '회원',
-		phone: '010-1231-2412',
-	},
-	{
-		id: 4,
-		name: 'eqwr',
-		date: '2023-04-15 19:15:32',
-		type: '비회원',
-		phone: '010-1231-2412',
-	},
-	{
-		id: 5,
-		name: 'yre',
-		date: '2023-04-17 21:12:32',
-		type: '회원',
-		phone: '010-1231-2412',
-	},
-	{
-		id: 6,
-		name: 'dskfj',
-		date: '2023-04-22 18:46:32',
-		type: '비회원',
-		phone: '010-1231-2412',
-	},
-];
+const booking = ref('');
+const router = useRouter();
+const loginId = ref();
 
-const editMember = list => {
-	console.log('update', list);
+const AdminBookingSearchView = async () => {
+	try {
+		const result = await axios.get('/api/booking/find-all-DTO');
+		booking.value = result.data;
+	} catch (error) {
+		console.log(error);
+	}
+};
+AdminBookingSearchView();
+
+// const editBooking = list => {
+// 	console.log('update', list);
+// };
+
+const deleteBooking = async id => {
+	try {
+		const result = await axios.delete(`/api/booking/delete/${id}`);
+		if (result != null) {
+			alert('삭제 성공');
+			router.go(0);
+		}
+	} catch (error) {
+		console.log(error);
+	}
 };
 
-const deleteMember = list => {
-	console.log('delete', list);
+const searchBooking = async () => {
+	try {
+		console.log(loginId.value);
+		const result = await axios.get(
+			`/api/booking/find/findByLoginId/${loginId.value}`,
+		);
+		if (result != null) {
+			booking.value = result.data;
+			console.log(booking.value);
+		}
+	} catch (error) {
+		console.log(error);
+	}
 };
 </script>
 

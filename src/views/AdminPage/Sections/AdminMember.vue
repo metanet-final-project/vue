@@ -4,10 +4,7 @@
 	<div class="container">
 		<Page />
 		<br />
-		<h2>
-			회원관리
-			<!-- <div class="main"></div> -->
-		</h2>
+		<h2>회원관리</h2>
 		<table class="table table-striped">
 			<thead>
 				<tr style="text-align: center; margin: auto; width: 5%" type="text">
@@ -35,9 +32,80 @@
 					<td>{{ member.email }}</td>
 					<td>{{ member.phone }}</td>
 					<td>
-						<button class="btn btn-primary" @click="editMember(member)">
-							수정
-						</button>
+						<div class="col-6">
+							<MaterialButton
+								color="dark"
+								id="searchString"
+								class="input-group-static"
+								@click="showModal = true"
+								>수정</MaterialButton
+							>
+						</div>
+						<div
+							v-if="showModal"
+							class="modal"
+							tabindex="-1"
+							style="display: flex"
+						>
+							<div class="modal-dialog">
+								<div
+									class="modal-content"
+									style="
+										box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
+											0 10px 10px rgba(0, 0, 0, 0.22);
+									"
+								>
+									<div class="modal-header">
+										<h5 class="modal-title">회원정보 수정</h5>
+										<MaterialBadge
+											color="light"
+											rounded
+											class="text-dark"
+											@click.prevent="showModal = false"
+											style="cursor: pointer"
+										>
+											닫기
+										</MaterialBadge>
+									</div>
+									<div class="modal-body">
+										<tr
+											style="text-align: center; margin: auto; width: 5%"
+											type="text"
+										>
+											<th>순번</th>
+											<th>아이디</th>
+											<th>이름</th>
+											<th>이메일</th>
+											<th>전화번호</th>
+										</tr>
+										<tr
+											v-on="(member, index) in members"
+											:key="member.id"
+											style="text-align: center; margin: auto; width: 5%"
+											type="text"
+										>
+											<td>
+												{{ index + 1 }}
+											</td>
+											<td>{{ member.loginId }}</td>
+											<td>{{ member.name }}</td>
+											<td>{{ member.email }}</td>
+											<td>{{ member.phone }}</td>
+										</tr>
+									</div>
+
+									<div class="modal-footer justify-content-between">
+										<MaterialButton
+											variant="contained"
+											color="dark"
+											class="mb-0"
+										>
+											수정하기
+										</MaterialButton>
+									</div>
+								</div>
+							</div>
+						</div>
 					</td>
 					<td>
 						<button class="btn btn-danger" @click="deleteMember(member.id)">
@@ -54,6 +122,7 @@
 			</p>
 		</div>
 	</div>
+
 	<Footer />
 </template>
 
@@ -65,22 +134,14 @@ import SideBar from '../SideBar.vue';
 import Footer from '@/layouts/Footer.vue';
 import Navbar from '@/layouts/Navbar.vue';
 import Page from '@/layouts/Page.vue';
+import MaterialButton from '@/components/MaterialButton.vue';
+import MaterialBadge from '@/components/MaterialBadge.vue';
 
+const showModal = ref(false);
 const members = ref('');
 
 const router = useRouter();
 const NameId = ref();
-const editMember = async () => {
-	try {
-		const result = await axios.put('/api/member/update');
-		if (result != null) {
-			alert('수정 완료');
-			router.go(0);
-		}
-	} catch (error) {
-		console.log(error);
-	}
-};
 
 const deleteMember = async memberId => {
 	try {
@@ -122,16 +183,8 @@ const searchMember = async () => {
 </script>
 
 <style scoped>
-.container {
-	width: 100%;
-	max-width: 1000px;
-	height: 100%;
-	margin: 0 auto;
-}
-
-.main {
-	width: 100px;
-	height: 100px;
+.app {
+	margin: 0;
 }
 .table {
 	width: 100%;
@@ -146,5 +199,9 @@ const searchMember = async () => {
 
 .btn-primary {
 	background-color: #00ff00;
+}
+
+tr th {
+	padding: 10px;
 }
 </style>

@@ -101,6 +101,68 @@
 				<br />
 			</ul>
 		</div>
+		<div class="page customer">
+			<form id="readForm" name="readForm" method="post">
+				<input type="hidden" id="lostCom" name="lostCom" />
+				<div class="noti_wrap taL">
+					<!-- 170119 class추가 'taL' -->
+					<p class="noti">
+						탑승하신 고속버스 운송사를 선택 후
+						<span class="line_block"
+							>해당 지역의 유실물 센터로 문의하시기 바랍니다.</span
+						>
+					</p>
+				</div>
+				<ul class="lost_com clfix">
+					<li>
+						<a href="javascript:fnReadLossClnc('1');"
+							><img src="./img/booking.jpeg" alt="금호고속"
+						/></a>
+					</li>
+					<li>
+						<a href="javascript:fnReadLossClnc('2');"
+							><img
+								src="../../images/page/lost_com2_s.png"
+								alt="Dongbu Express"
+						/></a>
+					</li>
+					<li>
+						<a href="javascript:fnReadLossClnc('3');"
+							><img src="../../images/page/lost_com3_s.png" alt="동양고속"
+						/></a>
+					</li>
+					<li>
+						<a href="javascript:fnReadLossClnc('4');"
+							><img src="../../images/page/lost_com4_s.png" alt="중앙고속"
+						/></a>
+					</li>
+					<li>
+						<a href="javascript:fnReadLossClnc('5');"
+							><img
+								src="../../images/page/lost_com5_s.png"
+								alt="CHUNIL EXPRESS"
+						/></a>
+					</li>
+					<li>
+						<a href="javascript:fnReadLossClnc('6');"
+							><img src="../../images/page/lost_com6_s.png" alt="SAMHWA"
+						/></a>
+					</li>
+					<li>
+						<a href="javascript:fnReadLossClnc('7');"
+							><img src="../../images/page/lost_com7_s.png" alt="HANIL EXPRESS"
+						/></a>
+					</li>
+					<li>
+						<a href="javascript:fnReadLossClnc('8');"
+							><img
+								src="../../images/page/lost_com8_s.png"
+								alt="금호속리산고속"
+						/></a>
+					</li>
+				</ul>
+			</form>
+		</div>
 		<div class="search_wrap type2">
 			<p class="form-control">
 				<input
