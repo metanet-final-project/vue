@@ -7,7 +7,7 @@
 			type="text"
 			icon="search"
 			:value="stInput"
-			@click="showModal = true"
+			@click="show"
 		/>
 	</div>
 	<!--	Modal	-->
@@ -59,8 +59,14 @@ import axios from 'axios';
 import MaterialInput from '@/components/MaterialInput.vue';
 import MaterialBadge from '@/components/MaterialBadge.vue';
 
+const emit = defineEmits(['stId']);
 const showModal = ref(false);
 const terminalList = ref([]);
+
+const show = () => {
+	showModal.value = true;
+	stInput.value = '';
+};
 
 const findAllTerminal = async () => {
 	try {
@@ -75,7 +81,6 @@ const findAllTerminal = async () => {
 findAllTerminal();
 
 const stInput = ref();
-const emit = defineEmits(['stId']);
 const startingTerminal = terminal => {
 	stInput.value = terminal.name;
 	showModal.value = false;

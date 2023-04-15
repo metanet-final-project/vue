@@ -113,13 +113,13 @@ let parentVariable = stId;
 const startingTerminal = async id => {
 	const result = await axios.get(`/api/terminal/findById/${id}`);
 	stId.value = result.data;
-	console.log('출발지 = ' + stId.value.name);
+	// console.log('출발지 = ' + stId.value.name);
 };
 
 const endingTerminal = async id => {
 	const result = await axios.get(`/api/terminal/findById/${id}`);
 	endId.value = result.data;
-	console.log('도착지 = ' + endId.value.name);
+	// console.log('도착지 = ' + endId.value.name);
 };
 
 onMounted(() => {
