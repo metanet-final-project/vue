@@ -100,12 +100,11 @@ const isLogin = async () => {
 		member.value = result.data;
 		login.value = true;
 	} else login.value = false;
-	console.log(member.value, login.value);
+	console.log('로그인' + login.value);
 };
 isLogin();
 
 const doLogout = () => {
-	console.log('click doLogout');
 	localStorage.removeItem('loginId');
 	router.replace({ name: 'Home' });
 	showToast('info', '잠시 후, 로그아웃됩니다');

@@ -11,7 +11,7 @@
 					</p>
 					<div class="row">
 						<ModalStarting @stId="startingTerminal" />
-						<ModalEnding @et="endingTerminal" :stId="starting" />
+						<ModalEnding @et="endingTerminal" :variable="parentVariable" />
 					</div>
 					<div class="row mt-3">
 						<div class="col-6">
@@ -104,15 +104,22 @@ import setMaterialInput from '@/assets/js/material-input';
 import CenteredBlogCard from '@/examples/cards/blogCards/CenteredBlogCard.vue';
 import ModalStarting from '@/components/ModalStarting.vue';
 import ModalEnding from '@/components/ModalEnding.vue';
+import axios from 'axios';
 
 const stId = ref();
+const endId = ref();
+let parentVariable = stId;
 
-const starting = () => {
-	return stId.value;
+const startingTerminal = async id => {
+	const result = await axios.get(`/api/terminal/findById/${id}`);
+	stId.value = result.data;
+	console.log('출발지 = ' + stId.value.name);
 };
 
-const startingTerminal = id => {
-	stId.value = id;
+const endingTerminal = async id => {
+	const result = await axios.get(`/api/terminal/findById/${id}`);
+	endId.value = result.data;
+	console.log('도착지 = ' + endId.value.name);
 };
 
 onMounted(() => {

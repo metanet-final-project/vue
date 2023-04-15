@@ -7,7 +7,7 @@
 			type="text"
 			icon="search"
 			:value="etInput"
-			@click="showModal = true"
+			@click="findEndpointTerminal"
 		/>
 	</div>
 	<!--	Modal	-->
@@ -34,17 +34,20 @@
 				</div>
 				<div class="modal-body">
 					<MaterialBadge
-						@click="endingTerminal(terminal.name)"
-						v-for="terminal in terminalList"
-						:key="terminal.id"
+						@click="endingTerminal(route.endTerminal)"
+						v-for="route in routeList"
+						:key="route.id"
 						color="light"
 						class="text-dark mx-1 mb-2"
 						style="cursor: pointer"
-					>
-						{{ terminal.name }}
+						>{{ route.endTerminal.name }}
 					</MaterialBadge>
 					<br /><br />
-					선택하신 출발지에서 도착 가능한 터미널 목록입니다.
+					출발지
+					<MaterialBadge color="light" class="text-dark mx-1 mb-2">
+						{{ variable.name }}
+					</MaterialBadge>
+					에서 도착 가능한 터미널 목록입니다.
 					<br />
 					도착지를 선택한 후, <b>배차</b>를 조회해보세요.
 				</div>
@@ -59,35 +62,45 @@ import axios from 'axios';
 import MaterialInput from '@/components/MaterialInput.vue';
 import MaterialBadge from '@/components/MaterialBadge.vue';
 
-const props = defineProps({
-	stId: {
-		type: Number,
-		required: true,
-	},
-});
-console.log(props.stId);
-
-const emit = defineEmits(['et']);
 const showModal = ref(false);
-const terminalList = ref([]);
+const routeList = ref([
+	{
+		id: null,
+		startTerminal: {
+			id: null,
+			name: null,
+			location: null,
+		},
+		endTerminal: {
+			id: null,
+			name: null,
+			location: null,
+		},
+		travelTime: null,
+	},
+]);
+const emit = defineEmits(['et']);
+const props = defineProps({ variable: Object });
 
 const findEndpointTerminal = async () => {
+	showModal.value = true;
 	try {
-		const result = await axios.get(`/api/route/find/end-point/14`);
+		const result = await axios.get(
+			`/api/route/findByEndPoint/${props.variable.id}`,
+		);
 		if (result.data != null) {
-			console.log(result.data);
-			terminalList.value = result.data;
+			routeList.value = result.data;
+			console.log(routeList.value);
 		}
 	} catch (error) {
 		console.error(error);
 	}
 };
-findEndpointTerminal();
 
 const etInput = ref();
-const endingTerminal = name => {
-	etInput.value = name;
+const endingTerminal = terminal => {
+	etInput.value = terminal.name;
 	showModal.value = false;
-	emit('et', name);
+	emit('et', terminal.id);
 };
 </script>
