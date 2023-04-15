@@ -32,42 +32,40 @@
 					<td>{{ member.email }}</td>
 					<td>{{ member.phone }}</td>
 					<td>
-						<div class="col-6">
+						<div class="col-6" style="margin: auto;">
 							<MaterialButton
 								color="dark"
 								id="searchString"
 								class="input-group-static"
-								@click="showModal = true"
+								@click="showMemberModal(member.id)"
 								>수정</MaterialButton
 							>
 						</div>
 						<div
-							v-if="showModal"
+							v-if="show"
 							class="modal"
 							tabindex="-1"
 							style="display: flex"
 						>
 							<div class="modal-dialog">
-								<div
-									class="modal-content"
-									style="
-										box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
-											0 10px 10px rgba(0, 0, 0, 0.22);
-									"
-								>
+								<template v-for="(member, index) in members"
+											:key="member.id">
+								<div class="modal-content" v-if="member.id == showId">
+									
 									<div class="modal-header">
 										<h5 class="modal-title">회원정보 수정</h5>
 										<MaterialBadge
 											color="light"
-											rounded
+											rounded	
 											class="text-dark"
-											@click.prevent="showModal = false"
+											@click.prevent="showMemberModal(id)"
 											style="cursor: pointer"
 										>
 											닫기
 										</MaterialBadge>
 									</div>
-									<div class="modal-body">
+									
+									<div class="modal-body" >
 										<tr
 											style="text-align: center; margin: auto; width: 5%"
 											type="text"
@@ -78,20 +76,32 @@
 											<th>이메일</th>
 											<th>전화번호</th>
 										</tr>
-										<tr
-											v-on="(member, index) in members"
-											:key="member.id"
-											style="text-align: center; margin: auto; width: 5%"
-											type="text"
-										>
-											<td>
-												{{ index + 1 }}
-											</td>
-											<td>{{ member.loginId }}</td>
-											<td>{{ member.name }}</td>
-											<td>{{ member.email }}</td>
-											<td>{{ member.phone }}</td>
-										</tr>
+										
+											<tr
+												style="text-align: center; margin: auto; width: 5%"
+												type="text"
+											
+											>
+												<td>
+													{{ index + 1 }}
+												</td>
+												<td><input type = "text" v-model="member.loginId" style="border: none;
+													outline: none; text-align: center; margin: auto; width: 50%">
+												</td>
+													<td><input type = "text" v-model="member.name" style="border: none;
+													outline: none; text-align: center; margin: auto; width: 50%">
+												</td>
+													<td><input type = "text" v-model="member.email" style="border: none;
+													outline: none; text-align: center; margin: auto; width: 50%">
+												</td>
+													<td><input type = "text" v-model="member.phone" style="border: none;
+													outline: none; text-align: center; margin: auto; width: 50%">
+												</td>
+												<!-- <td>{{ member.name }}</td>
+												<td>{{ member.email }}</td>
+												<td>{{ member.phone }}</td> -->
+											</tr>
+
 									</div>
 
 									<div class="modal-footer justify-content-between">
@@ -99,11 +109,14 @@
 											variant="contained"
 											color="dark"
 											class="mb-0"
+											@click.prevent="updateMember(member)"
 										>
 											수정하기
 										</MaterialButton>
 									</div>
+
 								</div>
+							</template>
 							</div>
 						</div>
 					</td>
@@ -133,13 +146,11 @@ import { ref } from 'vue';
 import SideBar from '../SideBar.vue';
 import Footer from '@/layouts/Footer.vue';
 import Navbar from '@/layouts/Navbar.vue';
-import Page from '@/layouts/Page.vue';
+
 import MaterialButton from '@/components/MaterialButton.vue';
 import MaterialBadge from '@/components/MaterialBadge.vue';
 
-const showModal = ref(false);
 const members = ref('');
-
 const router = useRouter();
 const NameId = ref();
 
@@ -155,6 +166,15 @@ const deleteMember = async memberId => {
 	}
 };
 
+const show = ref(false);
+const showId = ref(null);
+
+
+const showMemberModal = (id) => {
+	show.value = !show.value;
+	showId.value = id;
+}
+
 const findAllMember = async () => {
 	try {
 		const result = await axios.get('/api/member/findAllMember');
@@ -167,6 +187,19 @@ const findAllMember = async () => {
 	}
 };
 findAllMember();
+
+const updateMember = async(member)=>{
+
+	try{
+		const result = await axios.put('/api/member/update', member);
+		if(result != null){
+			console.log(members.value);
+			router.go(0);
+		}
+	}catch(error){
+		console.log(error);
+	}
+}
 
 const searchMember = async () => {
 	try {
@@ -203,5 +236,9 @@ const searchMember = async () => {
 
 tr th {
 	padding: 10px;
+}
+
+.modal-content {
+	box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
 }
 </style>
