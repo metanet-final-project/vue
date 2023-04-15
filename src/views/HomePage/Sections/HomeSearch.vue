@@ -10,16 +10,8 @@
 						편리하게 여행하세요.
 					</p>
 					<div class="row">
-						<ModalStarting />
-						<div class="col-6">
-							<MaterialInput
-								id="searchString"
-								class="input-group-static"
-								label="도착지"
-								type="text"
-								icon="search"
-							/>
-						</div>
+						<ModalStarting @stId="startingTerminal" />
+						<ModalEnding @et="endingTerminal" :stId="starting" />
 					</div>
 					<div class="row mt-3">
 						<div class="col-6">
@@ -105,11 +97,23 @@
 
 <script setup>
 import { onMounted } from 'vue';
+import { ref } from 'vue';
 import MaterialInput from '@/components/MaterialInput.vue';
 import MaterialButton from '@/components/MaterialButton.vue';
 import setMaterialInput from '@/assets/js/material-input';
 import CenteredBlogCard from '@/examples/cards/blogCards/CenteredBlogCard.vue';
 import ModalStarting from '@/components/ModalStarting.vue';
+import ModalEnding from '@/components/ModalEnding.vue';
+
+const stId = ref();
+
+const starting = () => {
+	return stId.value;
+};
+
+const startingTerminal = id => {
+	stId.value = id;
+};
 
 onMounted(() => {
 	setMaterialInput();

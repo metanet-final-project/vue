@@ -6,6 +6,7 @@
 			label="출발지"
 			type="text"
 			icon="search"
+			:value="stInput"
 			@click="showModal = true"
 		/>
 	</div>
@@ -20,11 +21,11 @@
 				"
 			>
 				<div class="modal-header">
-					<h5 class="modal-title">출발지 검색</h5>
+					<h5 class="modal-title">출발지 선택</h5>
 					<MaterialBadge
-						color="light"
+						color="dark"
 						rounded
-						class="text-dark"
+						class="text-white"
 						@click.prevent="showModal = false"
 						style="cursor: pointer"
 					>
@@ -32,18 +33,20 @@
 					</MaterialBadge>
 				</div>
 				<div class="modal-body">
-					Society has put up so many boundaries, so many limitations on what’s
-					right and wrong that it’s almost impossible to get a pure thought out.
+					<MaterialBadge
+						@click="startingTerminal(terminal)"
+						v-for="terminal in terminalList"
+						:key="terminal.id"
+						color="light"
+						class="text-dark mx-1 mb-2"
+						style="cursor: pointer"
+					>
+						{{ terminal.name }}
+					</MaterialBadge>
 					<br /><br />
-					It’s like a little kid, a little boy, looking at colors, and no one
-					told him what colors are good, before somebody tells you you shouldn’t
-					like pink because that’s for girls, or you’d instantly become a gay
-					two-year-old.
-				</div>
-				<div class="modal-footer justify-content-between">
-					<MaterialButton variant="contained" color="dark" class="mb-0">
-						선택하기
-					</MaterialButton>
+					예매 가능한 터미널 목록입니다. 출발지로 지정할 터미널을 선택하시면,
+					<br />
+					해당 터미널에서 갈 수 있는 <b>도착지</b>를 확인하실 수 있습니다.
 				</div>
 			</div>
 		</div>
@@ -52,9 +55,30 @@
 
 <script setup>
 import { ref } from 'vue';
+import axios from 'axios';
 import MaterialInput from '@/components/MaterialInput.vue';
-import MaterialButton from '@/components/MaterialButton.vue';
 import MaterialBadge from '@/components/MaterialBadge.vue';
 
 const showModal = ref(false);
+const terminalList = ref([]);
+
+const findAllTerminal = async () => {
+	try {
+		const result = await axios.get('/api/terminal/find-all');
+		if (result.data != null) {
+			terminalList.value = result.data;
+		}
+	} catch (error) {
+		console.error(error);
+	}
+};
+findAllTerminal();
+
+const stInput = ref();
+const emit = defineEmits(['stId']);
+const startingTerminal = terminal => {
+	stInput.value = terminal.name;
+	showModal.value = false;
+	emit('stId', terminal.id);
+};
 </script>
