@@ -7,7 +7,7 @@
 						<div class="blur-shadow-avatar"></div>
 					</div>
 					<div class="row py-4">
-						<h3 class="mb-0">가는 편 승차권 정보</h3>
+						<h3 class="mb-0">승차권 정보</h3>
 
 						<table>
 							<tr>
@@ -15,22 +15,26 @@
 							</tr>
 							<tr>
 								<td class="start" rowspan="2">
-									<img src="@/assets/img/출발.png" alt="" /> 서울경부
+									<img src="@/assets/img/출발.png" alt="" />
+									{{ scheduleInfo.routeDTO.startTerminal.name }}
 								</td>
 								<td>
 									<span class="ssub1">회사</span>
-									<span class="ssub2">(주)중앙고속</span>
+									<span class="ssub2">{{
+										scheduleInfo.busDTO.companyDTO.name
+									}}</span>
 								</td>
 							</tr>
 							<tr>
 								<td>
 									<span class="ssub1">등급</span>
-									<span class="ssub2">우등</span>
+									<span class="ssub2">{{ scheduleInfo.busDTO.grade }}</span>
 								</td>
 							</tr>
 							<tr>
 								<td class="end" rowspan="2">
-									<img src="@/assets/img/도착.png" alt="" /> 강릉
+									<img src="@/assets/img/도착.png" alt="" />
+									{{ scheduleInfo.routeDTO.endTerminal.name }}
 								</td>
 								<td>
 									<span class="ssub1">매수</span>
@@ -51,7 +55,55 @@
 	</section>
 </template>
 
-<script setup></script>
+<script setup>
+import axios from 'axios';
+import { ref } from 'vue';
+const schedule = ref({
+	id: 1,
+	routeId: 1,
+});
+
+const scheduleInfo = ref({
+	id: null,
+	routeDTO: {
+		id: null,
+		startTerminal: {
+			id: null,
+			name: null,
+			location: null,
+		},
+		endTerminal: {
+			id: null,
+			name: null,
+			location: null,
+		},
+		travelTime: null,
+	},
+	startTime: null,
+	endTime: null,
+	busDTO: {
+		id: null,
+		busNum: null,
+		companyDTO: {
+			id: null,
+			name: null,
+			phone: null,
+		},
+		grade: null,
+	},
+	price: null,
+});
+
+const ticket = async () => {
+	const result = await axios.get(
+		`/api/schedule/find/${schedule.value.id}/${schedule.value.routeId}`,
+	);
+	console.log(result.data);
+	scheduleInfo.value = result.data;
+	//console.log(result.data);
+}; // 배차 정보
+ticket();
+</script>
 <style scoped>
 table {
 	font-family: arial, sans-serif;

@@ -11,10 +11,10 @@
 
 						<table>
 							<tr>
-								<th>결제일시</th>
-								<td>2023.04.12 (수) 15:54</td>
+								<th>결제정보</th>
+								<td>신용카드</td>
 								<th>결제금액</th>
-								<td>50000</td>
+								<td>{{ totalPrice }}원</td>
 							</tr>
 						</table>
 					</div>
@@ -24,7 +24,21 @@
 	</section>
 </template>
 
-<script setup></script>
+<script setup>
+import { ref } from 'vue';
+import axios from 'axios';
+const totalPrice = ref('');
+
+const payConfirm = async () => {
+	const response = await axios.get(`/api/booking/find/bypayid/1`);
+	console.log(response.data);
+	const prices = response.data.map(booking => booking.price);
+	const sum = prices.reduce((acc, curr) => acc + curr, 0);
+	totalPrice.value = sum;
+	console.log('결제확인' + totalPrice.value);
+};
+payConfirm();
+</script>
 <style scoped>
 table {
 	width: 100%;

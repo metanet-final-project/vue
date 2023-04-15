@@ -41,53 +41,61 @@
 							<div class="row">
 								<div class="col-12">
 									<small class="font-weight-bold">카드번호</small>
-									<MaterialInput
-										id="carnumber"
-										class="input-group-outline my-1"
-										:label="{ text: '카드번호', class: 'form-label' }"
-										type="number"
-										v-model.number="cardNumber"
-									/>
+									<div class="input-group input-group-outline my-1">
+										<label class="form-label">카드번호</label>
+										<input
+											type="number"
+											class="form-control"
+											id="carnumber"
+											v-model="pay.cardNumber"
+										/>
+									</div>
 								</div>
 							</div>
 							<div class="row">
 								<div class="col-6">
 									<small class="font-weight-bold">유효기간</small>
-									<MaterialInput
-										id="expirationMonth"
-										class="input-group-outline my-1"
-										:label="{ text: '월', class: 'form-label' }"
-										type="number"
-										v-model="cardExpiration"
-									/>
+									<div class="input-group input-group-outline my-1">
+										<label class="form-label">월</label>
+										<input
+											type="number"
+											class="form-control"
+											id="expirationMonth"
+											v-model="pay.cardExpiration"
+										/>
+									</div>
 								</div>
 								<div class="col-6">
 									<small class="font-weight-bold">&nbsp;</small>
-									<MaterialInput
-										id="expirationYear"
-										class="input-group-outline my-1"
-										:label="{ text: '년', class: 'form-label' }"
-										type="number"
-									/>
+									<div class="input-group input-group-outline my-1">
+										<label class="form-label">년</label>
+										<input
+											type="number"
+											class="form-control"
+											id="expirationMonth"
+										/>
+									</div>
 								</div>
 							</div>
 							<div class="row">
 								<div class="col-6">
 									<small class="font-weight-bold">카드비밀번호</small>
-									<MaterialInput
-										id="cardPassword"
-										class="input-group-outline my-1"
-										:label="{ text: '비밀번호', class: 'form-label' }"
-										type="password"
-										v-model.number="cardPassword"
-									/>
+									<div class="input-group input-group-outline my-1">
+										<label class="form-label">비밀번호</label>
+										<input
+											type="number"
+											class="form-control"
+											id="cardPassword"
+											v-model="pay.cardPassword"
+										/>
+									</div>
 								</div>
 								<div class="col-6">
 									<small class="font-weight-bold">&nbsp;</small>
 									<div class="input-group-outline my-1">
 										<input
-											id="cardPassword"
-											type="password"
+											id="cardPassword1"
+											type="password1"
 											class="form-control"
 											value="**"
 											readonly
@@ -98,12 +106,15 @@
 							<div class="row">
 								<div class="col-12">
 									<small class="font-weight-bold">생년월일</small>
-									<MaterialInput
-										id="birth"
-										class="input-group-outline my-1"
-										:label="{ text: 'YYYY-MM-DD', class: 'form-label' }"
-										v-model="birth"
-									/>
+									<div class="input-group input-group-outline my-1">
+										<label class="form-label"></label>
+										<input
+											type="date"
+											class="form-control"
+											id="birth"
+											v-model="pay.birth"
+										/>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -113,7 +124,7 @@
 								<table>
 									<tr>
 										<th>총결제금액</th>
-										<td>{{ totalPrice }}원</td>
+										<td>totalPrice</td>
 									</tr>
 								</table>
 								<MaterialButton
@@ -121,7 +132,7 @@
 									variant="contained"
 									color="dark"
 									fullWidth
-									@click="submitForm"
+									@click.prevent="savePay"
 								>
 									결제하기
 								</MaterialButton>
@@ -138,46 +149,27 @@
 import { onMounted, ref } from 'vue';
 import axios from 'axios';
 //material
-import MaterialInput from '@/components/MaterialInput.vue';
 import setMaterialInput from '@/assets/js/material-input';
 import MaterialButton from '@/components/MaterialButton.vue';
 //import { useRouter } from 'vue-router';
 //const router = useRouter();
 
-const cardNumber = ref('');
-const cardPassword = ref('');
-const birth = ref('');
-const cardExpiration = ref('');
-const totalPrice = ref(5000);
+const pay = ref({});
 
 // const goBookingConfirm = () => {
 // 	router.push('/bookingconfirm');
 // };
 
-// const submitForm = async () => {
-// 	const data = {
-// 		card_number: cardNumber.value,
-// 		card_password: cardPassword.value,
-// 		birth: birth.value,
-// 		card_expiration: cardExpiration.value,
-// 	};
-
-// 	await axios
-// 		.post('/api/pay/save', data)
-// 		.then(response => {
-// 			console.log(response.data);
-// 		})
-// 		.catch(error => {
-// 			console.log(error);
-// 		});
-// };
-const submitForm = async () => {
-	await axios.post('/api/pay/save', {
-		card_number: cardNumber.value,
-		card_password: cardPassword.value,
-		birth: birth.value,
-		card_expiration: cardExpiration.value,
-	});
+const savePay = async () => {
+	try {
+		console.log(pay.value);
+		const result = await axios.post('/api/pay/save', pay.value);
+		if (result != null) {
+			alert('성공');
+		}
+	} catch (error) {
+		alert('실패');
+	}
 };
 
 onMounted(() => {
