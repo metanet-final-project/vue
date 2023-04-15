@@ -31,7 +31,7 @@
 							/>
 						</div>
 					</div>
-					<div class="row mt-3">
+					<!-- <div class="row mt-3">
 						<div class="col-3">
 							<div class="col-9">
 								<small class="font-weight-bold">어른</small>
@@ -68,7 +68,7 @@
 								</select>
 							</div>
 						</div>
-					</div>
+					</div> -->
 					<div class="row mt-3">
 						<div class="text-center">
 							<MaterialButton
