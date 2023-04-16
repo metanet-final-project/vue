@@ -61,6 +61,7 @@ import { ref, watch } from 'vue';
 import axios from 'axios';
 import MaterialInput from '@/components/MaterialInput.vue';
 import MaterialBadge from '@/components/MaterialBadge.vue';
+import Swal from 'sweetalert2';
 
 const showModal = ref(false);
 const routeList = ref([
@@ -83,17 +84,24 @@ const emit = defineEmits(['et']);
 const props = defineProps({ variable: Object });
 
 const findEndpointTerminal = async () => {
-	showModal.value = true;
-	etInput.value = '';
-	try {
-		const result = await axios.get(
-			`/api/route/findByEndPoint/${props.variable.id}`,
-		);
-		if (result.data != null) {
-			routeList.value = result.data;
+	if (props.variable == null) {
+		Swal.fire({
+			title: '출발지를 선택해주세요.',
+			icon: 'error',
+		});
+	} else {
+		showModal.value = true;
+		etInput.value = '';
+		try {
+			const result = await axios.get(
+				`/api/route/findByEndPoint/${props.variable.id}`,
+			);
+			if (result.data != null) {
+				routeList.value = result.data;
+			}
+		} catch (error) {
+			console.error(error);
 		}
-	} catch (error) {
-		console.error(error);
 	}
 };
 
