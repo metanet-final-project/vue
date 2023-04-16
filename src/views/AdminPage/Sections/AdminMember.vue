@@ -1,128 +1,134 @@
 <template>
 	<Navbar light />
-	<SideBar />
-	<div class="container">
-		<Page />
-		<br />
-		<h2>회원관리</h2>
-		<table class="table table-striped">
-			<thead>
-				<tr style="text-align: center; margin: auto; width: 5%" type="text">
-					<th>순번</th>
-					<th>아이디</th>
-					<th>이름</th>
-					<th>이메일</th>
-					<th>전화번호</th>
-					<th>수정</th>
-					<th>삭제</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr
-					v-for="(member, index) in members"
-					:key="member.id"
-					style="text-align: center; margin: auto; width: 5%"
-					type="text"
-				>
-					<td>
-						{{ index + 1 }}
-					</td>
-					<td>{{ member.loginId }}</td>
-					<td>{{ member.name }}</td>
-					<td>{{ member.email }}</td>
-					<td>{{ member.phone }}</td>
-					<td>
-						<div class="col-6">
-							<MaterialButton
-								color="dark"
-								id="searchString"
-								class="input-group-static"
-								@click="showModal = true"
-								>수정</MaterialButton
-							>
-						</div>
-						<div
-							v-if="showModal"
-							class="modal"
-							tabindex="-1"
-							style="display: flex"
+	<div class="row">
+		<NewSidebar />
+		<div class="col-md-9">
+			<div class="container">
+				<br />
+				<h2>회원관리</h2>
+				<table class="table table-striped">
+					<thead>
+						<tr style="text-align: center; margin: auto; width: 5%" type="text">
+							<th>순번</th>
+							<th>아이디</th>
+							<th>이름</th>
+							<th>이메일</th>
+							<th>전화번호</th>
+							<th>수정</th>
+							<th>삭제</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr
+							v-for="(member, index) in members"
+							:key="member.id"
+							style="text-align: center; margin: auto; width: 5%"
+							type="text"
 						>
-							<div class="modal-dialog">
+							<td>
+								{{ index + 1 }}
+							</td>
+							<td>{{ member.loginId }}</td>
+							<td>{{ member.name }}</td>
+							<td>{{ member.email }}</td>
+							<td>{{ member.phone }}</td>
+							<td>
+								<div class="col-6">
+									<MaterialButton
+										color="dark"
+										id="searchString"
+										class="input-group-static"
+										@click="showModal = true"
+										>수정</MaterialButton
+									>
+								</div>
 								<div
-									class="modal-content"
-									style="
-										box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
-											0 10px 10px rgba(0, 0, 0, 0.22);
-									"
+									v-if="showModal"
+									class="modal"
+									tabindex="-1"
+									style="display: flex"
 								>
-									<div class="modal-header">
-										<h5 class="modal-title">회원정보 수정</h5>
-										<MaterialBadge
-											color="light"
-											rounded
-											class="text-dark"
-											@click.prevent="showModal = false"
-											style="cursor: pointer"
+									<div class="modal-dialog">
+										<div
+											class="modal-content"
+											style="
+												box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
+													0 10px 10px rgba(0, 0, 0, 0.22);
+											"
 										>
-											닫기
-										</MaterialBadge>
-									</div>
-									<div class="modal-body">
-										<tr
-											style="text-align: center; margin: auto; width: 5%"
-											type="text"
-										>
-											<th>순번</th>
-											<th>아이디</th>
-											<th>이름</th>
-											<th>이메일</th>
-											<th>전화번호</th>
-										</tr>
-										<tr
-											v-on="(member, index) in members"
-											:key="member.id"
-											style="text-align: center; margin: auto; width: 5%"
-											type="text"
-										>
-											<td>
-												{{ index + 1 }}
-											</td>
-											<td>{{ member.loginId }}</td>
-											<td>{{ member.name }}</td>
-											<td>{{ member.email }}</td>
-											<td>{{ member.phone }}</td>
-										</tr>
-									</div>
+											<div class="modal-header">
+												<h5 class="modal-title">회원정보 수정</h5>
+												<MaterialBadge
+													color="light"
+													rounded
+													class="text-dark"
+													@click.prevent="showModal = false"
+													style="cursor: pointer"
+												>
+													닫기
+												</MaterialBadge>
+											</div>
+											<div class="modal-body">
+												<tr
+													style="text-align: center; margin: auto; width: 5%"
+													type="text"
+												>
+													<th>순번</th>
+													<th>아이디</th>
+													<th>이름</th>
+													<th>이메일</th>
+													<th>전화번호</th>
+												</tr>
+												<tr
+													v-on="(member, index) in members"
+													:key="member.id"
+													style="text-align: center; margin: auto; width: 5%"
+													type="text"
+												>
+													<td>
+														{{ index + 1 }}
+													</td>
+													<td>{{ member.loginId }}</td>
+													<td>{{ member.name }}</td>
+													<td>{{ member.email }}</td>
+													<td>{{ member.phone }}</td>
+												</tr>
+											</div>
 
-									<div class="modal-footer justify-content-between">
-										<MaterialButton
-											variant="contained"
-											color="dark"
-											class="mb-0"
-										>
-											수정하기
-										</MaterialButton>
+											<div class="modal-footer justify-content-between">
+												<MaterialButton
+													variant="contained"
+													color="dark"
+													class="mb-0"
+												>
+													수정하기
+												</MaterialButton>
+											</div>
+										</div>
 									</div>
 								</div>
-							</div>
-						</div>
-					</td>
-					<td>
-						<button class="btn btn-danger" @click="deleteMember(member.id)">
-							삭제
-						</button>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-		<div class="search_wrap type2">
-			<p class="form-control">
-				<input type="text" v-model="NameId" placeholder="회원명 입력하세요" />
-				<button type="button" @click="searchMember">검색</button>
-			</p>
+							</td>
+							<td>
+								<button class="btn btn-danger" @click="deleteMember(member.id)">
+									삭제
+								</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="search_wrap type2">
+					<p class="form-control">
+						<input
+							type="text"
+							v-model="NameId"
+							placeholder="회원명 입력하세요"
+						/>
+						<button type="button" @click="searchMember">검색</button>
+					</p>
+				</div>
+			</div>
 		</div>
 	</div>
-
 	<Footer />
 </template>
 
@@ -130,12 +136,11 @@
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
-import SideBar from '../SideBar.vue';
 import Footer from '@/layouts/Footer.vue';
 import Navbar from '@/layouts/Navbar.vue';
-import Page from '@/layouts/Page.vue';
 import MaterialButton from '@/components/MaterialButton.vue';
 import MaterialBadge from '@/components/MaterialBadge.vue';
+import NewSidebar from '../newSideBar.vue';
 
 const showModal = ref(false);
 const members = ref('');

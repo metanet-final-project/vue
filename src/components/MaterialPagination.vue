@@ -2,7 +2,7 @@
 defineProps({
 	color: {
 		type: String,
-		default: 'success',
+		default: 'secondary',
 	},
 	size: {
 		type: String,
