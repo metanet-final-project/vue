@@ -1,15 +1,5 @@
 <template>
-	<!--  Header Start `-->
-	<DefaultNavbar
-		:action="{
-			route: '/login',
-			color: 'bg-light',
-			label: '로그인 | 회원가입',
-		}"
-		transparent
-	/>
-	<!--  Header End  -->
-
+	<DefaultNavbar transparent />
 	<header class="bg-gradient-dark">
 		<div
 			class="page-header min-vh-75"
@@ -37,7 +27,7 @@
 		</div>
 	</header>
 	<div class="card card-body blur shadow-blur mx-3 mx-md-4 mt-n6">
-		<Search id="book" />
+		<Search />
 	</div>
 	<DefaultFooter />
 </template>
@@ -56,9 +46,8 @@ import Typed from 'typed.js';
 //sections
 import Search from './Sections/HomeSearch.vue';
 
-const body = document.getElementsByTagName('body')[0];
-
 //hooks
+const body = document.getElementsByTagName('body')[0];
 onMounted(() => {
 	body.classList.add('bg-gray-200');
 

@@ -57,7 +57,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import axios from 'axios';
 import MaterialInput from '@/components/MaterialInput.vue';
 import MaterialBadge from '@/components/MaterialBadge.vue';
@@ -103,4 +103,11 @@ const endingTerminal = terminal => {
 	showModal.value = false;
 	emit('et', terminal.id);
 };
+
+watch(
+	() => props.variable,
+	() => {
+		etInput.value = '';
+	},
+);
 </script>

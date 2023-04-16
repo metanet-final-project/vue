@@ -15,20 +15,24 @@
 					</div>
 					<div class="row mt-3">
 						<div class="col-6">
-							<MaterialInput
-								class="input-group-static"
-								id="searchString"
-								type="date"
-								label="가는일"
-							/>
+							<div class="input-group input-group-static my-3">
+								<label>가는일</label>
+								<input
+									type="date"
+									class="form-control"
+									v-model="searchInfo.stDate"
+								/>
+							</div>
 						</div>
 						<div class="col-6">
-							<MaterialInput
-								class="input-group-static"
-								id="searchString"
-								type="time"
-								label="가는시간"
-							/>
+							<div class="input-group input-group-static my-3">
+								<label>가는시간</label>
+								<input
+									type="time"
+									class="form-control"
+									v-model="searchInfo.stTime"
+								/>
+							</div>
 						</div>
 					</div>
 					<!-- <div class="row mt-3">
@@ -76,6 +80,7 @@
 								variant="contained"
 								color="dark"
 								fullWidth
+								@click="goSchedule"
 								>조회</MaterialButton
 							>
 						</div>
@@ -98,7 +103,6 @@
 <script setup>
 import { onMounted } from 'vue';
 import { ref } from 'vue';
-import MaterialInput from '@/components/MaterialInput.vue';
 import MaterialButton from '@/components/MaterialButton.vue';
 import setMaterialInput from '@/assets/js/material-input';
 import CenteredBlogCard from '@/examples/cards/blogCards/CenteredBlogCard.vue';
@@ -106,23 +110,28 @@ import ModalStarting from '@/components/ModalStarting.vue';
 import ModalEnding from '@/components/ModalEnding.vue';
 import axios from 'axios';
 
-const stId = ref();
-const endId = ref();
-let parentVariable = stId;
+onMounted(() => {
+	setMaterialInput();
+});
+
+const stId = ref(); // 출발지 터미널 정보
+const endId = ref(); // 도착지 터미널 정보
+let parentVariable = stId; // 출발지 정보 props 전달
+const searchInfo = ref({}); // 배차조회에 사용될 검색 조건
 
 const startingTerminal = async id => {
 	const result = await axios.get(`/api/terminal/findById/${id}`);
 	stId.value = result.data;
-	// console.log('출발지 = ' + stId.value.name);
 };
 
 const endingTerminal = async id => {
 	const result = await axios.get(`/api/terminal/findById/${id}`);
 	endId.value = result.data;
-	// console.log('도착지 = ' + endId.value.name);
 };
 
-onMounted(() => {
-	setMaterialInput();
-});
+const goSchedule = () => {
+	searchInfo.value.stId = stId.value.id;
+	searchInfo.value.endId = endId.value.id;
+	console.log(searchInfo.value);
+};
 </script>
