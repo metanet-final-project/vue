@@ -4,7 +4,7 @@
 	<div class="container">
 		<Page />
 		<br />
-		<h2>예약관리</h2>
+		<h2 style="margin-left: 3%">예약관리</h2>
 		<table class="table table-striped">
 			<thead>
 				<tr style="text-align: center; margin: auto; width: 5%" type="text">

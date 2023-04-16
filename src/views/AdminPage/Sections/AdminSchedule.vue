@@ -4,7 +4,7 @@
 	<div class="container">
 		<Page />
 		<br />
-		<h2>
+		<h2 style="margin-left: 3%">
 			배차관리
 			<!-- <div class="main"></div> -->
 		</h2>
