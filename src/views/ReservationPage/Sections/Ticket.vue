@@ -11,13 +11,7 @@
 
 						<table class="tickettb">
 							<tr>
-								<th colspan="2">
-									{{
-										moment(scheduleInfo.startTime).format(
-											'YYYY년 MM월 DD일 HH:mm',
-										)
-									}}
-								</th>
+								<th colspan="2">2023. 4. 29. 토 06:00</th>
 							</tr>
 							<tr>
 								<td class="start" rowspan="2">
@@ -167,8 +161,7 @@
 								</div>
 							</div>
 						</div>
-						<section v-if="!isLogin.value" class="pt-4 position-relative">
-							console.log("로그인한거"+!isLogin.value);
+						<section v-if="!login" class="pt-4 position-relative">
 							<div class="row pt-7">
 								<h3 class="mb-0">예매 조회정보 입력</h3>
 								<div class="col-12">
@@ -184,8 +177,8 @@
 												<input
 													type="number"
 													class="form-control"
-													id="phone"
-													v-model="phone"
+													id="nonMemPhone"
+													v-model="nonMemPhone"
 												/>
 											</div>
 										</div>
@@ -196,8 +189,8 @@
 												<input
 													type="date"
 													class="form-control"
-													id="nonbirth"
-													v-model="nonbirth"
+													id="nonbinonMemBirthrth"
+													v-model="nonMemBirth"
 												/>
 											</div>
 										</div>
@@ -237,16 +230,16 @@ import axios from 'axios';
 import MaterialButton from '@/components/MaterialButton.vue';
 import setMaterialInput from '@/assets/js/material-input';
 import { onMounted, ref } from 'vue';
-import moment from 'moment';
 const cardNumber = ref('');
 const cardExpiration = ref('');
 const cardPassword = ref('');
 const birth = ref('');
+const nonMemPhone = ref('');
+const nonMemBirth = ref('');
 const totalPrice = ref();
 const memlogInId = ref();
 onMounted(() => {
 	setMaterialInput();
-	isLogin.value = localStorage.getItem('loginId') !== null;
 });
 
 const schedule = ref({
@@ -293,23 +286,26 @@ const scheduleInfo = ref({
 	price: null,
 });
 
+let login = ref();
 //로그인한 회원정보 가져오기
 const isLogin = async () => {
 	const result = await axios.get(
 		`/api/member/findByLoginId/${localStorage.getItem('loginId')}`,
 	);
-	memlogInId.value = result.data.id;
-	return result.data;
+	if (result.data.loginId != null) {
+		memlogInId.value = result.data.id;
+		console.log('안세여' + memlogInId.value);
+		login.value = true;
+		return result.data;
+	} else login.value = false;
 };
 isLogin();
-console.log(member.value);
 
 const setLoginInfo = async () => {
 	if (isLogin.value) {
 		memlogInId.value = (await isLogin()).id;
 	}
 };
-
 setLoginInfo();
 
 //승차권정보 가져오기
@@ -334,9 +330,12 @@ const savePay = async () => {
 				birth: birth.value,
 				totalPrice: totalPrice.value,
 			},
+			nonMember: {
+				phone: nonMemPhone.value,
+				birth: nonMemBirth.value,
+			},
 			bookingList: [
 				{
-					memberId: memlogInId.value,
 					nonMemberId: 1,
 					scheduleId: schedule.value.id,
 					routeId: schedule.value.routeId,

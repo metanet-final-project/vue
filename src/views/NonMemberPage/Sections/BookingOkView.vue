@@ -25,6 +25,7 @@
 							<tbody>
 								<tr v-for="(booking, index) in myBookingList" :key="booking.id">
 									<td>{{ index + 1 }}</td>
+									<td>{{ booking.payDTO.id }}</td>
 									<td>편도</td>
 									<td>
 										<div class="d-flex">
@@ -142,6 +143,13 @@
 															class="mb-0"
 														>
 															삭제하기
+														</MaterialButton>
+														<MaterialButton
+															variant="contained"
+															color="dark"
+															class="mb-0"
+														>
+															영수증 발행
 														</MaterialButton>
 													</div>
 												</div>
