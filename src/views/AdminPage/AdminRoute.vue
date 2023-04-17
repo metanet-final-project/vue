@@ -23,8 +23,8 @@
 							<table class="table">
 								<thead>
 									<tr class="text-center">
-										<th class="col-1">번호</th>
-										<th class="col-2">고유번호</th>
+										<th class="col-1">순번</th>
+										<th class="col-2">노선번호</th>
 										<th class="col-3">출발 터미널</th>
 										<th class="col-3">도착 터미널</th>
 										<th class="col-2">소요시간(분)</th>

@@ -19,17 +19,19 @@
 							<table class="table">
 								<thead>
 									<tr class="text-center">
-										<th class="col-1">번호</th>
+										<th class="col-1">순번</th>
+										<th class="col-1">회원번호</th>
 										<th class="col-2">아이디</th>
 										<th class="col-2">이름</th>
 										<th class="col-3">이메일</th>
-										<th class="col-3">전화번호</th>
+										<th class="col-2">전화번호</th>
 										<th class="col-1">관리</th>
 									</tr>
 								</thead>
 								<tbody class="table-group-divider text-center">
 									<tr v-for="(member, idx) in memberList" :key="member.id">
 										<td>{{ idx + 1 }}</td>
+										<td>{{ member.id }}</td>
 										<td>{{ member.loginId }}</td>
 										<td>{{ member.name }}</td>
 										<td>{{ member.email }}</td>
