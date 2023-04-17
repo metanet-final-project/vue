@@ -161,7 +161,7 @@
 								</div>
 							</div>
 						</div>
-						<section v-if="!isLogin.value" class="pt-4 position-relative">
+						<section v-if="!login" class="pt-4 position-relative">
 							<div class="row pt-7">
 								<h3 class="mb-0">예매 조회정보 입력</h3>
 								<div class="col-12">
@@ -238,7 +238,6 @@ const totalPrice = ref();
 const memlogInId = ref();
 onMounted(() => {
 	setMaterialInput();
-	isLogin.value = localStorage.getItem('loginId') !== null;
 });
 
 const schedule = ref({
@@ -285,13 +284,17 @@ const scheduleInfo = ref({
 	price: null,
 });
 
+let login = ref();
 //로그인한 회원정보 가져오기
 const isLogin = async () => {
 	const result = await axios.get(
 		`/api/member/findByLoginId/${localStorage.getItem('loginId')}`,
 	);
-	memlogInId.value = result.data.id;
-	return result.data;
+	if (result.data.loginId != null) {
+		memlogInId.value = result.data.id;
+		login.value = true;
+		return result.data;
+	} else login.value = false;
 };
 isLogin();
 console.log(member.value);

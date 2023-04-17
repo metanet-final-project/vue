@@ -1,269 +1,270 @@
 <template>
 	<Navbar light />
-	<SideBar />
-	<div class="container">
-		<Page />
-		<br />
-		<h2 style="margin-left: 3%">회원관리</h2>
-		<table class="table table-striped">
-			<thead>
-				<tr style="text-align: center; margin: auto; width: 5%" type="text">
-					<th>순번</th>
-					<th>아이디</th>
-					<th>이름</th>
-					<th>이메일</th>
-					<th>전화번호</th>
-					<th>수정</th>
-					<th>삭제</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr
-					v-for="(member, index) in members"
-					:key="member.id"
-					style="text-align: center; margin: auto; width: 5%"
-					type="text"
+	<div class="row">
+		<Sidebar />
+		<div class="col-md-9">
+			<div>
+				<div
+					class="mt-4 d-flex justify-content-between"
+					style="background-color: #f0f2f5; border-radius: 10px"
 				>
-					<td>
-						{{ index + 1 }}
-					</td>
-					<td>{{ member.loginId }}</td>
-					<td>{{ member.name }}</td>
-					<td>{{ member.email }}</td>
-					<td>{{ member.phone }}</td>
-					<td>
-						<div class="col-6" style="margin: auto">
-							<MaterialButton
-								color="dark"
-								id="searchString"
-								class="input-group-static"
-								@click="showMemberModal(member.id)"
-								>수정</MaterialButton
-							>
-						</div>
-						<div v-if="show" class="modal" tabindex="-1" style="display: flex">
-							<div class="modal-dialog">
-								<template v-for="(member, index) in members" :key="member.id">
-									<div class="modal-content" v-if="member.id == showId">
-										<div class="modal-header">
-											<h5 class="modal-title">회원정보 수정</h5>
-											<MaterialBadge
-												color="light"
-												rounded
-												class="text-dark"
-												@click.prevent="showMemberModal(id)"
-												style="cursor: pointer"
-											>
-												닫기
-											</MaterialBadge>
-										</div>
-
-										<div class="modal-body">
-											<tr
-												style="text-align: center; margin: auto; width: 5%"
-												type="text"
-											>
-												<th>순번</th>
-												<th>아이디</th>
-												<th>이름</th>
-												<th>이메일</th>
-												<th>전화번호</th>
-											</tr>
-
-											<tr
-												style="text-align: center; margin: auto; width: 5%"
-												type="text"
-											>
-												<td>
-													{{ index + 1 }}
-												</td>
-												<td>
-													<input
-														type="text"
-														v-model="member.loginId"
-														style="
-															border: none;
-															outline: none;
-															text-align: center;
-															margin: auto;
-															width: 50%;
-														"
-													/>
-												</td>
-												<td>
-													<input
-														type="text"
-														v-model="member.name"
-														style="
-															border: none;
-															outline: none;
-															text-align: center;
-															margin: auto;
-															width: 50%;
-														"
-													/>
-												</td>
-												<td>
-													<input
-														type="text"
-														v-model="member.email"
-														style="
-															border: none;
-															outline: none;
-															text-align: center;
-															margin: auto;
-															width: 50%;
-														"
-													/>
-												</td>
-												<td>
-													<input
-														type="text"
-														v-model="member.phone"
-														style="
-															border: none;
-															outline: none;
-															text-align: center;
-															margin: auto;
-															width: 50%;
-														"
-													/>
-												</td>
-												<!-- <td>{{ member.name }}</td>
-												<td>{{ member.email }}</td>
-												<td>{{ member.phone }}</td> -->
-											</tr>
-										</div>
-
-										<div class="modal-footer justify-content-between">
+					<h4 class="m-3 p-2">회원관리</h4>
+					<MaterialButton class="m-3" variant="contained" color="dark"
+						>회원등록</MaterialButton
+					>
+				</div>
+				<div class="container mt-4">
+					<div class="row">
+						<div class="col-lg-12">
+							<table class="table">
+								<thead>
+									<tr class="text-center">
+										<th class="col-1">번호</th>
+										<th class="col-2">아이디</th>
+										<th class="col-2">이름</th>
+										<th class="col-3">이메일</th>
+										<th class="col-3">전화번호</th>
+										<th class="col-1">관리</th>
+									</tr>
+								</thead>
+								<tbody class="table-group-divider text-center">
+									<tr v-for="(member, idx) in memberList" :key="member.id">
+										<td>{{ idx + 1 }}</td>
+										<td>{{ member.loginId }}</td>
+										<td>{{ member.name }}</td>
+										<td>{{ member.email }}</td>
+										<td>{{ member.phone }}</td>
+										<td>
 											<MaterialButton
-												variant="contained"
-												color="dark"
-												class="mb-0"
-												@click.prevent="updateMember(member)"
+												color="light"
+												class="input-group-static btn-sm mb-0"
+												@click="goManageMember(member.id)"
+												>관리</MaterialButton
 											>
-												수정하기
-											</MaterialButton>
-										</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div
+							v-if="showModal"
+							class="modal"
+							tabindex="-1"
+							style="display: flex"
+						>
+							<div class="modal-dialog">
+								<div
+									class="modal-content"
+									style="
+										box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
+											0 10px 10px rgba(0, 0, 0, 0.22);
+										width: 400px;
+									"
+								>
+									<div class="modal-header">
+										<h5 class="modal-title">회원관리</h5>
+										<MaterialBadge
+											color="dark"
+											rounded
+											class="text-white"
+											@click.prevent="showModal = false"
+											style="cursor: pointer"
+										>
+											닫기
+										</MaterialBadge>
 									</div>
-								</template>
+									<div class="modal-body">
+										<form role="form" class="text-start p-3">
+											<label>회원고유번호</label>
+											<div class="input-group input-group-outline mb-2">
+												<input
+													type="text"
+													class="form-control"
+													disabled
+													v-model="member.id"
+												/>
+											</div>
+											<label>아이디</label>
+											<div class="input-group input-group-outline mb-2">
+												<input
+													type="text"
+													class="form-control"
+													disabled
+													v-model="member.loginId"
+												/>
+											</div>
+											<label>이름</label>
+											<div class="input-group input-group-outline mb-2">
+												<input
+													type="text"
+													class="form-control"
+													v-model="member.name"
+												/>
+											</div>
+											<label>이메일</label>
+											<div class="input-group input-group-outline mb-2">
+												<input
+													type="text"
+													class="form-control"
+													v-model="member.email"
+												/>
+											</div>
+											<label>전화번호</label>
+											<div class="input-group input-group-outline mb-2">
+												<input
+													type="text"
+													class="form-control"
+													v-model="member.phone"
+												/>
+											</div>
+											<!-- <label>권한</label>
+											<div class="input-group input-group-outline">
+												<input
+													type="text"
+													class="form-control"
+													v-model="member.role"
+													disabled
+												/>
+											</div> -->
+											<div class="modal-footer justify-content-between">
+												<MaterialButton
+													variant="contained"
+													color="dark"
+													class="mb-0"
+													@click.prevent="updateMember"
+													>수정하기</MaterialButton
+												>
+												<MaterialButton
+													variant="contained"
+													color="warning"
+													class="mb-0"
+													@click.prevent="deleteMember(member.id)"
+													>회원삭제</MaterialButton
+												>
+											</div>
+										</form>
+									</div>
+								</div>
 							</div>
 						</div>
-					</td>
-					<td>
-						<button class="btn btn-danger" @click="deleteMember(member.id)">
-							삭제
-						</button>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-		<div class="search_wrap type2">
-			<p class="form-control">
-				<input type="text" v-model="NameId" placeholder="회원명 입력하세요" />
-				<button type="button" @click="searchMember">검색</button>
-			</p>
+						<div class="row">
+							<div class="col-3 offset-md-9">
+								<div class="input-group input-group-outline my-3">
+									<label class="form-label">회원검색</label>
+									<input
+										type="text"
+										class="form-control form-control-md"
+										placeholder
+										isrequired="false"
+									/>
+								</div>
+							</div>
+						</div>
+						<section class="py-4">
+							<div class="container">
+								<div class="row justify-space-between py-2">
+									<div class="col-lg-4 mx-auto">
+										<MaterialPagination :color="light">
+											<MaterialPaginationItem prev class="ms-auto" />
+											<MaterialPaginationItem label="1" active />
+											<MaterialPaginationItem label="2" />
+											<MaterialPaginationItem label="3" />
+											<MaterialPaginationItem label="4" />
+											<MaterialPaginationItem label="5" />
+											<MaterialPaginationItem next />
+										</MaterialPagination>
+									</div>
+								</div>
+							</div>
+						</section>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 	<Footer />
 </template>
 
 <script setup>
-import axios from 'axios';
-import { useRouter } from 'vue-router';
-import { ref } from 'vue';
 import Footer from '@/layouts/Footer.vue';
 import Navbar from '@/layouts/Navbar.vue';
+import Sidebar from '../SideBar.vue';
 import MaterialButton from '@/components/MaterialButton.vue';
+import axios from 'axios';
+import { ref } from 'vue';
+import MaterialPagination from '@/components/MaterialPagination.vue';
+import MaterialPaginationItem from '@/components/MaterialPaginationItem.vue';
+import setMaterialInput from '@/assets/js/material-input';
+import { onMounted } from 'vue';
 import MaterialBadge from '@/components/MaterialBadge.vue';
+import Swal from 'sweetalert2';
 
-const members = ref('');
-const router = useRouter();
-const NameId = ref();
+onMounted(() => {
+	setMaterialInput();
+});
 
-const deleteMember = async memberId => {
-	try {
-		const result = await axios.delete(`/api/member/delete/${memberId}`);
-		if (result != null) {
-			alert('삭제 성공');
-			router.go(0);
-		}
-	} catch (error) {
-		console.log(error);
-	}
-};
-
-const show = ref(false);
-const showId = ref(null);
-
-const showMemberModal = id => {
-	show.value = !show.value;
-	showId.value = id;
-};
+const member = ref();
+const memberList = ref([]);
+const showModal = ref(false);
 
 const findAllMember = async () => {
 	try {
 		const result = await axios.get('/api/member/findAllMember');
-		if (result != null) {
-			members.value = result.data;
-			console.log(members.value);
+		if (result.data != null) {
+			memberList.value = result.data;
 		}
 	} catch (error) {
-		console.log(error);
+		console.error(error);
 	}
 };
 findAllMember();
 
-const updateMember = async member => {
+const goManageMember = async memberId => {
 	try {
-		const result = await axios.put('/api/member/update', member);
-		if (result != null) {
-			console.log(members.value);
-			router.go(0);
+		const result = await axios.get(`/api/member/findById/${memberId}`);
+		if (result.data != null) {
+			member.value = result.data;
 		}
 	} catch (error) {
-		console.log(error);
+		console.error(error);
+	}
+	showModal.value = true;
+};
+
+const updateMember = async () => {
+	try {
+		await axios.put(`/api/member/update`, member.value);
+		showToast('success', '회원수정을 완료했습니다.');
+		showModal.value = false;
+	} catch (error) {
+		console.error(error);
+		showToast('error', '회원수정에 실패했습니다.');
 	}
 };
 
-const searchMember = async () => {
+const deleteMember = async memberId => {
 	try {
-		console.log(NameId.value);
-		const result = await axios.get(`/api/member/findByName/${NameId.value}`);
-		if (result != null) {
-			members.value = result.data;
-			console.log(members.value);
-		}
+		await axios.delete(`/api/member/delete/${memberId}`);
+		showToast('success', '회원삭제를 완료했습니다.');
+		showModal.value = false;
 	} catch (error) {
-		console.log(error);
+		console.error(error);
+		showToast('error', '회원삭제에 실패했습니다.');
 	}
+};
+
+const Toast = Swal.mixin({
+	toast: true,
+	position: 'bottom-end',
+	showConfirmButton: false,
+	timer: 3000,
+	timerProgressBar: true,
+});
+
+const showToast = (icon, title) => {
+	Toast.fire({
+		icon: icon,
+		title: title,
+	});
 };
 </script>
-
-<style scoped>
-.app {
-	margin: 0;
-}
-.table {
-	width: 100%;
-	border-collapse: collapse;
-	margin-top: 20px;
-}
-
-.button-border {
-	border: 2px solid black;
-	border-radius: 4px;
-}
-
-.btn-primary {
-	background-color: #00ff00;
-}
-
-tr th {
-	padding: 10px;
-}
-
-.modal-content {
-	box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
-}
-</style>
