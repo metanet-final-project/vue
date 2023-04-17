@@ -16,6 +16,7 @@ import ScheduleSeatView from '../views/BookingPage/ScheduleSeat.vue';
 import MypageModifyView from '../views/MyPage/MypageModifyView.vue';
 import MypageBookingView from '../views/MyPage/MypageBookingView.vue';
 import MypageBookingModifyView from '../views/MyPage/MypageBookingModifyView.vue';
+import NonMemBookingView from '../views/NonMemberPage/NonMemBookingView.vue';
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
@@ -105,6 +106,11 @@ const router = createRouter({
 			path: '/schedule/seat',
 			name: 'ScheduleSeat',
 			component: ScheduleSeatView,
+		},
+		{
+			path: '/nonmember/booking',
+			name: 'NonMemBooking',
+			component: NonMemBookingView,
 		},
 	],
 });

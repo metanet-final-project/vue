@@ -21,7 +21,6 @@
 	</Header>
 	<div class="card card-body blur shadow-blur mx-3 mx-md-4 mt-n6 mb-4">
 		<Text />
-		<Ticket />
 		<PayConfirm />
 	</div>
 	<Footer />
@@ -32,7 +31,6 @@ import Navbar from '@/layouts/Navbar.vue';
 import Header from '@/examples/Header.vue';
 import Footer from '@/layouts/Footer.vue';
 import Text from './Sections/Text.vue';
-import Ticket from './Sections/Ticket.vue';
 import PayConfirm from './Sections/PayConfirm.vue';
 import image from '@/assets/img/busimage.png';
 </script>
