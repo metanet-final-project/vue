@@ -11,7 +11,13 @@
 
 						<table class="tickettb">
 							<tr>
-								<th colspan="2">2023. 4. 29. 토 06:00</th>
+								<th colspan="2">
+									{{
+										moment(scheduleInfo.startTime).format(
+											'YYYY년 MM월 DD일 HH:mm',
+										)
+									}}
+								</th>
 							</tr>
 							<tr>
 								<td class="start" rowspan="2">
@@ -70,6 +76,7 @@
 <script setup>
 import { ref } from 'vue';
 import axios from 'axios';
+import moment from 'moment';
 const totalPrice = ref('');
 const schedule = ref({
 	id: 2,

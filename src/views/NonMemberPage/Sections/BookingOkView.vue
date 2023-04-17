@@ -39,7 +39,13 @@
 											</div>
 										</div>
 									</td>
-									<td>{{ booking.scheduleDTO.startTime }}</td>
+									<td>
+										{{
+											moment(booking.scheduleDTO.startTime).format(
+												'YYYY년 MM월 DD일 HH:mm',
+											)
+										}}
+									</td>
 									<td>{{ booking.ageDTO.name }} 1명</td>
 									<td>{{ booking.price.toLocaleString() }}원</td>
 									<td>
@@ -156,6 +162,7 @@ import MaterialButton from '@/components/MaterialButton.vue';
 import { ref } from 'vue';
 import axios from 'axios';
 import MaterialBadge from '@/components/MaterialBadge.vue';
+import moment from 'moment';
 const showModal = ref(false);
 
 let myBookingList = ref('');

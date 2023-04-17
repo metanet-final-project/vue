@@ -11,7 +11,13 @@
 
 						<table class="tickettb">
 							<tr>
-								<th colspan="2">2023. 4. 29. 토 06:00</th>
+								<th colspan="2">
+									{{
+										moment(scheduleInfo.startTime).format(
+											'YYYY년 MM월 DD일 HH:mm',
+										)
+									}}
+								</th>
 							</tr>
 							<tr>
 								<td class="start" rowspan="2">
@@ -162,6 +168,7 @@
 							</div>
 						</div>
 						<section v-if="!isLogin.value" class="pt-4 position-relative">
+							console.log("로그인한거"+!isLogin.value);
 							<div class="row pt-7">
 								<h3 class="mb-0">예매 조회정보 입력</h3>
 								<div class="col-12">
@@ -230,6 +237,7 @@ import axios from 'axios';
 import MaterialButton from '@/components/MaterialButton.vue';
 import setMaterialInput from '@/assets/js/material-input';
 import { onMounted, ref } from 'vue';
+import moment from 'moment';
 const cardNumber = ref('');
 const cardExpiration = ref('');
 const cardPassword = ref('');
