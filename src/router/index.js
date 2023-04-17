@@ -17,6 +17,8 @@ import MypageModifyView from '../views/MyPage/MypageModifyView.vue';
 import MypageBookingView from '../views/MyPage/MypageBookingView.vue';
 import MypageBookingModifyView from '../views/MyPage/MypageBookingModifyView.vue';
 import NonMemBookingView from '../views/NonMemberPage/NonMemBookingView.vue';
+import TicketView from '../views/MyPage/TicketView.vue';
+import MypagePayView from '../views/MyPage/MypagePayView.vue';
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
@@ -51,6 +53,16 @@ const router = createRouter({
 			path: '/mypage/booking',
 			name: 'MypageBooking',
 			component: MypageBookingView,
+		},
+		{
+			path: '/mypage/booking/ticket',
+			name: 'TicketView',
+			component: TicketView,
+		},
+		{
+			path: '/mypage/pay',
+			name: 'MyPagePay',
+			component: MypagePayView,
 		},
 		{
 			path: '/mypage/booking/modify',
