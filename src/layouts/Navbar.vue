@@ -223,7 +223,7 @@ const showToast = (icon, title) => {
 												개발 페이지 목록
 											</div>
 											<RouterLink
-												:to="{ name: 'Admin' }"
+												:to="{ name: 'AdminMember' }"
 												class="dropdown-item border-radius-md"
 											>
 												<span>관리자 페이지</span>

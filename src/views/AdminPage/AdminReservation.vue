@@ -63,7 +63,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import SideBar from '../SideBar.vue';
+import SideBar from './Sections/SideBar.vue';
 import Footer from '@/layouts/Footer.vue';
 import Navbar from '@/layouts/Navbar.vue';
 // import Page from '@/layouts/Page.vue';

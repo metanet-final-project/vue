@@ -129,7 +129,7 @@
 </template>
 
 <script setup>
-import SideBar from '../SideBar.vue';
+import SideBar from './Sections/SideBar.vue';
 import { ref } from 'vue';
 import Footer from '@/layouts/Footer.vue';
 import Navbar from '@/layouts/Navbar.vue';

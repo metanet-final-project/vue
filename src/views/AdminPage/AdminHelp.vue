@@ -8,9 +8,9 @@
 					class="mt-4 d-flex justify-content-between"
 					style="background-color: #f0f2f5; border-radius: 10px"
 				>
-					<h4 class="m-3 p-2">회원관리</h4>
+					<h4 class="m-3 p-2">분실물 관리</h4>
 					<MaterialButton class="m-3" variant="contained" color="dark"
-						>회원등록</MaterialButton
+						>게시물작성</MaterialButton
 					>
 				</div>
 				<div class="container mt-4">
@@ -188,7 +188,7 @@
 <script setup>
 import Footer from '@/layouts/Footer.vue';
 import Navbar from '@/layouts/Navbar.vue';
-import Sidebar from '../SideBar.vue';
+import Sidebar from './Sections/SideBar.vue';
 import MaterialButton from '@/components/MaterialButton.vue';
 import axios from 'axios';
 import { ref } from 'vue';

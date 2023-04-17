@@ -12,6 +12,14 @@
 				</li>
 				<li class="nav-item">
 					<router-link
+						to="/admin/terminal"
+						class="nav-link text-center"
+						:class="{ active: currentPath == '/admin/terminal' }"
+						>터미널관리</router-link
+					>
+				</li>
+				<li class="nav-item">
+					<router-link
 						to="/admin/route"
 						class="nav-link text-center"
 						:class="{ active: currentPath == '/admin/route' }"

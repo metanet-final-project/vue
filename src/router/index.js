@@ -3,14 +3,14 @@ import HomeView from '../views/HomePage/HomeView.vue';
 import LoginView from '../views/LoginPage/LoginView.vue';
 import RegisterView from '../views/LoginPage/RegisterView.vue';
 import MyPageView from '../views/MyPage/MyPageView.vue';
-import AdminView from '../views/AdminPage/AdminView.vue';
 import BookingView from '../views/ReservationPage/BookingView.vue';
 import BookingConfirmView from '../views/ReservationPage/BookingConfirmView.vue';
-import AdminMemberView from '../views/AdminPage/Sections/AdminMember.vue';
-import AdminRouteView from '../views/AdminPage/Sections/AdminRoute.vue';
-import AdminScheduleView from '../views/AdminPage/Sections/AdminSchedule.vue';
-import AdminReservationView from '../views/AdminPage/Sections/AdminReservation.vue';
-import AdminHelpView from '../views/AdminPage/Sections/AdminHelp.vue';
+import AdminMemberView from '../views/AdminPage/AdminMember.vue';
+import AdminTerminalView from '../views/AdminPage/AdminTerminal.vue';
+import AdminRouteView from '../views/AdminPage/AdminRoute.vue';
+import AdminScheduleView from '../views/AdminPage/AdminSchedule.vue';
+import AdminReservationView from '../views/AdminPage/AdminReservation.vue';
+import AdminHelpView from '../views/AdminPage/AdminHelp.vue';
 import ScheduleSearchView from '../views/BookingPage/ScheduleSearch.vue';
 import ScheduleSeatView from '../views/BookingPage/ScheduleSeat.vue';
 import MypageModifyView from '../views/MyPage/MypageModifyView.vue';
@@ -58,11 +58,6 @@ const router = createRouter({
 			component: MypageBookingModifyView,
 		},
 		{
-			path: '/admin',
-			name: 'Admin',
-			component: AdminView,
-		},
-		{
 			path: '/booking',
 			name: 'Booking',
 			component: BookingView,
@@ -76,6 +71,11 @@ const router = createRouter({
 			path: '/admin/member',
 			name: 'AdminMember',
 			component: AdminMemberView,
+		},
+		{
+			path: '/admin/terminal',
+			name: 'AdminTerminal',
+			component: AdminTerminalView,
 		},
 		{
 			path: '/admin/route',
