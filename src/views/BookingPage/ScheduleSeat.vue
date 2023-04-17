@@ -17,7 +17,13 @@
 			<div class="compare_wrap">
 				<!-- 좌측 infoBox -->
 				<div class="infoBox">
-					<p class="date" id="satsDeprDtm">{{ scheduleInfo.startTime }}. 화</p>
+					<p class="date" id="satsDeprDtm">
+						{{
+							scheduleInfo.startTime != null
+								? scheduleInfo.startTime.slice(0, 16)
+								: ''
+						}}
+					</p>
 
 					<div class="route_wrap" id="satsRotInfo">
 						<div class="inner">
@@ -285,7 +291,9 @@
 							</section>
 							<!-- //총 결제금액 -->
 						</div>
-						<div class="btns btn_selectSeat">선택완료</div>
+						<div class="btns btn_selectSeat" @click="bookgingPage">
+							선택완료
+						</div>
 					</div>
 				</div>
 			</div>
@@ -302,12 +310,46 @@ import image from '@/assets/img/busimage.png';
 
 import { computed, ref } from 'vue';
 import axios from 'axios';
+import { useRoute, useRouter } from 'vue-router';
 
+const route = useRoute();
+const router = useRouter();
 const schedule = ref({
-	id: 1,
-	routeId: 3,
+	id: route.query.id,
+	routeId: route.query.routeId,
 });
-const scheduleInfo = ref();
+const scheduleInfo = ref({
+	id: null,
+	routeDTO: {
+		id: null,
+		startTerminal: {
+			id: null,
+			name: null,
+			location: null,
+		},
+		endTerminal: {
+			id: null,
+			name: null,
+			location: null,
+		},
+		travelTime: null,
+	},
+	startTime: null,
+	endTime: null,
+	busDTO: {
+		id: null,
+		busNum: null,
+		companyDTO: {
+			id: null,
+			name: null,
+			phone: null,
+		},
+		grade: null,
+	},
+	price: null,
+	countSeat: null,
+	date: null,
+});
 const seatInfo = ref();
 const seatNum = ref(
 	[...Array(22)].map((_, idx) => {
@@ -337,6 +379,7 @@ const getSeatInfo = async () => {
 getSchedule();
 getSeatInfo();
 
+// 좌석에 대한 코드
 const seat = ref({
 	adlt: {
 		count: 0,
@@ -353,7 +396,7 @@ const seat = ref({
 		selectCount: 0,
 		price: 1,
 	},
-});
+}); // 좌석 선택 및 가격 선언
 
 const seatSelectInfo = ref([]);
 const add = age => {
@@ -378,15 +421,23 @@ const add = age => {
 };
 
 const minus = age => {
-	if (age === 1 && seat.value.adlt.count != 0) {
-		console.log(age);
-		seat.value.adlt.count--;
-	} else if (age === 2 && seat.value.teen.count != 0) {
-		console.log(age);
-		seat.value.teen.count--;
-	} else if (age === 3 && seat.value.child.count != 0) {
-		console.log(age);
-		seat.value.child.count--;
+	if (
+		seat.value.adlt.count == seat.value.adlt.selectCount &&
+		seat.value.teen.count == seat.value.teen.selectCount &&
+		seat.value.child.count == seat.value.child.selectCount
+	) {
+		alert('좌석을 먼저 취소해주세요.');
+	} else {
+		if (age === 1 && seat.value.adlt.count != 0) {
+			console.log(age);
+			seat.value.adlt.count--;
+		} else if (age === 2 && seat.value.teen.count != 0) {
+			console.log(age);
+			seat.value.teen.count--;
+		} else if (age === 3 && seat.value.child.count != 0) {
+			console.log(age);
+			seat.value.child.count--;
+		}
 	}
 };
 
@@ -397,7 +448,7 @@ const seatSelected = idx => {
 		if (item.idx == idx) {
 			seatSelectInfo.value.splice(index, 1);
 			seatNum.value[idx - 1].select = !seatNum.value[idx - 1].select;
-			if (item.age == '어른') {
+			if (item.age == '일반') {
 				seat.value.adlt.count--;
 				seat.value.adlt.selectCount--;
 			} else if (item.age == '청소년') {
@@ -420,7 +471,7 @@ const seatSelected = idx => {
 		seatNum.value[idx - 1].select = !seatNum.value[idx - 1].select;
 		if (seat.value.adlt.count - seat.value.adlt.selectCount != 0) {
 			seat.value.adlt.selectCount++;
-			seatSelectInfo.value.push({ idx: idx, age: '어른' });
+			seatSelectInfo.value.push({ idx: idx, age: '일반' });
 		} else if (seat.value.teen.count - seat.value.teen.selectCount != 0) {
 			seat.value.teen.selectCount++;
 			seatSelectInfo.value.push({ idx: idx, age: '청소년' });
@@ -448,6 +499,15 @@ const childPrice = computed(() => {
 const totalPrice = computed(() => {
 	return adltPrice.value + teenPrice.value + childPrice.value;
 });
+
+// 좌석 선택완료 페이지 이동 이벤트
+const bookgingPage = () => {
+	console.log(seatSelectInfo.value);
+	// route.push({
+	// 	name: 'Booking',
+	// 	query:
+	// })
+};
 </script>
 
 <style scoped>
@@ -762,6 +822,8 @@ span.last_seat:nth-child(3n + 3) {
 	text-align: center;
 	background-color: #5754b5;
 	color: #ffffff;
+	margin-top: 250px;
+	cursor: pointer;
 }
 .taR {
 	width: 100%;
@@ -783,9 +845,5 @@ strong {
 
 .box_title span {
 	margin: 5px;
-}
-
-.btn_selectSeat {
-	margin-top: 250px;
 }
 </style>

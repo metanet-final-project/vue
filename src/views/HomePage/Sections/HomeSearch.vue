@@ -25,14 +25,14 @@
 							</div>
 						</div>
 						<div class="col-6">
-							<div class="input-group input-group-static my-3">
+							<!-- <div class="input-group input-group-static my-3">
 								<label>가는시간</label>
 								<input
 									type="time"
 									class="form-control"
 									v-model="searchInfo.stTime"
 								/>
-							</div>
+							</div> -->
 						</div>
 					</div>
 					<!-- <div class="row mt-3">
@@ -109,15 +109,19 @@ import CenteredBlogCard from '@/examples/cards/blogCards/CenteredBlogCard.vue';
 import ModalStarting from '@/components/ModalStarting.vue';
 import ModalEnding from '@/components/ModalEnding.vue';
 import axios from 'axios';
+import { useRouter } from 'vue-router';
+import Swal from 'sweetalert2';
 
 onMounted(() => {
 	setMaterialInput();
 });
 
+const router = useRouter();
 const stId = ref(); // 출발지 터미널 정보
 const endId = ref(); // 도착지 터미널 정보
 let parentVariable = stId; // 출발지 정보 props 전달
 const searchInfo = ref({}); // 배차조회에 사용될 검색 조건
+const routeId = ref();
 
 const startingTerminal = async id => {
 	const result = await axios.get(`/api/terminal/findById/${id}`);
@@ -129,9 +133,30 @@ const endingTerminal = async id => {
 	endId.value = result.data;
 };
 
-const goSchedule = () => {
-	searchInfo.value.stId = stId.value.id;
-	searchInfo.value.endId = endId.value.id;
-	console.log(searchInfo.value);
+const goSchedule = async () => {
+	if (
+		stId.value == undefined ||
+		endId.value == undefined ||
+		searchInfo.value.stDate == undefined
+	) {
+		Swal.fire({
+			title: '검색 조건을 선택해주세요.',
+			icon: 'error',
+		});
+		return;
+	}
+	const result = await axios.get(
+		`/api/route/find/start-end/point/${stId.value.id}/${endId.value.id}`,
+	);
+	routeId.value = result.data;
+	const date = ref(searchInfo.value.stDate);
+
+	router.push({
+		name: 'ScheduleSearch',
+		query: {
+			routeId: routeId.value,
+			date: date.value,
+		},
+	});
 };
 </script>
