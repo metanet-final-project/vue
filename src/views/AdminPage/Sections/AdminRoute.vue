@@ -5,7 +5,7 @@
 	<div class="container">
 		<Page />
 		<br />
-		<h2>
+		<h2 style="margin-left: 3%">
 			노선관리
 			<!-- <div class="main"></div> -->
 		</h2>
@@ -64,31 +64,33 @@
 import SideBar from '../SideBar.vue';
 import Footer from '@/layouts/Footer.vue';
 import Navbar from '@/layouts/Navbar.vue';
-import Page from '@/layouts/Page.vue';
+// import Page from '@/layouts/Page.vue';
 
 const routes = [];
 </script>
 
 <style scoped>
-.container {
-	width: 100%;
-	max-width: 1000px;
-	height: 100%;
-	margin: 0 auto;
+.app {
+	margin: 0;
 }
-
-.main {
-	width: 100px;
-	height: 100px;
-}
-
 .table {
 	width: 100%;
 	border-collapse: collapse;
 	margin-top: 20px;
 }
-
+.button-border {
+	border: 2px solid black;
+	border-radius: 4px;
+}
 .btn-primary {
 	background-color: #00ff00;
+}
+
+tr th {
+	padding: 10px;
+}
+
+.modal-content {
+	box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
 }
 </style>

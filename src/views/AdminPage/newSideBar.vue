@@ -23,7 +23,7 @@
 						to="/admin/schedule"
 						class="nav-link text-center"
 						:class="{ active: currentPath == '/admin/schedule' }"
-						>노선관리</router-link
+						>예약관리</router-link
 					>
 				</li>
 				<li class="nav-item">
