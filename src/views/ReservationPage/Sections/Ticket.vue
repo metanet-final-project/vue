@@ -230,6 +230,7 @@ import axios from 'axios';
 import MaterialButton from '@/components/MaterialButton.vue';
 import setMaterialInput from '@/assets/js/material-input';
 import { onMounted, ref } from 'vue';
+
 const cardNumber = ref('');
 const cardExpiration = ref('');
 const cardPassword = ref('');
@@ -247,13 +248,13 @@ const schedule = ref({
 	routeId: 1,
 });
 
-const member = ref({
-	id: null,
-	loginId: null,
-	name: null,
-	password: null,
-	phone: null,
-});
+// const member = ref({
+// 	id: null,
+// 	loginId: null,
+// 	name: null,
+// 	password: null,
+// 	phone: null,
+// });
 
 const scheduleInfo = ref({
 	id: null,
@@ -294,7 +295,6 @@ const isLogin = async () => {
 	);
 	if (result.data.loginId != null) {
 		memlogInId.value = result.data.id;
-		console.log('안세여' + memlogInId.value);
 		login.value = true;
 		return result.data;
 	} else login.value = false;
@@ -313,7 +313,6 @@ const ticket = async () => {
 	const response = await axios.get(
 		`/api/schedule/find/${schedule.value.id}/${schedule.value.routeId}`,
 	);
-	//console.log(response.data);
 	scheduleInfo.value = response.data;
 	totalPrice.value = response.data.price;
 };
@@ -336,12 +335,13 @@ const savePay = async () => {
 			},
 			bookingList: [
 				{
+					memberId: 361,
 					nonMemberId: 1,
 					scheduleId: schedule.value.id,
 					routeId: schedule.value.routeId,
 					ageId: 1,
 					seatNum: 1,
-					state: '예약완료',
+					state: '완료',
 					price: totalPrice.value,
 				},
 			],

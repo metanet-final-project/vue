@@ -17,19 +17,18 @@
 									<th>구분</th>
 									<th>노선</th>
 									<th>배차정보</th>
-									<th>매수</th>
-									<th>결제금액</th>
+									<th>총 매수</th>
+									<th>총 금액</th>
 									<th>상세조회</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr v-for="(booking, index) in myBookingList" :key="booking.id">
 									<td>{{ index + 1 }}</td>
-									<td>{{ booking.payDTO.id }}</td>
+
 									<td>편도</td>
 									<td>
 										<div class="d-flex">
-											<img class="small" src="@/assets/img/small.png" alt="" />
 											<div>
 												<p class="m-0">
 													{{ booking.routeDTO.startTerminal.name }}
@@ -47,8 +46,8 @@
 											)
 										}}
 									</td>
-									<td>{{ booking.ageDTO.name }} 1명</td>
-									<td>{{ booking.price.toLocaleString() }}원</td>
+									<td>총{{ totalNum }}명</td>
+									<td>{{ totalPrice }}원</td>
 									<td>
 										<MaterialButton
 											class="mb-2 col-12"
@@ -81,76 +80,94 @@
 															닫기
 														</MaterialBadge>
 													</div>
-													<div class="modal-body">
-														<table class="tickettb">
-															<tr>
-																<th colspan="2">2023. 4. 29. 토 06:00</th>
-															</tr>
-															<tr>
-																<td class="start" rowspan="2">
-																	<img
-																		class="startimg"
-																		src="@/assets/img/출발.png"
-																		alt=""
-																	/>
-																	{{ booking.routeDTO.startTerminal.name }}
-																</td>
-																<td>
-																	<span class="ssub1">회사</span>
-																	<span class="ssub2">{{
-																		booking.scheduleDTO.busDTO.companyDTO.name
-																	}}</span>
-																</td>
-															</tr>
-															<tr>
-																<td>
-																	<span class="ssub1">등급</span>
-																	<span class="ssub2">{{
-																		booking.scheduleDTO.busDTO.grade
-																	}}</span>
-																</td>
-															</tr>
-															<tr>
-																<td class="end" rowspan="2">
-																	<img
-																		class="endimg"
-																		src="@/assets/img/도착.png"
-																		alt=""
-																	/>
-																	{{ booking.routeDTO.endTerminal.name }}
-																</td>
-																<td>
-																	<span class="ssub1">매수</span>
-																	<span class="ssub2"
-																		>{{ booking.ageDTO.name }} 1명</span
-																	>
-																</td>
-															</tr>
-															<tr>
-																<td>
-																	<span class="ssub1">좌석</span>
-																	<span class="ssub2">{{
-																		booking.seatNum
-																	}}</span>
-																</td>
-															</tr>
-														</table>
-													</div>
-													<div class="modal-footer justify-content-between">
-														<MaterialButton
-															variant="contained"
-															color="dark"
-															class="mb-0"
-														>
-															삭제하기
-														</MaterialButton>
-														<MaterialButton
-															variant="contained"
-															color="dark"
-															class="mb-0"
-														>
-															영수증 발행
-														</MaterialButton>
+													<div
+														v-for="bookingDeatil in getDetailBookingList"
+														:key="bookingDeatil.id"
+													>
+														<div class="modal-body">
+															<table class="tickettb">
+																<tr>
+																	<th colspan="2">
+																		{{
+																			moment(
+																				bookingDeatil.scheduleDTO.startTime,
+																			).format('YYYY년 MM월 DD일 HH:mm')
+																		}}
+																	</th>
+																</tr>
+																<tr>
+																	<td class="start" rowspan="2">
+																		<img
+																			class="startimg"
+																			src="@/assets/img/출발.png"
+																			alt=""
+																		/>
+																		{{
+																			bookingDeatil.routeDTO.startTerminal.name
+																		}}
+																	</td>
+																	<td>
+																		<span class="ssub1">회사</span>
+																		<span class="ssub2">{{
+																			bookingDeatil.scheduleDTO.busDTO
+																				.companyDTO.name
+																		}}</span>
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		<span class="ssub1">등급</span>
+																		<span class="ssub2">{{
+																			bookingDeatil.scheduleDTO.busDTO.grade
+																		}}</span>
+																	</td>
+																</tr>
+																<tr>
+																	<td class="end" rowspan="2">
+																		<img
+																			class="endimg"
+																			src="@/assets/img/도착.png"
+																			alt=""
+																		/>
+																		{{
+																			bookingDeatil.routeDTO.endTerminal.name
+																		}}
+																	</td>
+																	<td>
+																		<span class="ssub1">매수</span>
+																		<span class="ssub2"
+																			>{{ bookingDeatil.ageDTO.name }} 1명</span
+																		>
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		<span class="ssub1">좌석</span>
+																		<span class="ssub2">{{
+																			bookingDeatil.seatNum
+																		}}</span>
+																	</td>
+																</tr>
+															</table>
+														</div>
+														<div class="modal-footer justify-content-between">
+															<MaterialButton
+																variant="contained"
+																color="dark"
+																class="mb-0"
+																@click="CancelBooking(bookingDeatil.id)"
+																:id="bookingDeatil.id"
+															>
+																삭제하기
+															</MaterialButton>
+															<MaterialButton
+																variant="contained"
+																color="dark"
+																class="mb-0"
+															>
+																영수증 발행
+															</MaterialButton>
+														</div>
 													</div>
 												</div>
 											</div>
@@ -171,9 +188,14 @@ import { ref } from 'vue';
 import axios from 'axios';
 import MaterialBadge from '@/components/MaterialBadge.vue';
 import moment from 'moment';
-const showModal = ref(false);
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
+const showModal = ref(false);
+const totalPrice = ref('');
+const totalNum = ref('');
 let myBookingList = ref('');
+let getDetailBookingList = ref('');
 
 const getMyBookingList = async () => {
 	const res = await axios.get(`/api/booking/find/findByNonMemId/123`);
@@ -181,6 +203,38 @@ const getMyBookingList = async () => {
 	console.log(myBookingList.value);
 };
 getMyBookingList();
+
+const getNonDetailBookingList = async () => {
+	const response = await axios.get(
+		`/api/booking/find/findByNonMemPayId/123/582`,
+	);
+	getDetailBookingList.value = response.data;
+	const prices = response.data.map(booking => booking.price);
+	const sum = prices.reduce((acc, curr) => acc + curr, 0);
+	totalPrice.value = sum;
+	totalNum.value = getDetailBookingList.value.length;
+	console.log('결제확인' + totalPrice.value);
+	console.log(getDetailBookingList.value.length);
+};
+getNonDetailBookingList();
+
+//예매삭제
+const CancelBooking = async id => {
+	try {
+		const res = await axios.put(`/api/booking/changeBookingState`, {
+			id: id,
+			state: '예매취소',
+		});
+
+		if (res != null) {
+			alert(' 취소 완료');
+			router.go(0);
+		}
+	} catch (error) {
+		console.log(error);
+		console.log(id);
+	}
+};
 </script>
 <style scoped>
 .tickettb {
