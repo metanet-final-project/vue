@@ -162,6 +162,105 @@
 				<ul class="desc-list">
 					<li>과거 예매 내역은 출발일 날짜 기준 당일까지 조회 가능합니다.</li>
 				</ul>
+				<!-- 취소 내역  -------------------------------------->
+				<h3
+					style="
+						margin-bottom: 30px;
+						text-align: center;
+						font-weight: lighter;
+						margin-top: 50px;
+						color: black;
+					"
+				>
+					취소 내역
+				</h3>
+				<div id="cancleList" v-for="item in myCancelList" :key="item.id">
+					<table class="table table-bordered">
+						<thead style="background-color: #f3f4f6">
+							<tr>
+								<th style="width: 50%">
+									<span class="arrival_time" style="color: black"
+										>{{ item.scheduleDTO.startTime }}출발</span
+									>
+								</th>
+								<th style="width: 50%">
+									<div class="price">
+										<span style="font-weight: lighter">취소일시</span>
+										<span
+											style="
+												font-weight: lighter;
+												font-size: large;
+												margin-left: 10px;
+												color: black;
+											"
+											>2023. 04. 12(수) 21:06</span
+										>
+									</div>
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>
+									<div id="cancel_route_info" class="cancel_route_info">
+										<span style="font-size: 15px">출발지</span>
+										<div
+											class="start_point"
+											style="font-size: 25px; color: black; margin-bottom: 20px"
+										>
+											{{ item.routeDTO.startTerminal.name }}
+										</div>
+										<span style="font-size: 15px; margin-top: 20px"
+											>도착지</span
+										>
+										<div
+											class="end_point"
+											style="font-size: 25px; color: black"
+										>
+											{{ item.routeDTO.endTerminal.name }}
+										</div>
+										<div
+											style="font-size: 15px; color: #5691bd; margin-top: 8px"
+										>
+											{{
+												parseInt(item.routeDTO.travelTime / 60) == 0
+													? ' '
+													: parseInt(item.routeDTO.travelTime / 60) + '시간 '
+											}}
+											{{ item.routeDTO.travelTime % 60 }}분 소요
+										</div>
+									</div>
+								</td>
+								<td>
+									<div class="booking_info">
+										<div class="booking-info-detail">
+											<div class="id">좌석번호</div>
+											<div class="value">{{ item.seatNum }}</div>
+										</div>
+
+										<div class="booking-info-detail">
+											<span class="id">등급</span>
+											<div class="value">
+												{{ item.scheduleDTO.busDTO.grade }}
+											</div>
+										</div>
+
+										<div class="booking-info-detail">
+											<span class="id">매수</span>
+											<span class="value">{{ item.ageDTO.name }}1명</span>
+										</div>
+										<div class="booking-info-detail">
+											<span class="id">결제금액</span>
+											<div class="value">
+												{{ item.price.toLocaleString() }}원
+											</div>
+										</div>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -179,6 +278,7 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 
 let myBookingList = ref('');
+let myCancelList = ref('');
 
 const getMyBookingList = async () => {
 	const res = await axios.get(
@@ -188,6 +288,16 @@ const getMyBookingList = async () => {
 	console.log(myBookingList.value);
 };
 getMyBookingList();
+
+const getMyCancelList = async () => {
+	const res = await axios.get(
+		`/api/booking/find/findCancelByLoginId/${localStorage.getItem('loginId')}`,
+	);
+	myCancelList.value = res.data;
+	console.log(res.data);
+	console.log(myCancelList.value);
+};
+getMyCancelList();
 
 const CancelBooking = async id => {
 	try {
@@ -349,4 +459,27 @@ button {
 .booking-info-detail {
 	padding: 5px;
 }
+
+.cancel_route_info {
+	position: relative;
+	padding: 20px;
+}
+.cancel_route_info:before {
+	display: block;
+	content: '';
+	position: absolute;
+	background: url(/src/assets/img/bg_cancelTicket_com.png) 0 0 no-repeat;
+	background-color: #fff;
+	background-size: 178px 72px;
+	background-position: 50% 50%;
+	opacity: 0.7;
+	left: 0;
+	top: 0;
+	z-index: 100;
+	width: 100%;
+	height: 100%;
+}
+/* .table tbody tr:last-child td {
+	border-width: 1px;
+} */
 </style>
