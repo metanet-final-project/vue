@@ -12,7 +12,7 @@
 						<h1 class="text-white">
 							<span class="text-white" id="typed"></span>
 						</h1>
-						<p class="lead mb-4 text-white">시외버스예매</p>
+						<p class="lead mb-4 text-white">결제내역 조회</p>
 					</div>
 				</div>
 			</div>
@@ -20,8 +20,7 @@
 		</div>
 	</Header>
 	<div class="card card-body blur shadow-blur mx-3 mx-md-4 mt-n6 mb-4">
-		<Agree />
-		<Ticket />
+		<BookingOk />
 	</div>
 	<Footer />
 </template>
@@ -30,8 +29,7 @@
 import Navbar from '@/layouts/Navbar.vue';
 import Header from '@/examples/Header.vue';
 import Footer from '@/layouts/Footer.vue';
-import Ticket from './Sections/Ticket.vue';
-import Agree from './Sections/Agree.vue';
+import BookingOk from './Sections/BookingOkView.vue';
 import image from '@/assets/img/busimage.png';
 </script>
 
