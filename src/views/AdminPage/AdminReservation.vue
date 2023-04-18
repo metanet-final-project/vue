@@ -18,7 +18,7 @@
 									<tr class="text-center">
 										<th class="col-1">순번</th>
 										<th class="col-1">결제번호</th>
-										<th class="col-1">결재정보(카드번호)</th>
+										<th class="col-1">결제정보(카드번호)</th>
 										<th class="col-2">회원아이디</th>
 										<th class="col-2">전화번호</th>
 										<th class="col-2">결제금액</th>
