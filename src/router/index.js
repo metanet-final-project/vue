@@ -19,6 +19,7 @@ import MypageBookingModifyView from '../views/MyPage/MypageBookingModifyView.vue
 import NonMemBookingView from '../views/NonMemberPage/NonMemBookingView.vue';
 import TicketView from '../views/MyPage/TicketView.vue';
 import MypagePayView from '../views/MyPage/MypagePayView.vue';
+import LostItemDetailView from '../views/Board/LostItemDetail.vue';
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
@@ -68,6 +69,11 @@ const router = createRouter({
 			path: '/mypage/booking/modify',
 			name: 'MypageBookingModify',
 			component: MypageBookingModifyView,
+		},
+		{
+			path: '/board/LostItemDetail',
+			name: 'LostItemDetail',
+			component: LostItemDetailView,
 		},
 		{
 			path: '/admin',

@@ -208,7 +208,11 @@
 													margin-left: 10px;
 													color: black;
 												"
-												>2023. 04. 12(수) 21:06</span
+												>{{
+													moment(item.bookingDate).format(
+														'YYYY년 MM월 DD일(ddd) HH:mm',
+													)
+												}}</span
 											>
 										</div>
 									</th>
