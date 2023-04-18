@@ -31,7 +31,7 @@
 						to="/admin/reservation"
 						class="nav-link text-center"
 						:class="{ active: currentPath == '/admin/reservation' }"
-						>예약관리</router-link
+						>예매관리</router-link
 					>
 				</li>
 				<li class="nav-item">

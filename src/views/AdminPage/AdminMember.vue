@@ -41,7 +41,7 @@
 												color="light"
 												class="input-group-static btn-sm mb-0"
 												@click="goManageMember(member.id)"
-												>관리</MaterialButton
+												>수정 | 삭제</MaterialButton
 											>
 										</td>
 									</tr>
