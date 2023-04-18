@@ -236,6 +236,7 @@ const cardPassword = ref('');
 const birth = ref('');
 const totalPrice = ref();
 const memlogInId = ref();
+
 onMounted(() => {
 	setMaterialInput();
 	isLogin.value = localStorage.getItem('loginId') !== null;
