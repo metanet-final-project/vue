@@ -8,46 +8,53 @@
 					</div>
 					<div class="row pt-4">
 						<h3 class="mb-0">승차권 정보</h3>
-
-						<table class="tickettb">
-							<tr>
-								<th colspan="2">2023. 4. 29. 토 06:00</th>
-							</tr>
-							<tr>
-								<td class="start" rowspan="2">
-									<img class="startimg" src="@/assets/img/출발.png" alt="" />
-									{{ scheduleInfo.routeDTO.startTerminal.name }}
-								</td>
-								<td>
-									<span class="ssub1">회사</span>
-									<span class="ssub2">{{
-										scheduleInfo.busDTO.companyDTO.name
-									}}</span>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<span class="ssub1">등급</span>
-									<span class="ssub2">{{ scheduleInfo.busDTO.grade }}</span>
-								</td>
-							</tr>
-							<tr>
-								<td class="end" rowspan="2">
-									<img class="endimg" src="@/assets/img/도착.png" alt="" />
-									{{ scheduleInfo.routeDTO.endTerminal.name }}
-								</td>
-								<td>
-									<span class="ssub1">매수</span>
-									<span class="ssub2">일반 1명</span>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<span class="ssub1">좌석</span>
-									<span class="ssub2">8</span>
-								</td>
-							</tr>
-						</table>
+						<template v-for="seat in seatInfo" :key="seat.id">
+							<table class="tickettb">
+								<tr>
+									<th colspan="2">
+										{{
+											moment(scheduleInfo.startTime)
+												.locale('ko')
+												.format('YYYY년 MM월 DD일 ddd HH:mm')
+										}}
+									</th>
+								</tr>
+								<tr>
+									<td class="start" rowspan="2">
+										<img class="startimg" src="@/assets/img/출발.png" alt="" />
+										{{ scheduleInfo.routeDTO.startTerminal.name }}
+									</td>
+									<td>
+										<span class="ssub1">회사</span>
+										<span class="ssub2">{{
+											scheduleInfo.busDTO.companyDTO.name
+										}}</span>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<span class="ssub1">등급</span>
+										<span class="ssub2">{{ scheduleInfo.busDTO.grade }}</span>
+									</td>
+								</tr>
+								<tr>
+									<td class="end" rowspan="2">
+										<img class="endimg" src="@/assets/img/도착.png" alt="" />
+										{{ scheduleInfo.routeDTO.endTerminal.name }}
+									</td>
+									<td>
+										<span class="ssub1">구분</span>
+										<span class="ssub2">{{ seat.ageName }}</span>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<span class="ssub1">좌석</span>
+										<span class="ssub2">{{ seat.seatNum }} 번</span>
+									</td>
+								</tr>
+							</table>
+						</template>
 					</div>
 					<div class="row pt-7">
 						<h3 class="mb-0">카드정보 입력</h3>
@@ -154,8 +161,8 @@
 										<input
 											type="date"
 											class="form-control"
-											id="birth"
-											v-model="birth"
+											id="cardBirth"
+											v-model="cardBirth"
 										/>
 									</div>
 								</div>
@@ -177,8 +184,8 @@
 												<input
 													type="number"
 													class="form-control"
-													id="phone"
-													v-model="phone"
+													id="nonMemPhone"
+													v-model="nonMemPhone"
 												/>
 											</div>
 										</div>
@@ -189,8 +196,8 @@
 												<input
 													type="date"
 													class="form-control"
-													id="nonbirth"
-													v-model="nonbirth"
+													id="nonbinonMemBirthrth"
+													v-model="nonMemBirth"
 												/>
 											</div>
 										</div>
@@ -230,29 +237,39 @@ import axios from 'axios';
 import MaterialButton from '@/components/MaterialButton.vue';
 import setMaterialInput from '@/assets/js/material-input';
 import { onMounted, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import moment from 'moment';
+import 'moment/locale/ko';
+moment.locale('ko');
+const router = useRouter();
 const cardNumber = ref('');
 const cardExpiration = ref('');
 const cardPassword = ref('');
-const birth = ref('');
+const cardBirth = ref();
+const nonMemPhone = ref(null);
+const nonMemBirth = ref(null);
 const totalPrice = ref();
 const memlogInId = ref();
+const payId = ref();
+const route = useRoute();
 onMounted(() => {
 	setMaterialInput();
 });
-
 const schedule = ref({
-	id: 2,
-	routeId: 1,
+	id: route.query.id,
+	routeId: route.query.routeId,
 });
+const seatInfo = ref(JSON.parse(route.query.seat));
 
-const member = ref({
-	id: null,
-	loginId: null,
-	name: null,
-	password: null,
-	phone: null,
-});
-
+// const member = ref({
+// 	id: null,
+// 	loginId: null,
+// 	name: null,
+// 	password: null,
+// 	phone: null,
+// });
+console.log(schedule.value);
+console.log(seatInfo.value);
 const scheduleInfo = ref({
 	id: null,
 	routeDTO: {
@@ -291,20 +308,19 @@ const isLogin = async () => {
 		`/api/member/findByLoginId/${localStorage.getItem('loginId')}`,
 	);
 	if (result.data.loginId != null) {
+		console.log('아이디' + result.data);
 		memlogInId.value = result.data.id;
+		console.log(memlogInId.value);
 		login.value = true;
-		return result.data;
 	} else login.value = false;
 };
 isLogin();
-console.log(member.value);
 
 const setLoginInfo = async () => {
 	if (isLogin.value) {
 		memlogInId.value = (await isLogin()).id;
 	}
 };
-
 setLoginInfo();
 
 //승차권정보 가져오기
@@ -312,40 +328,58 @@ const ticket = async () => {
 	const response = await axios.get(
 		`/api/schedule/find/${schedule.value.id}/${schedule.value.routeId}`,
 	);
-	//console.log(response.data);
 	scheduleInfo.value = response.data;
-	totalPrice.value = response.data.price;
+	const prices = response.data.map(schedule => schedule.price);
+	const sum = prices.reduce((acc, curr) => acc + curr, 0);
+	totalPrice.value = sum;
+	console.log('결제확인' + totalPrice.value);
 };
 ticket();
 
 //예매테이블에 저장하기
 const savePay = async () => {
+	const bookingList = [];
+	for (const seat of seatInfo.value) {
+		bookingList.push({
+			memberId: memlogInId.value,
+			nonMemberId: null,
+			scheduleId: schedule.value.id,
+			routeId: schedule.value.routeId,
+			ageId: seat.ageId,
+			seatNum: seat.seatNum,
+			state: '결제완료',
+			price: seat.price,
+		});
+	}
 	try {
 		const response = await axios.post('/api/pay/save', {
 			pay: {
 				cardNumber: cardNumber.value,
 				cardExpiration: cardExpiration.value,
 				cardPassword: cardPassword.value,
-				birth: birth.value,
+				birth: cardBirth.value,
 				totalPrice: totalPrice.value,
 			},
-			bookingList: [
-				{
-					memberId: memlogInId.value,
-					nonMemberId: 1,
-					scheduleId: schedule.value.id,
-					routeId: schedule.value.routeId,
-					ageId: 1,
-					seatNum: 1,
-					state: '예약완료',
-					price: totalPrice.value,
-				},
-			],
+			nonMember: {
+				phone: nonMemPhone.value,
+				birth: nonMemBirth.value,
+			},
+			bookingList,
 		});
 		console.log(response.data);
+		payId.value = response.data;
 	} catch (error) {
 		console.error(error);
 	}
+	router.push({
+		name: 'BookingConfirm',
+		query: {
+			seat: route.query.seat,
+			id: schedule.value.id,
+			routeId: schedule.value.routeId,
+			payId: payId.value,
+		},
+	});
 };
 </script>
 
