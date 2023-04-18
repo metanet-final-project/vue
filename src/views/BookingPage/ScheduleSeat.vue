@@ -502,11 +502,35 @@ const totalPrice = computed(() => {
 
 // 좌석 선택완료 페이지 이동 이벤트
 const bookgingPage = () => {
-	console.log(seatSelectInfo.value);
-	// route.push({
-	// 	name: 'Booking',
-	// 	query:
-	// })
+	const seatInfo = ref([]);
+	seatSelectInfo.value.forEach(seat => {
+		const ageId = ref();
+		const price = ref();
+		if (seat.age === '일반') {
+			ageId.value = 1;
+			price.value = scheduleInfo.value.price;
+		} else if (seat.age === '청소년') {
+			ageId.value = 2;
+			price.value = 0.8 * scheduleInfo.value.price;
+		} else if (seat.age === '아동') {
+			ageId.value = 3;
+			price.value = 0.5 * scheduleInfo.value.price;
+		}
+		seatInfo.value.push({
+			ageName: seat.age,
+			ageId: ageId.value,
+			seatNum: seat.idx,
+			price: price.value,
+		});
+	});
+	router.push({
+		name: 'Booking',
+		query: {
+			seatInfo: seatInfo.value,
+			id: schedule.value.id,
+			routeId: schedule.value.routeId,
+		},
+	});
 };
 </script>
 

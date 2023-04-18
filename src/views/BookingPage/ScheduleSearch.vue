@@ -115,8 +115,9 @@ import 'v-calendar/style.css';
 import { ref } from 'vue';
 import axios from 'axios';
 import { DatePicker } from 'v-calendar';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 const route = useRoute();
+const router = useRouter();
 const schedule = ref({
 	routeId: route.query.routeId,
 	date: route.query.date,
@@ -157,12 +158,17 @@ const scheduleInfo = ref([
 ]);
 const getSchedule = async () => {
 	console.log(schedule.value);
+
 	const result = await axios.get(
 		`/api/schedule/find/seat/${schedule.value.routeId}/${schedule.value.date}`,
 	);
+	if (result.data == null || result.data.length == 0) {
+		alert('조회된 배차가 없습니다.');
+		router.push({
+			name: 'Home',
+		});
+	}
 	scheduleInfo.value = result.data;
-
-	console.log(result.data);
 }; // 배차 정보
 
 getSchedule();
