@@ -146,6 +146,7 @@
 									<template v-if="getMember == null">
 										<tr v-for="(member, idx) in memberList" :key="member.id">
 											<td>{{ idx + 1 }}</td>
+											<td>{{ member.id }}</td>
 											<td>{{ member.loginId }}</td>
 											<td>{{ member.name }}</td>
 											<td>{{ member.email }}</td>

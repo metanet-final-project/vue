@@ -200,7 +200,7 @@ const routeList = ref([
 		travelTime: null,
 	},
 ]);
-const terminalList = ref([]);
+const terminalList = ref('');
 const showModal = ref(false);
 
 const insertRoute = async () => {
