@@ -17,18 +17,25 @@
 	</div> -->
 	<div class="card-wrapper">
 		<div class="card-deck d-flex justify-content-center">
-			<div class="card text-center mx-3" style="width: 30rem">
+			<div class="card text-center mx-3" style="width: 23rem">
 				<div class="card-body">
 					<h5 class="card-title">나의 예매내역</h5>
 					<p class="card-text">{{ myBookingList.length }}건</p>
 					<a href="/mypage/booking" class="btn btn-dark">조회</a>
 				</div>
 			</div>
-			<div class="card text-center mx-3" style="width: 30rem">
+			<div class="card text-center mx-3" style="width: 23rem">
 				<div class="card-body">
 					<h5 class="card-title">내 정보 수정</h5>
 					<p class="card-text">비밀번호 변경</p>
 					<a href="/mypage/modify" class="btn btn-dark">수정</a>
+				</div>
+			</div>
+			<div class="card text-center mx-3" style="width: 23rem">
+				<div class="card-body">
+					<h5 class="card-title">결제 내역</h5>
+					<p class="card-text">결제내역 조회</p>
+					<a href="/mypage/pay" class="btn btn-dark">조회</a>
 				</div>
 			</div>
 		</div>
@@ -52,7 +59,7 @@ let myBookingList = ref('');
 
 const getMyBookingList = async () => {
 	const res = await axios.get(
-		`/api/booking/find/findByLoginId/${localStorage.getItem('loginId')}`,
+		`/api/booking/find/findValidByLoginId/${localStorage.getItem('loginId')}`,
 	);
 	myBookingList.value = res.data;
 	console.log(myBookingList.value);

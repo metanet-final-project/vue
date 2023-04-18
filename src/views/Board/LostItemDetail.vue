@@ -2,12 +2,6 @@
 	<Navbar light />
 	<div>
 		<div class="container">
-			<!-- <div class="button-area">
-				<div class="btn btn-dark" style="width: 150px; font-size: 16px">
-					조회
-				</div>
-			</div> -->
-
 			<div class="table-container">
 				<h3
 					style="
@@ -17,13 +11,13 @@
 						color: black;
 					"
 				>
-					내 정보 수정
+					습득물 상세보기
 				</h3>
 				<table class="table table-bordered">
 					<tbody>
 						<tr>
 							<td style="background-color: #f8f9fb; width: 30%; padding: 15px">
-								아이디
+								습득기관
 							</td>
 
 							<td style="width: 70%; padding: 15px">{{ loginId }}</td>
@@ -86,76 +80,18 @@
 					</tbody>
 				</table>
 				<div class="btn-area">
-					<button
-						type="button"
-						class="btn-print2"
-						@click="UpdateMember(loginId, name, phone, email)"
-					>
-						변경
-					</button>
+					<button type="button" class="btn-print2">목록</button>
 				</div>
 			</div>
 		</div>
 	</div>
 	<Footer />
 </template>
-
 <script setup>
 import Navbar from '@/layouts/Navbar.vue';
 import Footer from '@/layouts/Footer.vue';
-import axios from 'axios';
-import { ref } from 'vue';
-
-import { useRouter } from 'vue-router';
-
-const router = useRouter();
-
-const loginId = ref('');
-const name = ref('');
-const email = ref('');
-const birth = ref('');
-const phone = ref('');
-const birthObject = ref('');
-const birthOnly = ref('');
-
-const getMemberInfo = async () => {
-	const res = await axios.get(
-		`/api/member/findByLoginId/${localStorage.getItem('loginId')}`,
-	);
-	DataTransfer.value = res.data;
-	console.log(res.data);
-	console.log(res.data.birth);
-	loginId.value = res.data.loginId;
-	name.value = res.data.name;
-	email.value = res.data.email;
-	birth.value = res.data.birth;
-	birthObject.value = new Date(birth.value);
-	birthOnly.value = birthObject.value.toISOString().slice(0, 10);
-	console.log(birthOnly);
-	phone.value = res.data.phone;
-};
-getMemberInfo();
-
-const UpdateMember = async (loginId, name, phone, email) => {
-	try {
-		const res = await axios.put(`/api/member/update`, {
-			loginId: localStorage.getItem('loginId'),
-			name: name,
-			phone: phone,
-			email: email,
-		});
-
-		if (res != null) {
-			alert('회원정보가 수정되었습니다.');
-			router.push({ name: 'Mypage' });
-		}
-	} catch (error) {
-		alert('회원정보 저장에 실패했습니다. 정보를 다시 확인해주세요.');
-		console.log(error);
-	}
-};
 </script>
-<style scoped>
+<style>
 .table-container {
 	margin-top: 100px;
 	display: block;
@@ -166,6 +102,7 @@ const UpdateMember = async (loginId, name, phone, email) => {
 
 	font-size: 18px;
 }
+
 .btn-area {
 	margin-top: 30px;
 	text-align: center;
