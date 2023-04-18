@@ -13,11 +13,71 @@
 						class="m-3"
 						variant="contained"
 						color="dark"
-						@click="goManageTerminal(terminal.id)"
+						@click.prevent="showModal2 = true"
 						>터미널등록</MaterialButton
 					>
 				</div>
+				<div
+					v-if="showModal2"
+					class="modal"
+					tabindex="-1"
+					style="display: flex"
+				>
+					<div class="modal-dialog">
+						<div
+							class="modal-content"
+							style="
+								box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
+									0 10px 10px rgba(0, 0, 0, 0.22);
+								width: 400px;
+							"
+						>
+							<div class="modal-header">
+								<h5 class="modal-title">터미널 등록</h5>
+								<MaterialBadge
+									color="dark"
+									rounded
+									class="text-white"
+									@click.prevent="showModal2 = false"
+									style="cursor: pointer"
+								>
+									닫기
+								</MaterialBadge>
+							</div>
+							<div class="modal-body">
+								<form role="form" class="text-start p-3">
+									<label>이름</label>
+									<div class="input-group input-group-outline mb-2">
+										<input
+											type="text"
+											class="form-control"
+											v-model="terminalValue.name"
+										/>
+									</div>
+									<label>위치</label>
+									<div class="input-group input-group-outline mb-2">
+										<input
+											type="text"
+											class="form-control"
+											v-model="terminalValue.location"
+										/>
+									</div>
 
+									<div class="modal-footer justify-content-between">
+										<MaterialButton
+											variant="contained"
+											color="dark"
+											class="mb-0"
+											@click.prevent="saveTerminal"
+											>저장하기</MaterialButton
+										>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- modal2 end -->
 				<div class="container mt-4">
 					<div class="row">
 						<div class="col-lg-12">
@@ -45,13 +105,14 @@
 												color="light"
 												class="input-group-static btn-sm mb-0"
 												@click="goManageTerminal(terminal.id)"
-												>관리</MaterialButton
+												>수정 | 삭제</MaterialButton
 											>
 										</td>
 									</tr>
 								</tbody>
 							</table>
 						</div>
+						<!-- modal start -->
 						<div
 							v-if="showModal"
 							class="modal"
@@ -114,7 +175,7 @@
 													color="dark"
 													class="mb-0"
 													@click.prevent="updateTerminal"
-													>수정하기</MaterialButton
+													>저장하기</MaterialButton
 												>
 												<MaterialButton
 													variant="contained"
@@ -129,6 +190,7 @@
 								</div>
 							</div>
 						</div>
+						<!-- modal end -->
 						<div class="row">
 							<div class="col-3 offset-md-9">
 								<div class="input-group input-group-outline my-3">
@@ -139,13 +201,13 @@
 										class="form-control form-control-md"
 										placeholder
 									/>
-									<button
+									<!-- <button
 										class="btn btn-outline-secondary input-group-text"
 										type="button"
 										@click="searchTerminal"
 									>
 										검색
-									</button>
+									</button> -->
 								</div>
 								<button
 									class="btn btn-outline-secondary input-group-text"
@@ -154,7 +216,6 @@
 								>
 									검색
 								</button>
-								<div class="input-group-append"></div>
 							</div>
 						</div>
 						<section class="py-4">
@@ -200,9 +261,11 @@ onMounted(() => {
 	setMaterialInput();
 });
 const terminal = ref();
+const terminalValue = ref({});
 const terminalName = ref();
 const terminalList = ref();
 const showModal = ref(false);
+const showModal2 = ref(false);
 
 const findAllTerminal = async () => {
 	try {
@@ -225,6 +288,18 @@ const goManageTerminal = async terminalId => {
 		}
 	} catch (error) {
 		console.error(error);
+	}
+};
+
+const saveTerminal = async () => {
+	try {
+		const result = await axios.post('/api/terminal/save', terminalValue.value);
+		if (result != null) {
+			showToast('success', '등록 성공했습니다');
+			findAllTerminal();
+		}
+	} catch (error) {
+		showToast('error', '올바른 정보를 입력하세요');
 	}
 };
 

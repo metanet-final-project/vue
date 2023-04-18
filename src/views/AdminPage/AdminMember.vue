@@ -9,9 +9,106 @@
 					style="background-color: #f0f2f5; border-radius: 10px"
 				>
 					<h4 class="m-3 p-2">회원관리</h4>
-					<MaterialButton class="m-3" variant="contained" color="dark"
+					<MaterialButton
+						class="m-3"
+						variant="contained"
+						color="dark"
+						@click.prevent="showModal2 = true"
 						>회원등록</MaterialButton
 					>
+				</div>
+				<div
+					v-if="showModal2"
+					class="modal"
+					tabindex="-1"
+					style="display: flex"
+				>
+					<div class="modal-dialog">
+						<div
+							class="modal-content"
+							style="
+								box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
+									0 10px 10px rgba(0, 0, 0, 0.22);
+								width: 400px;
+							"
+						>
+							<div class="modal-header">
+								<h5 class="modal-title">회원등록</h5>
+								<MaterialBadge
+									color="dark"
+									rounded
+									class="text-white"
+									@click.prevent="showModal2 = false"
+									style="cursor: pointer"
+								>
+									닫기
+								</MaterialBadge>
+							</div>
+							<div class="modal-body">
+								<form role="form" class="text-start p-3">
+									<label>아이디</label>
+									<div class="input-group input-group-outline mb-2">
+										<input
+											type="text"
+											class="form-control"
+											v-model="memberSave.loginId"
+										/>
+									</div>
+									<label>비밀번호</label>
+									<div class="input-group input-group-outline mb-2">
+										<input
+											type="text"
+											class="form-control"
+											v-model="memberSave.password"
+										/>
+									</div>
+									<label>이름</label>
+									<div class="input-group input-group-outline mb-2">
+										<input
+											type="text"
+											class="form-control"
+											v-model="memberSave.name"
+										/>
+									</div>
+									<label>이메일</label>
+									<div class="input-group input-group-outline mb-2">
+										<input
+											type="text"
+											class="form-control"
+											v-model="memberSave.email"
+										/>
+									</div>
+									<label>전화번호</label>
+									<div class="input-group input-group-outline mb-2">
+										<input
+											type="text"
+											class="form-control"
+											v-model="memberSave.phone"
+										/>
+									</div>
+
+									<div class="input-group input-group-static my-3">
+										<label>생년월일</label>
+										<input
+											type="date"
+											class="form-control"
+											id="birth"
+											v-model="memberSave.birth"
+										/>
+									</div>
+									<div class="modal-footer justify-content-between">
+										<MaterialButton
+											variant="contained"
+											color="dark"
+											class="mb-0"
+											@click.prevent="saveMember"
+											>등록</MaterialButton
+										>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
 				</div>
 				<div class="container mt-4">
 					<div class="row">
@@ -28,21 +125,40 @@
 									</tr>
 								</thead>
 								<tbody class="table-group-divider text-center">
-									<tr v-for="(member, idx) in memberList" :key="member.id">
-										<td>{{ idx + 1 }}</td>
-										<td>{{ member.loginId }}</td>
-										<td>{{ member.name }}</td>
-										<td>{{ member.email }}</td>
-										<td>{{ member.phone }}</td>
-										<td>
-											<MaterialButton
-												color="light"
-												class="input-group-static btn-sm mb-0"
-												@click="goManageMember(member.id)"
-												>관리</MaterialButton
-											>
-										</td>
-									</tr>
+									<template v-if="getMember != null">
+										<tr>
+											<td>1</td>
+											<td>{{ getMember.loginId }}</td>
+											<td>{{ getMember.name }}</td>
+											<td>{{ getMember.email }}</td>
+											<td>{{ getMember.phone }}</td>
+											<td>
+												<MaterialButton
+													color="light"
+													class="input-group-static btn-sm mb-0"
+													@click="goManageMember(getMember.id)"
+													>관리</MaterialButton
+												>
+											</td>
+										</tr>
+									</template>
+									<template v-if="getMember == null">
+										<tr v-for="(member, idx) in memberList" :key="member.id">
+											<td>{{ idx + 1 }}</td>
+											<td>{{ member.loginId }}</td>
+											<td>{{ member.name }}</td>
+											<td>{{ member.email }}</td>
+											<td>{{ member.phone }}</td>
+											<td>
+												<MaterialButton
+													color="light"
+													class="input-group-static btn-sm mb-0"
+													@click="goManageMember(member.id)"
+													>관리</MaterialButton
+												>
+											</td>
+										</tr>
+									</template>
 								</tbody>
 							</table>
 						</div>
@@ -117,15 +233,6 @@
 													v-model="member.phone"
 												/>
 											</div>
-											<!-- <label>권한</label>
-											<div class="input-group input-group-outline">
-												<input
-													type="text"
-													class="form-control"
-													v-model="member.role"
-													disabled
-												/>
-											</div> -->
 											<div class="modal-footer justify-content-between">
 												<MaterialButton
 													variant="contained"
@@ -154,11 +261,20 @@
 									<input
 										type="text"
 										class="form-control form-control-md"
+										v-model="memberValue"
 										placeholder
-										isrequired="false"
 									/>
 								</div>
+								<button
+									class="btn btn-outline-secondary input-group-text"
+									type="button"
+									@click="searchMember"
+								>
+									검색
+								</button>
 							</div>
+
+							<div class="input-group-append"></div>
 						</div>
 						<section class="py-4">
 							<div class="container">
@@ -204,8 +320,12 @@ onMounted(() => {
 });
 
 const member = ref();
-const memberList = ref([]);
+const memberSave = ref({});
+const memberList = ref();
+const getMember = ref(null);
+const memberValue = ref();
 const showModal = ref(false);
+const showModal2 = ref(false);
 
 const findAllMember = async () => {
 	try {
@@ -221,6 +341,7 @@ findAllMember();
 
 const goManageMember = async memberId => {
 	try {
+		showModal.value = true;
 		const result = await axios.get(`/api/member/findById/${memberId}`);
 		if (result.data != null) {
 			member.value = result.data;
@@ -228,7 +349,35 @@ const goManageMember = async memberId => {
 	} catch (error) {
 		console.error(error);
 	}
-	showModal.value = true;
+};
+
+const saveMember = async () => {
+	try {
+		const result = await axios.post('/api/save', memberSave.value);
+		if (result != null) {
+			showToast('success', '등록 성공했습니다');
+			showModal2.value = false;
+			findAllMember();
+		}
+	} catch (error) {
+		showToast('error', '올바른 정보를 입력하세요');
+	}
+};
+
+const searchMember = async () => {
+	try {
+		const result = await axios.get(
+			`/api/member/findByLoginId/${memberValue.value}`,
+		);
+		if (result != null) {
+			getMember.value = result.data;
+			console.log(getMember.value);
+			showToast('success', '검색 성공');
+		}
+	} catch (error) {
+		console.log(error);
+		showToast('error', '올바른 아이디를 입력하세요');
+	}
 };
 
 const updateMember = async () => {
@@ -246,6 +395,7 @@ const deleteMember = async memberId => {
 	try {
 		await axios.delete(`/api/member/delete/${memberId}`);
 		showToast('success', '회원삭제를 완료했습니다.');
+		findAllMember();
 		showModal.value = false;
 	} catch (error) {
 		console.error(error);
