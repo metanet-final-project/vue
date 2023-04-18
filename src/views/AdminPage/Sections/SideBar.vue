@@ -28,17 +28,17 @@
 				</li>
 				<li class="nav-item">
 					<router-link
-						to="/admin/schedule"
+						to="/admin/reservation"
 						class="nav-link text-center"
-						:class="{ active: currentPath == '/admin/schedule' }"
-						>예약관리</router-link
+						:class="{ active: currentPath == '/admin/reservation' }"
+						>예매관리</router-link
 					>
 				</li>
 				<li class="nav-item">
 					<router-link
-						to="/admin/reservation"
+						to="/admin/schedule"
 						class="nav-link text-center"
-						:class="{ active: currentPath == '/admin/reservation' }"
+						:class="{ active: currentPath == '/admin/schedule' }"
 						>배차관리</router-link
 					>
 				</li>

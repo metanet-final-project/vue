@@ -116,11 +116,12 @@
 							<table class="table">
 								<thead>
 									<tr class="text-center">
-										<th class="col-1">번호</th>
+										<th class="col-1">순번</th>
+										<th class="col-1">회원번호</th>
 										<th class="col-2">아이디</th>
 										<th class="col-2">이름</th>
 										<th class="col-3">이메일</th>
-										<th class="col-3">전화번호</th>
+										<th class="col-2">전화번호</th>
 										<th class="col-1">관리</th>
 									</tr>
 								</thead>
@@ -190,7 +191,7 @@
 										</MaterialBadge>
 									</div>
 									<div class="modal-body">
-										<form role="form" class="text-start p-3">
+										<form role="form" class="text-start">
 											<label>회원고유번호</label>
 											<div class="input-group input-group-outline mb-2">
 												<input
@@ -229,7 +230,7 @@
 											<div class="input-group input-group-outline mb-2">
 												<input
 													type="text"
-													class="form-control"
+													class="form-control mb-4"
 													v-model="member.phone"
 												/>
 											</div>
@@ -385,6 +386,7 @@ const updateMember = async () => {
 		await axios.put(`/api/member/update`, member.value);
 		showToast('success', '회원수정을 완료했습니다.');
 		showModal.value = false;
+		findAllMember();
 	} catch (error) {
 		console.error(error);
 		showToast('error', '회원수정에 실패했습니다.');
