@@ -18,7 +18,11 @@
 				<!-- 좌측 infoBox -->
 				<div class="infoBox">
 					<p class="date" id="satsDeprDtm">
-						{{ scheduleInfo[0].startTime.slice(0, 10) }}
+						{{
+							scheduleInfo[0].startTime != null
+								? scheduleInfo[0].startTime.slice(0, 10)
+								: ''
+						}}
 					</p>
 					<div class="route_wrap" id="satsRotInfo">
 						<div class="inner">
@@ -48,7 +52,11 @@
 			<!-- 우측 detailBox -->
 			<div class="main_box">
 				<div class="date_box">
-					<span>{{ scheduleInfo[0].startTime.slice(0, 10) }}</span>
+					<span>{{
+						scheduleInfo[0].startTime != null
+							? scheduleInfo[0].startTime.slice(0, 10)
+							: ''
+					}}</span>
 				</div>
 				<div class="bustime_box">
 					<div class="bustime_title">
@@ -64,20 +72,31 @@
 						</table>
 					</div>
 					<div class="bustime_wrap">
-						<table class="table_box">
-							<tr
-								class="table_body"
-								v-for="schedule in scheduleInfo"
-								:key="schedule.id"
+						<template v-for="schedule in scheduleInfo" :key="schedule.id">
+							<router-link
+								:to="{
+									name: 'ScheduleSeat',
+									query: { id: schedule.id, routeId: schedule.routeDTO.id },
+								}"
 							>
-								<td>{{ scheduleInfo[0].startTime.slice(11, 16) }}</td>
-								<td>{{ schedule.busDTO.companyDTO.name }}</td>
-								<td>{{ schedule.busDTO.grade }}</td>
-								<td>{{ schedule.price }} 원</td>
-								<td>{{ 22 - schedule.countSeat }} 석</td>
-								<td class="btn_arrow">선택</td>
-							</tr>
-						</table>
+								<table class="table_box">
+									<tr class="table_body">
+										<td>
+											{{
+												schedule.startTime != null
+													? schedule.startTime.slice(10, 16)
+													: ''
+											}}
+										</td>
+										<td>{{ schedule.busDTO.companyDTO.name }}</td>
+										<td>{{ schedule.busDTO.grade }}</td>
+										<td>{{ schedule.price }} 원</td>
+										<td>{{ 22 - schedule.countSeat }} 석</td>
+										<td class="btn_arrow">선택</td>
+									</tr>
+								</table>
+							</router-link>
+						</template>
 					</div>
 				</div>
 			</div>
@@ -96,18 +115,60 @@ import 'v-calendar/style.css';
 import { ref } from 'vue';
 import axios from 'axios';
 import { DatePicker } from 'v-calendar';
-
+import { useRoute, useRouter } from 'vue-router';
+const route = useRoute();
+const router = useRouter();
 const schedule = ref({
-	routeId: 3,
+	routeId: route.query.routeId,
+	date: route.query.date,
 });
-const scheduleInfo = ref();
+const scheduleInfo = ref([
+	{
+		id: null,
+		routeDTO: {
+			id: null,
+			startTerminal: {
+				id: null,
+				name: null,
+				location: null,
+			},
+			endTerminal: {
+				id: null,
+				name: null,
+				location: null,
+			},
+			travelTime: null,
+		},
+		startTime: null,
+		endTime: null,
+		busDTO: {
+			id: null,
+			busNum: null,
+			companyDTO: {
+				id: null,
+				name: null,
+				phone: null,
+			},
+			grade: null,
+		},
+		price: null,
+		countSeat: null,
+		date: null,
+	},
+]);
 const getSchedule = async () => {
 	console.log(schedule.value);
+
 	const result = await axios.get(
-		`/api/schedule/find/seat/${schedule.value.routeId}`,
+		`/api/schedule/find/seat/${schedule.value.routeId}/${schedule.value.date}`,
 	);
+	if (result.data == null || result.data.length == 0) {
+		alert('조회된 배차가 없습니다.');
+		router.push({
+			name: 'Home',
+		});
+	}
 	scheduleInfo.value = result.data;
-	console.log(result.data);
 }; // 배차 정보
 
 getSchedule();
