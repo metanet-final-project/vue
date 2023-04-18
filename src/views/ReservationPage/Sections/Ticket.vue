@@ -13,9 +13,9 @@
 								<tr>
 									<th colspan="2">
 										{{
-											moment(scheduleInfo.startTime).format(
-												'YYYY년 MM월 DD일 HH:mm',
-											)
+											moment(scheduleInfo.startTime)
+												.locale('ko')
+												.format('YYYY년 MM월 DD일 ddd HH:mm')
 										}}
 									</th>
 								</tr>
@@ -237,17 +237,20 @@ import axios from 'axios';
 import MaterialButton from '@/components/MaterialButton.vue';
 import setMaterialInput from '@/assets/js/material-input';
 import { onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
-
+import { useRoute, useRouter } from 'vue-router';
 import moment from 'moment';
+import 'moment/locale/ko';
+moment.locale('ko');
+const router = useRouter();
 const cardNumber = ref('');
 const cardExpiration = ref('');
 const cardPassword = ref('');
 const cardBirth = ref();
-const nonMemPhone = ref('');
-const nonMemBirth = ref('');
+const nonMemPhone = ref(null);
+const nonMemBirth = ref(null);
 const totalPrice = ref();
 const memlogInId = ref();
+const payId = ref();
 const route = useRoute();
 onMounted(() => {
 	setMaterialInput();
@@ -326,7 +329,10 @@ const ticket = async () => {
 		`/api/schedule/find/${schedule.value.id}/${schedule.value.routeId}`,
 	);
 	scheduleInfo.value = response.data;
-	totalPrice.value = response.data.price;
+	const prices = response.data.map(schedule => schedule.price);
+	const sum = prices.reduce((acc, curr) => acc + curr, 0);
+	totalPrice.value = sum;
+	console.log('결제확인' + totalPrice.value);
 };
 ticket();
 
@@ -336,7 +342,7 @@ const savePay = async () => {
 	for (const seat of seatInfo.value) {
 		bookingList.push({
 			memberId: memlogInId.value,
-			nonMemberId: 1,
+			nonMemberId: null,
 			scheduleId: schedule.value.id,
 			routeId: schedule.value.routeId,
 			ageId: seat.ageId,
@@ -355,15 +361,25 @@ const savePay = async () => {
 				totalPrice: totalPrice.value,
 			},
 			nonMember: {
-				phone: 123354,
-				birth: '2023-02-13',
+				phone: nonMemPhone.value,
+				birth: nonMemBirth.value,
 			},
 			bookingList,
 		});
 		console.log(response.data);
+		payId.value = response.data;
 	} catch (error) {
 		console.error(error);
 	}
+	router.push({
+		name: 'BookingConfirm',
+		query: {
+			seat: route.query.seat,
+			id: schedule.value.id,
+			routeId: schedule.value.routeId,
+			payId: payId.value,
+		},
+	});
 };
 </script>
 

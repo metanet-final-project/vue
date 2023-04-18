@@ -8,52 +8,53 @@
 					</div>
 					<div class="row py-4">
 						<h3 class="mb-0">승차권 정보</h3>
-
-						<table class="tickettb">
-							<tr>
-								<th colspan="2">
-									{{
-										moment(scheduleInfo.startTime).format(
-											'YYYY년 MM월 DD일 HH:mm',
-										)
-									}}
-								</th>
-							</tr>
-							<tr>
-								<td class="start" rowspan="2">
-									<img class="startimg" src="@/assets/img/출발.png" alt="" />
-									{{ scheduleInfo.routeDTO.startTerminal.name }}
-								</td>
-								<td>
-									<span class="ssub1">회사</span>
-									<span class="ssub2">{{
-										scheduleInfo.busDTO.companyDTO.name
-									}}</span>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<span class="ssub1">등급</span>
-									<span class="ssub2">{{ scheduleInfo.busDTO.grade }}</span>
-								</td>
-							</tr>
-							<tr>
-								<td class="end" rowspan="2">
-									<img class="endimg" src="@/assets/img/도착.png" alt="" />
-									{{ scheduleInfo.routeDTO.endTerminal.name }}
-								</td>
-								<td>
-									<span class="ssub1">매수</span>
-									<span class="ssub2">일반 1명</span>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<span class="ssub1">좌석</span>
-									<span class="ssub2">8</span>
-								</td>
-							</tr>
-						</table>
+						<template v-for="seat in seatInfo" :key="seat.id">
+							<table class="tickettb">
+								<tr>
+									<th colspan="2">
+										{{
+											moment(scheduleInfo.startTime)
+												.locale('ko')
+												.format('YYYY년 MM월 DD일 ddd HH:mm')
+										}}
+									</th>
+								</tr>
+								<tr>
+									<td class="start" rowspan="2">
+										<img class="startimg" src="@/assets/img/출발.png" alt="" />
+										{{ scheduleInfo.routeDTO.startTerminal.name }}
+									</td>
+									<td>
+										<span class="ssub1">회사</span>
+										<span class="ssub2">{{
+											scheduleInfo.busDTO.companyDTO.name
+										}}</span>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<span class="ssub1">등급</span>
+										<span class="ssub2">{{ scheduleInfo.busDTO.grade }}</span>
+									</td>
+								</tr>
+								<tr>
+									<td class="end" rowspan="2">
+										<img class="endimg" src="@/assets/img/도착.png" alt="" />
+										{{ scheduleInfo.routeDTO.endTerminal.name }}
+									</td>
+									<td>
+										<span class="ssub1">구분</span>
+										<span class="ssub2">{{ seat.ageName }}</span>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<span class="ssub1">좌석</span>
+										<span class="ssub2">{{ seat.seatNum }} 번</span>
+									</td>
+								</tr>
+							</table>
+						</template>
 					</div>
 					<div class="row py-4">
 						<h3 class="mb-0">결제완료</h3>
@@ -77,12 +78,19 @@
 import { ref } from 'vue';
 import axios from 'axios';
 import moment from 'moment';
-const totalPrice = ref('');
+import { useRoute } from 'vue-router';
+import 'moment/locale/ko';
+moment.locale('ko');
+const totalPrice = ref();
+const route = useRoute();
 const schedule = ref({
-	id: 2,
-	routeId: 1,
+	id: route.query.id,
+	routeId: route.query.routeId,
 });
-
+const booking = ref({
+	payId: route.query.payId,
+});
+const seatInfo = ref(JSON.parse(route.query.seat));
 const scheduleInfo = ref({
 	id: null,
 	routeDTO: {
@@ -114,17 +122,18 @@ const scheduleInfo = ref({
 	price: null,
 });
 const ticket = async () => {
-	const result = await axios.get(
+	const response = await axios.get(
 		`/api/schedule/find/${schedule.value.id}/${schedule.value.routeId}`,
 	);
-	console.log(result.data);
-	scheduleInfo.value = result.data;
-	//console.log(result.data);
-}; // 배차 정보
+	scheduleInfo.value = response.data;
+	totalPrice.value = response.data.price;
+};
 ticket();
 
 const payConfirm = async () => {
-	const response = await axios.get(`/api/booking/find/bypayid/1`);
+	const response = await axios.get(
+		`/api/booking/find/bypayid/${booking.value.payId}`,
+	);
 	console.log(response.data);
 	const prices = response.data.map(booking => booking.price);
 	const sum = prices.reduce((acc, curr) => acc + curr, 0);
