@@ -502,7 +502,7 @@ const totalPrice = computed(() => {
 
 // 좌석 선택완료 페이지 이동 이벤트
 const bookgingPage = () => {
-	const seatInfo = ref([]);
+	const seatInfo = [];
 	seatSelectInfo.value.forEach(seat => {
 		const ageId = ref();
 		const price = ref();
@@ -516,17 +516,18 @@ const bookgingPage = () => {
 			ageId.value = 3;
 			price.value = 0.5 * scheduleInfo.value.price;
 		}
-		seatInfo.value.push({
-			ageName: seat.age,
-			ageId: ageId.value,
-			seatNum: seat.idx,
-			price: price.value,
+		seatInfo.push({
+			ageName: seat.age, // age 테이블 name
+			ageId: ageId.value, // age 테이블 id
+			seatNum: seat.idx, // 좌석번호
+			price: price.value, // 구분된 가격
 		});
 	});
+	console.log(seatInfo);
 	router.push({
 		name: 'Booking',
 		query: {
-			seatInfo: seatInfo.value,
+			seat: JSON.stringify(seatInfo),
 			id: schedule.value.id,
 			routeId: schedule.value.routeId,
 		},
