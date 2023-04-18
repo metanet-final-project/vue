@@ -335,7 +335,8 @@ const savePay = async () => {
 	const bookingList = [];
 	for (const seat of seatInfo.value) {
 		bookingList.push({
-			memberId: 1,
+			memberId: memlogInId.value,
+			nonMemberId: 1,
 			scheduleId: schedule.value.id,
 			routeId: schedule.value.routeId,
 			ageId: seat.ageId,
@@ -354,8 +355,8 @@ const savePay = async () => {
 				totalPrice: totalPrice.value,
 			},
 			nonMember: {
-				phone: nonMemPhone.value,
-				birth: nonMemBirth.value,
+				phone: 123354,
+				birth: '2023-02-13',
 			},
 			bookingList,
 		});
