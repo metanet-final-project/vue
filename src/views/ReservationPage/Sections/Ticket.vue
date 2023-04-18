@@ -291,9 +291,10 @@ let login = ref();
 //로그인한 회원정보 가져오기
 const isLogin = async () => {
 	const result = await axios.get(
-		`/api/member/findByLoginId/${localStorage.getItem('loginId')}`,
+		`/api/member/findById/${localStorage.getItem('id')}`,
 	);
 	if (result.data.loginId != null) {
+		console.log(localStorage.getItem('id'));
 		memlogInId.value = result.data.id;
 		login.value = true;
 		return result.data;
@@ -335,7 +336,7 @@ const savePay = async () => {
 			},
 			bookingList: [
 				{
-					memberId: 361,
+					memberId: localStorage.getItem('loginId'),
 					nonMemberId: 1,
 					scheduleId: schedule.value.id,
 					routeId: schedule.value.routeId,

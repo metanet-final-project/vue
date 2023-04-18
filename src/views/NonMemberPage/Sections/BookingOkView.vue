@@ -189,16 +189,32 @@ import axios from 'axios';
 import MaterialBadge from '@/components/MaterialBadge.vue';
 import moment from 'moment';
 import { useRouter } from 'vue-router';
+const nonMember = ref({
+	id: 123,
+	phone: 2323,
+});
 
 const router = useRouter();
 const showModal = ref(false);
 const totalPrice = ref('');
 const totalNum = ref('');
-let myBookingList = ref('');
-let getDetailBookingList = ref('');
+const myBookingList = ref('');
+const getDetailBookingList = ref('');
+const NonMember = ref('');
+
+const getNonMem = async () => {
+	const resp = await axios.get(
+		`/api/non-member/findByPhone/${nonMember.value.phone}`,
+	);
+	//비회원 전화번호
+	NonMember.value = resp.data;
+	console.log(nonMember.value.phone);
+};
+getNonMem();
 
 const getMyBookingList = async () => {
 	const res = await axios.get(`/api/booking/find/findByNonMemId/123`);
+	//비회원전화번호로 찾은 id
 	myBookingList.value = res.data;
 	console.log(myBookingList.value);
 };
@@ -207,6 +223,7 @@ getMyBookingList();
 const getNonDetailBookingList = async () => {
 	const response = await axios.get(
 		`/api/booking/find/findByNonMemPayId/123/582`,
+		//비회원전화번호로 찾은 id와 해당 payid
 	);
 	getDetailBookingList.value = response.data;
 	const prices = response.data.map(booking => booking.price);
