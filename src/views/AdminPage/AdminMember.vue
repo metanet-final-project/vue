@@ -110,17 +110,16 @@
 						</div>
 					</div>
 				</div>
-				<div class="container mt-4">
+				<div class="container mt-2">
 					<div class="row">
 						<div class="col-lg-12">
 							<table class="table">
 								<thead>
 									<tr class="text-center">
-										<th class="col-1">순번</th>
-										<th class="col-1">회원번호</th>
+										<th class="col-1">번호</th>
 										<th class="col-2">아이디</th>
 										<th class="col-2">이름</th>
-										<th class="col-3">이메일</th>
+										<th class="col-4">이메일</th>
 										<th class="col-2">전화번호</th>
 										<th class="col-1">관리</th>
 									</tr>
@@ -145,8 +144,7 @@
 										</tr>
 									</template>
 									<template v-if="getMember == null">
-										<tr v-for="(member, idx) in memberList" :key="member.id">
-											<td>{{ idx + 1 }}</td>
+										<tr v-for="member in paginatedItems" :key="member.id">
 											<td>{{ member.id }}</td>
 											<td>{{ member.loginId }}</td>
 											<td>{{ member.name }}</td>
@@ -257,40 +255,27 @@
 								</div>
 							</div>
 						</div>
-						<div class="row">
-							<div class="col-3 offset-md-9">
-								<div class="input-group input-group-outline my-3">
-									<label class="form-label">회원검색</label>
-									<input
-										type="text"
-										class="form-control form-control-md"
-										v-model="memberValue"
-										placeholder
-									/>
-								</div>
-								<button
-									class="btn btn-outline-secondary input-group-text"
-									type="button"
-									@click="searchMember"
-								>
-									검색
-								</button>
-							</div>
-
-							<div class="input-group-append"></div>
-						</div>
-						<section class="py-4">
+						<section>
 							<div class="container">
 								<div class="row justify-space-between py-2">
-									<div class="col-lg-4 mx-auto">
+									<div class="mx-auto">
 										<MaterialPagination :color="light">
-											<MaterialPaginationItem prev class="ms-auto" />
-											<MaterialPaginationItem label="1" active />
-											<MaterialPaginationItem label="2" />
-											<MaterialPaginationItem label="3" />
-											<MaterialPaginationItem label="4" />
-											<MaterialPaginationItem label="5" />
-											<MaterialPaginationItem next />
+											<MaterialPaginationItem
+												prev
+												class="ms-auto"
+												@click="currentPage != 1 ? currentPage-- : null"
+											/>
+											<MaterialPaginationItem
+												v-for="idx in maxPage"
+												:key="idx"
+												:label="idx"
+												:active="currentPage == idx"
+												@click="currentPage = idx"
+											/>
+											<MaterialPaginationItem
+												next
+												@click="currentPage != maxPage ? currentPage++ : null"
+											/>
 										</MaterialPagination>
 									</div>
 								</div>
@@ -301,16 +286,14 @@
 			</div>
 		</div>
 	</div>
-	<Footer />
 </template>
 
 <script setup>
-import Footer from '@/layouts/Footer.vue';
 import Navbar from '@/layouts/Navbar.vue';
 import Sidebar from './Sections/SideBar.vue';
 import MaterialButton from '@/components/MaterialButton.vue';
 import axios from 'axios';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import MaterialPagination from '@/components/MaterialPagination.vue';
 import MaterialPaginationItem from '@/components/MaterialPaginationItem.vue';
 import setMaterialInput from '@/assets/js/material-input';
@@ -326,7 +309,6 @@ const member = ref();
 const memberSave = ref({});
 const memberList = ref();
 const getMember = ref(null);
-const memberValue = ref();
 const showModal = ref(false);
 const showModal2 = ref(false);
 
@@ -367,22 +349,6 @@ const saveMember = async () => {
 	}
 };
 
-const searchMember = async () => {
-	try {
-		const result = await axios.get(
-			`/api/member/findByLoginId/${memberValue.value}`,
-		);
-		if (result != null) {
-			getMember.value = result.data;
-			console.log(getMember.value);
-			showToast('success', '검색 성공');
-		}
-	} catch (error) {
-		console.log(error);
-		showToast('error', '올바른 아이디를 입력하세요');
-	}
-};
-
 const updateMember = async () => {
 	try {
 		await axios.put(`/api/member/update`, member.value);
@@ -406,6 +372,18 @@ const deleteMember = async memberId => {
 		showToast('error', '회원삭제에 실패했습니다.');
 	}
 };
+
+// pagination
+const currentPage = ref(1);
+const pageSize = ref(10);
+const maxPage = computed(() => {
+	return Math.ceil(memberList.value.length / pageSize.value);
+});
+
+const paginatedItems = computed(() => {
+	const startIndex = (currentPage.value - 1) * pageSize.value;
+	return memberList.value.slice(startIndex, startIndex + pageSize.value);
+});
 
 const Toast = Swal.mixin({
 	toast: true,

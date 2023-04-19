@@ -17,23 +17,21 @@
 						>노선등록</MaterialButton
 					>
 				</div>
-				<div class="container mt-4">
+				<div class="container mt-2">
 					<div class="row">
 						<div class="col-lg-12">
 							<table class="table">
 								<thead>
 									<tr class="text-center">
-										<th class="col-1">순번</th>
-										<th class="col-2">노선번호</th>
-										<th class="col-3">출발 터미널</th>
-										<th class="col-3">도착 터미널</th>
-										<th class="col-2">소요시간(분)</th>
+										<th class="col-1">번호</th>
+										<th class="col-4">출발 터미널</th>
+										<th class="col-4">도착 터미널</th>
+										<th class="col-3">소요시간(분)</th>
 										<th class="col-1">관리</th>
 									</tr>
 								</thead>
 								<tbody class="table-group-divider text-center">
-									<tr v-for="(route, idx) in routeList" :key="route.id">
-										<td>{{ idx + 1 }}</td>
+									<tr v-for="route in paginatedItems" :key="route.id">
 										<td>{{ route.id }}</td>
 										<td>{{ route.startTerminal.name }}</td>
 										<td>{{ route.endTerminal.name }}</td>
@@ -127,31 +125,27 @@
 								</div>
 							</div>
 						</div>
-						<div class="row">
-							<div class="col-3 offset-md-9">
-								<div class="input-group input-group-outline my-3">
-									<label class="form-label">노선검색</label>
-									<input
-										type="text"
-										class="form-control form-control-md"
-										placeholder
-										isrequired="false"
-									/>
-								</div>
-							</div>
-						</div>
-						<section class="py-4">
+						<section class="">
 							<div class="container">
 								<div class="row justify-space-between py-2">
-									<div class="col-lg-4 mx-auto">
+									<div class="col-lg mx-auto">
 										<MaterialPagination :color="light">
-											<MaterialPaginationItem prev class="ms-auto" />
-											<MaterialPaginationItem label="1" active />
-											<MaterialPaginationItem label="2" />
-											<MaterialPaginationItem label="3" />
-											<MaterialPaginationItem label="4" />
-											<MaterialPaginationItem label="5" />
-											<MaterialPaginationItem next />
+											<MaterialPaginationItem
+												prev
+												class="ms-auto"
+												@click="currentPage != 1 ? currentPage-- : null"
+											/>
+											<MaterialPaginationItem
+												v-for="idx in maxPage"
+												:key="idx"
+												:label="idx"
+												:active="currentPage == idx"
+												@click="currentPage = idx"
+											/>
+											<MaterialPaginationItem
+												next
+												@click="currentPage != maxPage ? currentPage++ : null"
+											/>
 										</MaterialPagination>
 									</div>
 								</div>
@@ -162,16 +156,14 @@
 			</div>
 		</div>
 	</div>
-	<Footer />
 </template>
 
 <script setup>
-import Footer from '@/layouts/Footer.vue';
 import Navbar from '@/layouts/Navbar.vue';
 import Sidebar from './Sections/SideBar.vue';
 import MaterialButton from '@/components/MaterialButton.vue';
 import axios from 'axios';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import MaterialPagination from '@/components/MaterialPagination.vue';
 import MaterialPaginationItem from '@/components/MaterialPaginationItem.vue';
 import setMaterialInput from '@/assets/js/material-input';
@@ -184,22 +176,7 @@ onMounted(() => {
 });
 
 const route = ref({});
-const routeList = ref([
-	{
-		id: null,
-		startTerminal: {
-			id: null,
-			name: null,
-			location: null,
-		},
-		endTerminal: {
-			id: null,
-			name: null,
-			location: null,
-		},
-		travelTime: null,
-	},
-]);
+const routeList = ref([]);
 const terminalList = ref('');
 const showModal = ref(false);
 
@@ -251,6 +228,18 @@ const findAllTerminal = async () => {
 	}
 };
 findAllTerminal();
+
+// pagination
+const currentPage = ref(1);
+const pageSize = ref(10);
+const maxPage = computed(() => {
+	return Math.ceil(routeList.value.length / pageSize.value);
+});
+
+const paginatedItems = computed(() => {
+	const startIndex = (currentPage.value - 1) * pageSize.value;
+	return routeList.value.slice(startIndex, startIndex + pageSize.value);
+});
 
 const Toast = Swal.mixin({
 	toast: true,

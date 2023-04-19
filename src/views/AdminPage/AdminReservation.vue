@@ -10,7 +10,7 @@
 				>
 					<h4 class="m-3 p-2">예매관리</h4>
 				</div>
-				<div class="container mt-4">
+				<div class="container mt-2">
 					<div class="row">
 						<div class="col-lg-12">
 							<table class="table">
@@ -28,15 +28,25 @@
 									</tr>
 								</thead>
 								<tbody class="table-group-divider text-center">
-									<template v-for="(pay, idx) in payList" :key="pay.id">
+									<template v-for="(pay, idx) in paginatedItems" :key="pay.id">
 										<tr>
 											<td>{{ idx + 1 }}</td>
 											<td>{{ pay.id }}</td>
 											<td>{{ pay.cardNumber }}</td>
 											<td>
-												{{ pay.bookingDTOList[0].memberDTO.loginId }}
+												{{
+													pay.bookingDTOList[0].memberDTO.loginId != null
+														? pay.bookingDTOList[0].memberDTO.loginId
+														: 비회원
+												}}
 											</td>
-											<td>{{ pay.bookingDTOList[0].memberDTO.phone }}</td>
+											<td>
+												{{
+													pay.bookingDTOList[0].memberDTO.phone != null
+														? pay.bookingDTOList[0].memberDTO.phone
+														: pay.bookingDTOList[0].nonMemberDTO.phone
+												}}
+											</td>
 											<td>{{ pay.totalPrice }}원</td>
 											<td>
 												{{
@@ -104,31 +114,27 @@
 								</tbody>
 							</table>
 						</div>
-						<div class="row">
-							<div class="col-3 offset-md-9">
-								<div class="input-group input-group-outline my-3">
-									<label class="form-label">예매검색</label>
-									<input
-										type="text"
-										class="form-control form-control-md"
-										placeholder
-										isrequired="false"
-									/>
-								</div>
-							</div>
-						</div>
-						<section class="py-4">
+						<section class="">
 							<div class="container">
 								<div class="row justify-space-between py-2">
-									<div class="col-lg-4 mx-auto">
+									<div class="col-lg mx-auto">
 										<MaterialPagination :color="light">
-											<MaterialPaginationItem prev class="ms-auto" />
-											<MaterialPaginationItem label="1" active />
-											<MaterialPaginationItem label="2" />
-											<MaterialPaginationItem label="3" />
-											<MaterialPaginationItem label="4" />
-											<MaterialPaginationItem label="5" />
-											<MaterialPaginationItem next />
+											<MaterialPaginationItem
+												prev
+												class="ms-auto"
+												@click="currentPage != 1 ? currentPage-- : null"
+											/>
+											<MaterialPaginationItem
+												v-for="idx in maxPage"
+												:key="idx"
+												:label="idx"
+												:active="currentPage == idx"
+												@click="currentPage = idx"
+											/>
+											<MaterialPaginationItem
+												next
+												@click="currentPage != maxPage ? currentPage++ : null"
+											/>
 										</MaterialPagination>
 									</div>
 								</div>
@@ -139,96 +145,24 @@
 			</div>
 		</div>
 	</div>
-	<Footer />
 </template>
 
 <script setup>
-import Footer from '@/layouts/Footer.vue';
 import Navbar from '@/layouts/Navbar.vue';
 import Sidebar from './Sections/SideBar.vue';
 import MaterialButton from '@/components/MaterialButton.vue';
 import axios from 'axios';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import MaterialPagination from '@/components/MaterialPagination.vue';
 import MaterialPaginationItem from '@/components/MaterialPaginationItem.vue';
 import setMaterialInput from '@/assets/js/material-input';
 import { onMounted } from 'vue';
-import Swal from 'sweetalert2';
 import moment from 'moment';
 
 const formatDate = (value, format) => {
 	return moment(value).format(format);
 };
-
-const payList = ref([
-	{
-		id: null,
-		cardNumber: null,
-		cardExpiration: null,
-		cardPassword: null,
-		birth: null,
-		totalPrice: null,
-		bookingDTOList: [
-			{
-				id: null,
-				payDTO: {
-					id: null,
-					cardNumber: null,
-					cardExpiration: null,
-					cardPassword: null,
-					birth: null,
-					totalPrice: null,
-				},
-				memberDTO: {
-					id: null,
-					loginId: null,
-					name: null,
-					password: null,
-					phone: null,
-					role: null,
-					email: null,
-					birth: null,
-				},
-				nonMemberDTO: {
-					id: null,
-					phone: null,
-					birth: null,
-				},
-				scheduleDTO: {
-					id: null,
-					startTime: null,
-					endTime: null,
-					busDTO: {
-						id: null,
-						busNum: null,
-						companyDTO: {
-							name: null,
-						},
-						grade: null,
-					},
-					price: null,
-					countSeat: null,
-				},
-				routeDTO: {
-					startTerminal: {
-						name: null,
-					},
-					endTerminal: {
-						name: null,
-					},
-					travelTime: null,
-				},
-				ageDTO: {
-					name: null,
-				},
-				seatNum: null,
-				state: null,
-				price: null,
-				bookingDate: null,
-			},
-		],
-	},
-]);
+const payList = ref([]);
 const showDropdown = ref(0);
 
 const showDetail = payId => {
@@ -249,24 +183,21 @@ const findAllPay = async () => {
 };
 findAllPay();
 
+// pagination
+const currentPage = ref(1);
+const pageSize = ref(10);
+const maxPage = computed(() => {
+	return Math.ceil(payList.value.length / pageSize.value);
+});
+
+const paginatedItems = computed(() => {
+	const startIndex = (currentPage.value - 1) * pageSize.value;
+	return payList.value.slice(startIndex, startIndex + pageSize.value);
+});
+
 onMounted(() => {
 	setMaterialInput();
 });
-
-const Toast = Swal.mixin({
-	toast: true,
-	position: 'bottom-end',
-	showConfirmButton: false,
-	timer: 3000,
-	timerProgressBar: true,
-});
-
-const showToast = (icon, title) => {
-	Toast.fire({
-		icon: icon,
-		title: title,
-	});
-};
 </script>
 
 <style scoped>

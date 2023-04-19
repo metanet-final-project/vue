@@ -58,7 +58,7 @@
 									<div class="input-group input-group-outline mb-2">
 										<input
 											type="text"
-											class="form-control"
+											class="form-control mb-4"
 											v-model="terminalValue.location"
 										/>
 									</div>
@@ -78,25 +78,20 @@
 					</div>
 				</div>
 				<!-- modal2 end -->
-				<div class="container mt-4">
+				<div class="container mt-2">
 					<div class="row">
 						<div class="col-lg-12">
 							<table class="table">
 								<thead>
 									<tr class="text-center">
 										<th class="col-1">번호</th>
-										<th class="col-2">고유번호</th>
-										<th class="col-2">이름</th>
+										<th class="col-5">이름</th>
 										<th class="col-5">위치</th>
-										<th class="col-2">관리</th>
+										<th class="col-1">관리</th>
 									</tr>
 								</thead>
 								<tbody class="table-group-divider text-center">
-									<tr
-										v-for="(terminal, idx) in terminalList"
-										:key="terminal.id"
-									>
-										<td>{{ idx + 1 }}</td>
+									<tr v-for="terminal in paginatedItems" :key="terminal.id">
 										<td>{{ terminal.id }}</td>
 										<td>{{ terminal.name }}</td>
 										<td>{{ terminal.location }}</td>
@@ -156,7 +151,6 @@
 												<input
 													type="text"
 													class="form-control"
-													disabled
 													v-model="terminal.name"
 												/>
 											</div>
@@ -164,11 +158,10 @@
 											<div class="input-group input-group-outline mb-2">
 												<input
 													type="text"
-													class="form-control"
+													class="form-control mb-4"
 													v-model="terminal.location"
 												/>
 											</div>
-
 											<div class="modal-footer justify-content-between">
 												<MaterialButton
 													variant="contained"
@@ -191,46 +184,27 @@
 							</div>
 						</div>
 						<!-- modal end -->
-						<div class="row">
-							<div class="col-3 offset-md-9">
-								<div class="input-group input-group-outline my-3">
-									<label class="form-label">터미널 이름검색</label>
-									<input
-										type="text"
-										v-model="terminalName"
-										class="form-control form-control-md"
-										placeholder
-									/>
-									<!-- <button
-										class="btn btn-outline-secondary input-group-text"
-										type="button"
-										@click="searchTerminal"
-									>
-										검색
-									</button> -->
-								</div>
-								<button
-									class="btn btn-outline-secondary input-group-text"
-									type="button"
-									@click="searchTerminal"
-								>
-									검색
-								</button>
-								<div class="input-group-append"></div>
-							</div>
-						</div>
-						<section class="py-4">
+						<section class="">
 							<div class="container">
 								<div class="row justify-space-between py-2">
-									<div class="col-lg-4 mx-auto">
+									<div class="col-lg mx-auto">
 										<MaterialPagination :color="light">
-											<MaterialPaginationItem prev class="ms-auto" />
-											<MaterialPaginationItem label="1" active />
-											<MaterialPaginationItem label="2" />
-											<MaterialPaginationItem label="3" />
-											<MaterialPaginationItem label="4" />
-											<MaterialPaginationItem label="5" />
-											<MaterialPaginationItem next />
+											<MaterialPaginationItem
+												prev
+												class="ms-auto"
+												@click="currentPage != 1 ? currentPage-- : null"
+											/>
+											<MaterialPaginationItem
+												v-for="idx in maxPage"
+												:key="idx"
+												:label="idx"
+												:active="currentPage == idx"
+												@click="currentPage = idx"
+											/>
+											<MaterialPaginationItem
+												next
+												@click="currentPage != maxPage ? currentPage++ : null"
+											/>
 										</MaterialPagination>
 									</div>
 								</div>
@@ -241,16 +215,14 @@
 			</div>
 		</div>
 	</div>
-	<Footer />
 </template>
 
 <script setup>
-import Footer from '@/layouts/Footer.vue';
 import Navbar from '@/layouts/Navbar.vue';
 import Sidebar from './Sections/SideBar.vue';
 import MaterialButton from '@/components/MaterialButton.vue';
 import axios from 'axios';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import MaterialPagination from '@/components/MaterialPagination.vue';
 import MaterialPaginationItem from '@/components/MaterialPaginationItem.vue';
 import setMaterialInput from '@/assets/js/material-input';
@@ -263,8 +235,7 @@ onMounted(() => {
 });
 const terminal = ref();
 const terminalValue = ref({});
-const terminalName = ref();
-const terminalList = ref();
+const terminalList = ref([]);
 const showModal = ref(false);
 const showModal2 = ref(false);
 
@@ -328,21 +299,17 @@ const deleteTerminal = async terminalId => {
 	}
 };
 
-const searchTerminal = async () => {
-	try {
-		const result = await axios.get(
-			`/api/terminal/findByName/${terminalName.value}`,
-		);
-		if (result != null) {
-			terminalList.value = result.data;
-			console.log(terminalList.value);
-			showToast('success', '검색 완료');
-		}
-	} catch (error) {
-		console.log(error);
-		showToast('error', '터미널 고유번호를 입력하세요');
-	}
-};
+// pagination
+const currentPage = ref(1);
+const pageSize = ref(10);
+const maxPage = computed(() => {
+	return Math.ceil(terminalList.value.length / pageSize.value);
+});
+
+const paginatedItems = computed(() => {
+	const startIndex = (currentPage.value - 1) * pageSize.value;
+	return terminalList.value.slice(startIndex, startIndex + pageSize.value);
+});
 
 const Toast = Swal.mixin({
 	toast: true,
