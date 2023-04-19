@@ -17,7 +17,7 @@
 									class="form-check-input"
 									type="checkbox"
 									value=""
-									id="flexCheckDefault"
+									id="check1"
 								/>
 								<label class="form-check-label"> 동의 </label>
 							</div>
@@ -44,7 +44,7 @@
 									class="form-check-input"
 									type="checkbox"
 									value=""
-									id="flexCheckDefault"
+									id="check2"
 								/>
 								<label class="form-check-label"> 동의 </label>
 							</div>
@@ -71,7 +71,7 @@
 									class="form-check-input"
 									type="checkbox"
 									value=""
-									id="flexCheckDefault"
+									id="check3"
 								/>
 								<label class="form-check-label"> 동의 </label>
 							</div>
@@ -94,6 +94,7 @@
 							variant="contained"
 							color="dark"
 							fullWidth
+							@click="AllAgree"
 						>
 							전체 동의
 						</MaterialButton>
@@ -105,6 +106,21 @@
 </template>
 <script setup>
 import MaterialButton from '@/components/MaterialButton.vue';
+const AllAgree = () => {
+	let check1 = document.getElementById("check1");
+	let check2 = document.getElementById("check2");
+ let check3 = document.getElementById("check3");
+	if (check1.checked && check2.checked&& check3.checked) {
+		check1.checked = false;
+		check2.checked = false;
+check3.checked = false;
+	} else {
+		check1.checked = true;
+		check2.checked = true;
+		check3.checked = true;
+	}
+};
+
 </script>
 <style scoped>
 .scroll-container {
@@ -130,5 +146,9 @@ import MaterialButton from '@/components/MaterialButton.vue';
 .form-check-label {
 	color: #59b55c;
 	accent-color: #59b55c;
+}
+.form-check-input:checked {
+  background-color: #59b55c !important;
+  border-color: #59b55c !important;
 }
 </style>

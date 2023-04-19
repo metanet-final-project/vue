@@ -213,7 +213,7 @@ const getNonMem = async () => {
 getNonMem();
 
 const getMyBookingList = async () => {
-	const res = await axios.get(`/api/booking/find/findByNonMemId/123`);
+	const res = await axios.get(`/api/booking/find/findByNonMemId/2`);
 	//비회원전화번호로 찾은 id
 	myBookingList.value = res.data;
 	console.log(myBookingList.value);
@@ -222,7 +222,7 @@ getMyBookingList();
 
 const getNonDetailBookingList = async () => {
 	const response = await axios.get(
-		`/api/booking/find/findByNonMemPayId/123/582`,
+		`/api/booking/find/findByNonMemPayId/2/7`,
 		//비회원전화번호로 찾은 id와 해당 payid
 	);
 	getDetailBookingList.value = response.data;

@@ -63,30 +63,24 @@
 						</div>
 
 						<div class="bundle col-12">
-							<div class="row">
 								<div class="col-12">
 									<small class="font-weight-bold">카드선택</small>
-									<div class="form-check form-check-inline">
-										<input
-											class="form-check-input"
-											type="radio"
-											name="inlineRadioOptions"
-										/>
-										<label class="form-check-label" for="inlineRadio1"
-											>개인</label
-										>
-									</div>
-									<div class="form-check form-check-inline">
-										<input
-											class="form-check-input"
-											type="radio"
-											name="inlineRadioOptions"
-										/>
-										<label class="form-check-label" for="inlineRadio2"
-											>법인</label
-										>
-									</div>
-								</div>
+									<div class="form-check">
+								<input
+									class="form-check-input"
+									type="checkbox"
+									value=""
+									id="check4"
+								/>
+								<label class="form-check-label"> 개인 </label>
+								<input
+									class="form-check-input"
+									type="checkbox"
+									value=""
+									id="check5"
+								/>
+								<label class="form-check-label pl-5"> 법인 </label>
+							</div>
 							</div>
 							<div class="row">
 								<div class="col-12">
@@ -107,23 +101,14 @@
 									<small class="font-weight-bold">유효기간</small>
 									<div class="input-group input-group-outline my-1">
 										<label class="form-label">월</label>
-										<input
-											type="number"
-											class="form-control"
-											id="expirationMonth"
-											v-model="cardExpiration"
-										/>
+										<input type="number" class="form-control" v-model="cardExpirationMonth" min="1" max="12"/>
 									</div>
 								</div>
 								<div class="col-6">
 									<small class="font-weight-bold">&nbsp;</small>
 									<div class="input-group input-group-outline my-1">
 										<label class="form-label">년</label>
-										<input
-											type="number"
-											class="form-control"
-											id="expirationMonth"
-										/>
+										<input type="number" class="form-control" v-model="cardExpirationYear" />
 									</div>
 								</div>
 							</div>
@@ -131,12 +116,14 @@
 								<div class="col-6">
 									<small class="font-weight-bold">카드비밀번호</small>
 									<div class="input-group input-group-outline my-1">
-										<label class="form-label">비밀번호</label>
+										<label class="form-label">비밀번호 앞2자리</label>
 										<input
 											type="number"
 											class="form-control"
 											id="cardPassword"
 											v-model="cardPassword"
+											min="0" max="99"
+											maxlength="2"
 										/>
 									</div>
 								</div>
@@ -234,14 +221,15 @@
 
 <script setup>
 import axios from 'axios';
+import { watch } from 'vue';
 import MaterialButton from '@/components/MaterialButton.vue';
 import setMaterialInput from '@/assets/js/material-input';
+import Swal from 'sweetalert2';
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import moment from 'moment';
 const router = useRouter();
 const cardNumber = ref('');
-const cardExpiration = ref('');
 const cardPassword = ref('');
 const cardBirth = ref();
 const nonMemPhone = ref(null);
@@ -258,8 +246,23 @@ const schedule = ref({
 	routeId: route.query.routeId,
 });
 const seatInfo = ref(JSON.parse(route.query.seat));
+const cardExpirationMonth = ref('');
+const cardExpirationYear = ref('');
 
+const updateCardExpiration = () => {
+  const month = String(cardExpirationMonth.value).padStart(2, '0');
+  const year = String(cardExpirationYear.value).slice(-2);
+  return month + year;
+}
 
+const cardExpiration = ref(updateCardExpiration());
+
+watch([cardExpirationMonth, cardExpirationYear], () => {
+  cardExpiration.value = updateCardExpiration();
+});
+watch(cardExpirationMonth, (value) => {
+  if (value < 1 || value > 12) cardExpirationMonth.value = '';
+});
 // const member = ref({
 // 	id: null,
 // 	loginId: null,
@@ -337,6 +340,17 @@ ticket();
 
 //예매테이블에 저장하기
 const savePay = async () => {
+	  const check1 = document.getElementById("check1");
+  const check2 = document.getElementById("check2");
+  const check3 = document.getElementById("check3");
+
+  if (!check1.checked || !check2.checked || !check3.checked) {
+    Swal.fire({
+      title: '이용약관에 동의해주세요.',
+      icon: 'error',
+    });
+    return;
+  }
 	const bookingList = [];
 	for (const seat of seatInfo.value) {
 		bookingList.push({
@@ -461,4 +475,16 @@ const savePay = async () => {
 	font-weight: bold;
 	width: 50%;
 }
+.form-check{
+	padding-left: 0;
+}
+.form-check-label {
+	accent-color: #59b55c;
+	padding-right: 20px;
+}
+.form-check-input:checked {
+  background-color: #59b55c !important;
+  border-color: #59b55c !important;
+}
+
 </style>
