@@ -6,7 +6,7 @@
 					<div class="mt-n8 mt-md-n9 text-center">
 						<div class="blur-shadow-avatar"></div>
 					</div>
-					<div class="row py-4 pt-8">
+					<div class="row py-12 pt-8">
 						<div class="col-6">
 							<h3 class="mb-0"></h3>
 						</div>
@@ -213,7 +213,7 @@ const getNonMem = async () => {
 getNonMem();
 
 const getMyBookingList = async () => {
-	const res = await axios.get(`/api/booking/find/findByNonMemId/2`);
+	const res = await axios.get(`/api/booking/find/findByNonMemId/1`);
 	//비회원전화번호로 찾은 id
 	myBookingList.value = res.data;
 	console.log(myBookingList.value);
@@ -222,7 +222,7 @@ getMyBookingList();
 
 const getNonDetailBookingList = async () => {
 	const response = await axios.get(
-		`/api/booking/find/findByNonMemPayId/2/7`,
+		`/api/booking/find/findByNonMemPayId/1/6`,
 		//비회원전화번호로 찾은 id와 해당 payid
 	);
 	getDetailBookingList.value = response.data;
@@ -279,11 +279,11 @@ const CancelBooking = async id => {
 	border-bottom: 2px solid #dddddd;
 }
 .tickettb .start {
-	font-size: 30px;
+	font-size: 15px;
 	padding: 0 20px;
 }
 .tickettb .end {
-	font-size: 30px;
+	font-size: 15px;
 	padding: 0 20px;
 }
 .tickettb .ssub1 {
@@ -325,7 +325,17 @@ thead {
 body {
 	border-bottom: 3px solid #b1b2b5;
 }
+.modal{
+	position: absolute;
+	z-index: 20;
+}
 .modal-dialog {
 	width: 100%;
+}
+.startimg {
+	width: 50px;
+}
+.endimg {
+	width: 50px;
 }
 </style>
