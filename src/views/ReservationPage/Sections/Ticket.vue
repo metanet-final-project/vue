@@ -252,6 +252,7 @@ const totalPrice = ref();
 const memlogInId = ref();
 const payId = ref();
 const route = useRoute();
+
 onMounted(() => {
 	setMaterialInput();
 });

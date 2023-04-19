@@ -153,7 +153,6 @@ import MaterialPagination from '@/components/MaterialPagination.vue';
 import MaterialPaginationItem from '@/components/MaterialPaginationItem.vue';
 import setMaterialInput from '@/assets/js/material-input';
 import { onMounted } from 'vue';
-import MaterialBadge from '@/components/MaterialBadge.vue';
 import Swal from 'sweetalert2';
 import moment from 'moment';
 
