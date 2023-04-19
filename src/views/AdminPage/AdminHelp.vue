@@ -105,7 +105,7 @@
 											variant="contained"
 											color="dark"
 											class="mb-0"
-											@click.prevent="saveLost"
+											@click="saveLost"
 											>등록</MaterialButton
 										>
 									</div>
@@ -121,10 +121,9 @@
 								<thead>
 									<tr class="text-center">
 										<th class="col-1">순번</th>
-										<th class="col-1">번호</th>
-										<th class="col-2">제목</th>
-										<th class="col-2">습득위치</th>
-										<th class="col-3">내용</th>
+										<th class="col-1">제목</th>
+										<th class="col-2">습득장소</th>
+										<th class="col-2">내용</th>
 										<th class="col-3">날짜</th>
 										<th class="col-3">파일</th>
 									</tr>
@@ -132,22 +131,11 @@
 								<tbody class="table-group-divider text-center">
 									<tr v-for="(lost, idx) in lostList" :key="lost.id">
 										<td>{{ idx + 1 }}</td>
-										<td>{{ lost.id }}</td>
 										<td>{{ lost.title }}</td>
 										<td>{{ lost.findPlace }}</td>
-										<td>{{ lost.savePlace }}</td>
 										<td>{{ lost.contents }}</td>
 										<td>{{ lost.findDate }}</td>
 										<td>{{ lost.fileName }}</td>
-										<td>{{ lost.phone }}</td>
-										<!-- <td>
-											<MaterialButton
-												color="light"
-												class="input-group-static btn-sm mb-0"
-												@click="goManageLost(lost.id)"
-												>첨부</MaterialButton
-											>
-										</td> -->
 									</tr>
 								</tbody>
 							</table>
