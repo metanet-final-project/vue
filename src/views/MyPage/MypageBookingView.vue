@@ -148,7 +148,8 @@
 										<button
 											type="button"
 											class="btnS btn_print"
-											@click="openTicketWindow"
+											@click="openTicketWindow(item.id)"
+											:id="item.id"
 										>
 											홈티켓 출력
 										</button>
@@ -171,7 +172,7 @@
 							<button
 								type="button"
 								class="btn-print2"
-								@click="openTicketWindow"
+								@click="openTicketWindow(item.id)"
 							>
 								홈티켓 출력
 							</button>
@@ -368,8 +369,8 @@ const CancelBooking = async id => {
 <script>
 export default {
 	methods: {
-		openTicketWindow() {
-			window.open('/mypage/booking/ticket', '_blank');
+		openTicketWindow(id) {
+			window.open(`/mypage/booking/ticket/${id}`, '_blank');
 		},
 	},
 };

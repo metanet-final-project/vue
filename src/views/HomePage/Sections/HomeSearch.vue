@@ -3,7 +3,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-md-6 m-auto">
-					<h4>승차권 예매</h4>
+					<h3>승차권 예매</h3>
 					<p class="mb-4 fw-bolder">
 						예매 가능한 좌석정보와 운행정보, 간펀한 결제 방식으로 온라인 승차권
 						예매를 하실 수 있습니다. <br />시외버스 예매 시스템으로 안전하고
@@ -24,55 +24,7 @@
 								/>
 							</div>
 						</div>
-						<div class="col-6">
-							<!-- <div class="input-group input-group-static my-3">
-								<label>가는시간</label>
-								<input
-									type="time"
-									class="form-control"
-									v-model="searchInfo.stTime"
-								/>
-							</div> -->
-						</div>
 					</div>
-					<!-- <div class="row mt-3">
-						<div class="col-3">
-							<div class="col-9">
-								<small class="font-weight-bold">어른</small>
-								<select class="form-select p-2">
-									<option value="0">0</option>
-									<option value="1">1</option>
-									<option value="2">2</option>
-									<option value="3">3</option>
-									<option value="4">4</option>
-								</select>
-							</div>
-						</div>
-						<div class="col-3">
-							<div class="col-9">
-								<small class="font-weight-bold">청소년</small>
-								<select class="form-select p-2">
-									<option value="0">0</option>
-									<option value="1">1</option>
-									<option value="2">2</option>
-									<option value="3">3</option>
-									<option value="4">4</option>
-								</select>
-							</div>
-						</div>
-						<div class="col-3">
-							<div class="col-9">
-								<small class="font-weight-bold">아동</small>
-								<select class="form-select p-2">
-									<option value="0">0</option>
-									<option value="1">1</option>
-									<option value="2">2</option>
-									<option value="3">3</option>
-									<option value="4">4</option>
-								</select>
-							</div>
-						</div>
-					</div> -->
 					<div class="row mt-3">
 						<div class="text-center">
 							<MaterialButton
@@ -81,19 +33,53 @@
 								color="dark"
 								fullWidth
 								@click="goSchedule"
-								>조회</MaterialButton
+								>배차조회</MaterialButton
 							>
 						</div>
 					</div>
 				</div>
-				<div class="col-md-5 ms-auto mt-6 md-mt-0">
-					<CenteredBlogCard
-						image="https://i0.wp.com/www.areyouawakening.com/wp-content/uploads/2020/02/lostitem1.jpg?fit=999%2C666&ssl=1"
-						title="분실물 신고"
-						description="두고 내린 물건이
-					있으신가요? 분실물 신고 서비스를 이용해 빠른 접수를 하실 수 있습니다."
-						:action="{ label: '접수하기', color: 'bg-dark text-white' }"
-					/>
+				<div class="col-md-4 m-auto">
+					<h3>비회원 예매조회</h3>
+					<p class="mb-4 fw-bolder">
+						비회원으로 예매하셨나요?<br />
+						비회원 예매조회로 예매 내역을 빠르게 조회해보세요.
+					</p>
+					<div class="row mt-3 col-11 m-auto">
+						<div>
+							<div class="input-group input-group-static">
+								<label>전화번호</label>
+								<input
+									type="text"
+									class="form-control"
+									v-model="nonMember.phone"
+								/>
+							</div>
+						</div>
+					</div>
+					<div class="row mt-3 col-11 m-auto">
+						<div>
+							<div class="input-group input-group-static my-3">
+								<label>생년월일</label>
+								<input
+									type="date"
+									class="form-control"
+									v-model="nonMember.birthStr"
+								/>
+							</div>
+						</div>
+					</div>
+					<div class="row mt-3">
+						<div class="text-center">
+							<MaterialButton
+								class="my-4 mb-2"
+								variant="contained"
+								color="dark"
+								fullWidth
+								@click="goNonMemberBooking"
+								>예매조회</MaterialButton
+							>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -105,7 +91,6 @@ import { onMounted } from 'vue';
 import { ref } from 'vue';
 import MaterialButton from '@/components/MaterialButton.vue';
 import setMaterialInput from '@/assets/js/material-input';
-import CenteredBlogCard from '@/examples/cards/blogCards/CenteredBlogCard.vue';
 import ModalStarting from '@/components/ModalStarting.vue';
 import ModalEnding from '@/components/ModalEnding.vue';
 import axios from 'axios';
@@ -122,6 +107,7 @@ const endId = ref(); // 도착지 터미널 정보
 let parentVariable = stId; // 출발지 정보 props 전달
 const searchInfo = ref({}); // 배차조회에 사용될 검색 조건
 const routeId = ref();
+const nonMember = ref({});
 
 const startingTerminal = async id => {
 	const result = await axios.get(`/api/terminal/findById/${id}`);
@@ -158,5 +144,25 @@ const goSchedule = async () => {
 			date: date.value,
 		},
 	});
+};
+
+const goNonMemberBooking = async () => {
+	try {
+		const result = await axios.post(
+			'/api/non-member/find/info',
+			nonMember.value,
+		);
+		if (result.data != null) {
+			console.log(result.data);
+			router.push({
+				name: 'NonMemBooking',
+				query: {
+					nonMemberId: result.data.id,
+				},
+			});
+		}
+	} catch (error) {
+		console.error(error);
+	}
 };
 </script>

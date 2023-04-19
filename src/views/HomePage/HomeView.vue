@@ -28,6 +28,7 @@
 	</header>
 	<div class="card card-body blur shadow-blur mx-3 mx-md-4 mt-n6">
 		<Search />
+		<LostSection />
 	</div>
 	<DefaultFooter />
 </template>
@@ -45,6 +46,7 @@ import Typed from 'typed.js';
 
 //sections
 import Search from './Sections/HomeSearch.vue';
+import LostSection from './Sections/LostSection.vue';
 
 //hooks
 const body = document.getElementsByTagName('body')[0];

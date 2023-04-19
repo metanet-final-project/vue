@@ -1,64 +1,6 @@
 <template>
-	<section class="py-sm-7 py-5 position-relative">
-		<div class="container">
-			<div class="row">
-				<div class="col-12 mx-auto">
-					<div class="mt-n8 mt-md-n9 text-center">
-						<div class="blur-shadow-avatar"></div>
-					</div>
-					<div class="row py-12 pt-8">
-						<div class="col-6">
-							<h3 class="mb-0"></h3>
-						</div>
-						<table class="table">
-							<thead>
-								<tr>
-									<th>번호</th>
-									<th>구분</th>
-									<th>노선</th>
-									<th>배차정보</th>
-									<th>총 매수</th>
-									<th>총 금액</th>
-									<th>상세조회</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr v-for="(booking, index) in myBookingList" :key="booking.id">
-									<td>{{ index + 1 }}</td>
-
-									<td>편도</td>
-									<td>
-										<div class="d-flex">
-											<div>
-												<p class="m-0">
-													{{ booking.routeDTO.startTerminal.name }}
-												</p>
-												<p class="m-0 mt-2">
-													{{ booking.routeDTO.endTerminal.name }}
-												</p>
-											</div>
-										</div>
-									</td>
-									<td>
-										{{
-											moment(booking.scheduleDTO.startTime).format(
-												'YYYY년 MM월 DD일 HH:mm',
-											)
-										}}
-									</td>
-									<td>총{{ totalNum }}명</td>
-									<td>{{ totalPrice }}원</td>
-									<td>
-										<MaterialButton
-											class="mb-2 col-12"
-											variant="contained"
-											color="dark"
-											fullWidth
-											@click="showModal = true"
-										>
-											조회
-										</MaterialButton>
-										<!--	Modal	-->
+	<div class="col-6">
+		<!--	Modal	-->
 										<div v-if="showModal" class="modal" style="display: flex">
 											<div class="modal-dialog">
 												<div
@@ -172,16 +114,9 @@
 												</div>
 											</div>
 										</div>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
+	</div>
 </template>
+
 <script setup>
 import MaterialButton from '@/components/MaterialButton.vue';
 import { ref } from 'vue';
@@ -213,7 +148,7 @@ const getNonMem = async () => {
 getNonMem();
 
 const getMyBookingList = async () => {
-	const res = await axios.get(`/api/booking/find/findByNonMemId/1`);
+	const res = await axios.get(`/api/booking/find/findByNonMemId/2`);
 	//비회원전화번호로 찾은 id
 	myBookingList.value = res.data;
 	console.log(myBookingList.value);
@@ -222,7 +157,7 @@ getMyBookingList();
 
 const getNonDetailBookingList = async () => {
 	const response = await axios.get(
-		`/api/booking/find/findByNonMemPayId/1/6`,
+		`/api/booking/find/findByNonMemPayId/2/7`,
 		//비회원전화번호로 찾은 id와 해당 payid
 	);
 	getDetailBookingList.value = response.data;
@@ -279,11 +214,11 @@ const CancelBooking = async id => {
 	border-bottom: 2px solid #dddddd;
 }
 .tickettb .start {
-	font-size: 15px;
+	font-size: 30px;
 	padding: 0 20px;
 }
 .tickettb .end {
-	font-size: 15px;
+	font-size: 30px;
 	padding: 0 20px;
 }
 .tickettb .ssub1 {
@@ -325,17 +260,7 @@ thead {
 body {
 	border-bottom: 3px solid #b1b2b5;
 }
-.modal{
-	position: absolute;
-	z-index: 20;
-}
 .modal-dialog {
 	width: 100%;
-}
-.startimg {
-	width: 50px;
-}
-.endimg {
-	width: 50px;
 }
 </style>
