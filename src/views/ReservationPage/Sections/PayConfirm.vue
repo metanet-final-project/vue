@@ -64,7 +64,7 @@
 								<th>결제수단</th>
 								<td>신용카드</td>
 								<th>결제금액</th>
-								<td>{{ totalPrice }}원</td>
+								<td>{{ totalSeatPrice }}원</td>
 							</tr>
 						</table>
 					</div>
@@ -79,9 +79,6 @@ import { ref } from 'vue';
 import axios from 'axios';
 import moment from 'moment';
 import { useRoute } from 'vue-router';
-import 'moment/locale/ko';
-moment.locale('ko');
-const totalPrice = ref();
 const route = useRoute();
 const schedule = ref({
 	id: route.query.id,
@@ -91,6 +88,11 @@ const booking = ref({
 	payId: route.query.payId,
 });
 const seatInfo = ref(JSON.parse(route.query.seat));
+let totalSeatPrice = 0;
+seatInfo.value.forEach((seat) => {
+  totalSeatPrice += seat.price;
+});
+console.log('좌석 가격: ' + totalSeatPrice);
 const scheduleInfo = ref({
 	id: null,
 	routeDTO: {
@@ -126,7 +128,6 @@ const ticket = async () => {
 		`/api/schedule/find/${schedule.value.id}/${schedule.value.routeId}`,
 	);
 	scheduleInfo.value = response.data;
-	totalPrice.value = response.data.price;
 };
 ticket();
 
@@ -137,8 +138,6 @@ const payConfirm = async () => {
 	console.log(response.data);
 	const prices = response.data.map(booking => booking.price);
 	const sum = prices.reduce((acc, curr) => acc + curr, 0);
-	totalPrice.value = sum;
-	console.log('결제확인' + totalPrice.value);
 	console.log(response.data[0].id);
 };
 payConfirm();

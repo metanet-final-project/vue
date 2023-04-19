@@ -15,7 +15,7 @@
 										{{
 											moment(scheduleInfo.startTime)
 												.locale('ko')
-												.format('YYYY년 MM월 DD일 ddd HH:mm')
+												.format('YYYY년 MM월 DD일 HH:mm')
 										}}
 									</th>
 								</tr>
@@ -211,7 +211,7 @@
 								<table class="pay">
 									<tr class="paytr">
 										<th class="payth">총결제금액</th>
-										<td class="paytd">{{ scheduleInfo.price }}</td>
+										<td class="paytd">{{totalSeatPrice}}</td>
 									</tr>
 								</table>
 								<MaterialButton
@@ -239,8 +239,6 @@ import setMaterialInput from '@/assets/js/material-input';
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import moment from 'moment';
-import 'moment/locale/ko';
-moment.locale('ko');
 const router = useRouter();
 const cardNumber = ref('');
 const cardExpiration = ref('');
@@ -261,6 +259,7 @@ const schedule = ref({
 });
 const seatInfo = ref(JSON.parse(route.query.seat));
 
+
 // const member = ref({
 // 	id: null,
 // 	loginId: null,
@@ -270,6 +269,12 @@ const seatInfo = ref(JSON.parse(route.query.seat));
 // });
 console.log(schedule.value);
 console.log(seatInfo.value);
+let totalSeatPrice = 0;
+seatInfo.value.forEach((seat) => {
+  totalSeatPrice += seat.price;
+});
+console.log('좌석 가격: ' + totalSeatPrice);
+
 const scheduleInfo = ref({
 	id: null,
 	routeDTO: {
@@ -308,14 +313,11 @@ const isLogin = async () => {
 		`/api/member/findByLoginId/${localStorage.getItem('loginId')}`,
 	);
 	if (result.data.loginId != null) {
-		console.log('아이디' + result.data);
 		memlogInId.value = result.data.id;
-		console.log(memlogInId.value);
 		login.value = true;
 	} else login.value = false;
 };
 isLogin();
-
 const setLoginInfo = async () => {
 	if (isLogin.value) {
 		memlogInId.value = (await isLogin()).id;
@@ -325,14 +327,11 @@ setLoginInfo();
 
 //승차권정보 가져오기
 const ticket = async () => {
-	const response = await axios.get(
-		`/api/schedule/find/${schedule.value.id}/${schedule.value.routeId}`,
-	);
-	scheduleInfo.value = response.data;
-	const prices = response.data.map(schedule => schedule.price);
-	const sum = prices.reduce((acc, curr) => acc + curr, 0);
-	totalPrice.value = sum;
-	console.log('결제확인' + totalPrice.value);
+   const response = await axios.get(
+      `/api/schedule/find/${schedule.value.id}/${schedule.value.routeId}`,
+   );
+   scheduleInfo.value = response.data;
+console.log('결제확인' + scheduleInfo.value.price);
 };
 ticket();
 
@@ -348,7 +347,8 @@ const savePay = async () => {
 			ageId: seat.ageId,
 			seatNum: seat.seatNum,
 			state: '결제완료',
-			price: seat.price,
+			price: totalSeatPrice,
+			bookingDate: new Date().toISOString(),
 		});
 	}
 	try {
