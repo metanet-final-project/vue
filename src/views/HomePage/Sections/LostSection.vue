@@ -9,7 +9,7 @@
 			<div class="row">
 				<div class="col-lg-3 col-sm-6">
 					<TransparentBlogCard
-						:image="post4"
+						:image="imageUrl" alt="image"
 						title="(동서울) 지갑"
 						description="2023-04-19(수) 동서울 터미널에서 분실물이 발생하였습니다. 분실물이 있으신 고객께서는 해당 터미널로 연락주시기 바랍니다."
 					/>
@@ -42,4 +42,26 @@
 <script setup>
 import TransparentBlogCard from '@/examples/cards/blogCards/TransparentBlogCard.vue';
 import post4 from '@/assets/img/분실물.webp';
+import {ref, onMounted} from 'vue';
+
+const filename = '111.png';
+const imageUrl = `http://localhost:8084/api/getImage/${filename}`;
+
+onMounted(()=>{
+	getImage();
+})
+
+const getImage = async()=>{
+	try{
+		const result = await axios.get(`/api/getImage/${filename}`,{
+			responseType: 'arraybuffer'
+		})
+		const blob = new Blob([result.data],{type: 'image/png'})
+		imageUrl.value = URL.createObjectURL(blob)
+	}catch(error){
+			console.error(error);
+	}
+}
+
+
 </script>
