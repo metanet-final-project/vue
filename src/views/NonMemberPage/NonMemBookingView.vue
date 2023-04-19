@@ -20,185 +20,180 @@
 		</div>
 	</Header>
 	<!--	Modal	-->
-										<div v-if="showModal" class="modal" style="display: flex; justify-content: center; align-items: center;">
-  <div class="modal-dialog justify-content-center align-items-center">
-    <div class="modal-content" style="box-shadow: 0 2px 2px rgba(0, 0, 0, 0.25), 0 1px 1px rgba(0, 0, 0, 0.22);">
-      <div class="modal-header">
-        <h5 class="modal-title">결제내역 상세조회</h5>
-														<MaterialBadge
-															color="light"
-															rounded
-															class="text-dark"
-															@click.prevent="showModal = false"
-															style="cursor: pointer"
-														>
-															닫기
-														</MaterialBadge>
-													</div>
-													<div
-														v-for="bookingDeatil in getDetailBookingList"
-														:key="bookingDeatil.id"
-													>
-														<div class="modal-body">
-															<table class="tickettb">
-																<tr>
-																	<th colspan="2">
-																		{{
-																			moment(
-																				bookingDeatil.scheduleDTO.startTime,
-																			).format('YYYY년 MM월 DD일 HH:mm')
-																		}} 출발
-																	</th>
-																</tr>
-																<tr>
-																	<td class="start" rowspan="2">
-																		<img
-																			class="startimg"
-																			src="@/assets/img/출발.png"
-																			alt=""
-																		/>
-																		{{
-																			bookingDeatil.routeDTO.startTerminal.name
-																		}}
-																	</td>
-																	<td>
-																		<span class="ssub1">회사</span>
-																		<span class="ssub2">{{
-																			bookingDeatil.scheduleDTO.busDTO
-																				.companyDTO.name
-																		}}</span>
-																	</td>
-																</tr>
-																<tr>
-																	<td>
-																		<span class="ssub1">등급</span>
-																		<span class="ssub2">{{
-																			bookingDeatil.scheduleDTO.busDTO.grade
-																		}}</span>
-																	</td>
-																</tr>
-																<tr>
-																	<td class="end" rowspan="2">
-																		<img
-																			class="endimg"
-																			src="@/assets/img/도착.png"
-																			alt=""
-																		/>
-																		{{
-																			bookingDeatil.routeDTO.endTerminal.name
-																		}}
-																	</td>
-																	<td>
-																		<span class="ssub1">매수</span>
-																		<span class="ssub2"
-																			>{{ bookingDeatil.ageDTO.name }} 1명</span
-																		>
-																	</td>
-																</tr>
-																<tr>
-																	<td>
-																		<span class="ssub1">좌석</span>
-																		<span class="ssub2">{{
-																			bookingDeatil.seatNum
-																		}}</span>
-																	</td>
-																</tr>
-															</table>
-														</div>
-														<div class="modal-footer justify-content-between">
-															<MaterialButton
-																variant="contained"
-																color="dark"
-																class="mb-0"
-																@click="CancelBooking(bookingDeatil.id)"
-																:id="bookingDeatil.id"
-															>
-																예매 취소
-															</MaterialButton>
-															<MaterialButton
-																variant="contained"
-																color="dark"
-																class="mb-0"
-																@click="openReceiptPage"
-															>
-																홈 티켓 출력
-															</MaterialButton>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-	<div class="content1 card card-body blur shadow-blur mx-3 mx-md-4 mt-n6 mb-4">
-		
-		<section class="py-sm-7 py-5 position-relative">
-		<div class="container">
-			<div class="row">
-				<div class="col-12 mx-auto">
-					<div class="mt-n8 mt-md-n9 text-center">
-						<div class="blur-shadow-avatar"></div>
-					</div>
-					<div class="row py-12 pt-8">
-						<div class="col-6">
-							<h3 class="mb-0"></h3>
-						</div>
-						<table class="table">
-							<thead>
-								<tr>
-									<th>번호</th>
-									<th>구분</th>
-									<th>노선</th>
-									<th>배차정보</th>
-									<th>총 매수</th>
-									<th>총 금액</th>
-									<th>상세조회</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr v-for="(booking, index) in myBookingList" :key="booking.id">
-									<td>{{ index + 1 }}</td>
-
-									<td>편도</td>
-									<td>
-										<div class="d-flex">
-											<div>
-												<p class="m-0">
-													{{ booking.routeDTO.startTerminal.name }}
-												</p>
-												<p class="m-0 mt-2">
-													{{ booking.routeDTO.endTerminal.name }}
-												</p>
-											</div>
-										</div>
-									</td>
-									<td>
-										{{
-											moment(booking.scheduleDTO.startTime).format(
-												'YYYY년 MM월 DD일 HH:mm',
-											)
-										}}
-									</td>
-									<td>총{{ totalNum }}명</td>
-									<td>{{ totalPrice }}원</td>
-									<td>
-										<MaterialButton
-											class="mb-2 col-12"
-											variant="contained"
-											color="dark"
-											fullWidth
-											@click="showModal = true"
-										>
-											조회
-										</MaterialButton>
-										
-									</td>
-								</tr>
-							</tbody>
+	<div
+		v-if="showModal"
+		class="modal"
+		style="display: flex; justify-content: center; align-items: center"
+	>
+		<div class="modal-dialog justify-content-center align-items-center">
+			<div
+				class="modal-content"
+				style="
+					box-shadow: 0 2px 2px rgba(0, 0, 0, 0.25),
+						0 1px 1px rgba(0, 0, 0, 0.22);
+				"
+			>
+				<div class="modal-header">
+					<h5 class="modal-title">결제내역 상세조회</h5>
+					<MaterialBadge
+						color="light"
+						rounded
+						class="text-dark"
+						@click.prevent="showModal = false"
+						style="cursor: pointer"
+					>
+						닫기
+					</MaterialBadge>
+				</div>
+				<div
+					v-for="bookingDeatil in getDetailBookingList"
+					:key="bookingDeatil.id"
+				>
+					<div class="modal-body">
+						<table class="tickettb">
+							<tr>
+								<th colspan="2">
+									{{
+										moment(bookingDeatil.scheduleDTO.startTime).format(
+											'YYYY년 MM월 DD일 HH:mm',
+										)
+									}}
+									출발
+								</th>
+							</tr>
+							<tr>
+								<td class="start" rowspan="2">
+									<img class="startimg" src="@/assets/img/출발.png" alt="" />
+									{{ bookingDeatil.routeDTO.startTerminal.name }}
+								</td>
+								<td>
+									<span class="ssub1">회사</span>
+									<span class="ssub2">{{
+										bookingDeatil.scheduleDTO.busDTO.companyDTO.name
+									}}</span>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<span class="ssub1">등급</span>
+									<span class="ssub2">{{
+										bookingDeatil.scheduleDTO.busDTO.grade
+									}}</span>
+								</td>
+							</tr>
+							<tr>
+								<td class="end" rowspan="2">
+									<img class="endimg" src="@/assets/img/도착.png" alt="" />
+									{{ bookingDeatil.routeDTO.endTerminal.name }}
+								</td>
+								<td>
+									<span class="ssub1">매수</span>
+									<span class="ssub2">{{ bookingDeatil.ageDTO.name }} 1명</span>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<span class="ssub1">좌석</span>
+									<span class="ssub2">{{ bookingDeatil.seatNum }}</span>
+								</td>
+							</tr>
 						</table>
+					</div>
+					<div class="modal-footer justify-content-between">
+						<MaterialButton
+							variant="contained"
+							color="dark"
+							class="mb-0"
+							@click="CancelBooking(bookingDeatil.id)"
+							:id="bookingDeatil.id"
+						>
+							예매 취소
+						</MaterialButton>
+						<MaterialButton
+							variant="contained"
+							color="dark"
+							class="mb-0"
+							@click="openReceiptPage"
+						>
+							홈 티켓 출력
+						</MaterialButton>
 					</div>
 				</div>
 			</div>
 		</div>
-	</section>
+	</div>
+	<div class="content1 card card-body blur shadow-blur mx-3 mx-md-4 mt-n6 mb-4">
+		<section class="py-sm-7 py-5 position-relative">
+			<div class="container">
+				<div class="row">
+					<div class="col-12 mx-auto">
+						<div class="mt-n8 mt-md-n9 text-center">
+							<div class="blur-shadow-avatar"></div>
+						</div>
+						<div class="row py-12 pt-8">
+							<div class="col-6">
+								<h3 class="mb-0"></h3>
+							</div>
+							<table class="table">
+								<thead>
+									<tr>
+										<th>번호</th>
+										<th>구분</th>
+										<th>노선</th>
+										<th>배차정보</th>
+										<th>총 매수</th>
+										<th>총 금액</th>
+										<th>상세조회</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr
+										v-for="(booking, index) in myBookingList"
+										:key="booking.id"
+									>
+										<td>{{ index + 1 }}</td>
+
+										<td>편도</td>
+										<td>
+											<div class="d-flex">
+												<div>
+													<p class="m-0">
+														{{ booking.routeDTO.startTerminal.name }}
+													</p>
+													<p class="m-0 mt-2">
+														{{ booking.routeDTO.endTerminal.name }}
+													</p>
+												</div>
+											</div>
+										</td>
+										<td>
+											{{
+												moment(booking.scheduleDTO.startTime).format(
+													'YYYY년 MM월 DD일 HH:mm',
+												)
+											}}
+										</td>
+										<td>총{{ totalNum }}명</td>
+										<td>{{ totalPrice }}원</td>
+										<td>
+											<MaterialButton
+												class="mb-2 col-12"
+												variant="contained"
+												color="dark"
+												fullWidth
+												@click="showModal = true"
+											>
+												조회
+											</MaterialButton>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
 	</div>
 	<Footer />
 </template>
@@ -214,12 +209,13 @@ import { ref } from 'vue';
 import axios from 'axios';
 import MaterialBadge from '@/components/MaterialBadge.vue';
 import moment from 'moment';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 const nonMember = ref({
 	id: 123,
 	phone: 2323,
 });
 
+const route = useRoute();
 const router = useRouter();
 const showModal = ref(false);
 const totalPrice = ref('');
@@ -228,16 +224,20 @@ const myBookingList = ref('');
 const getDetailBookingList = ref('');
 const NonMember = ref('');
 
-const openReceiptPage = async() =>{
-	const receiptPage = window.open('영수증 페이지 URL', '_blank');
-      // 영수증 페이지 로딩 완료 이벤트 처리
-      receiptPage.onload = () => {
-        // 영수증 페이지에서 프린트 이벤트 발생 시 처리할 함수 등록
-      receiptPage.window.addEventListener('beforeprint', () => {
-          // 프린트 처리할 코드 작성
-			receiptPage.window.print();
+const nonMemberParam = ref({
+	nonMemberId: route.query.id,
 });
-};
+
+const openReceiptPage = async () => {
+	const receiptPage = window.open('영수증 페이지 URL', '_blank');
+	// 영수증 페이지 로딩 완료 이벤트 처리
+	receiptPage.onload = () => {
+		// 영수증 페이지에서 프린트 이벤트 발생 시 처리할 함수 등록
+		receiptPage.window.addEventListener('beforeprint', () => {
+			// 프린트 처리할 코드 작성
+			receiptPage.window.print();
+		});
+	};
 };
 
 const getNonMem = async () => {
@@ -366,7 +366,6 @@ body {
 	border-bottom: 3px solid #b1b2b5;
 }
 .modal-dialog {
-  width: 200%;
+	width: 200%;
 }
 </style>
-

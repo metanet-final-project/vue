@@ -63,24 +63,24 @@
 						</div>
 
 						<div class="bundle col-12">
-								<div class="col-12">
-									<small class="font-weight-bold">카드선택</small>
-									<div class="form-check">
-								<input
-									class="form-check-input"
-									type="checkbox"
-									value=""
-									id="check4"
-								/>
-								<label class="form-check-label"> 개인 </label>
-								<input
-									class="form-check-input"
-									type="checkbox"
-									value=""
-									id="check5"
-								/>
-								<label class="form-check-label pl-5"> 법인 </label>
-							</div>
+							<div class="col-12">
+								<small class="font-weight-bold">카드선택</small>
+								<div class="form-check">
+									<input
+										class="form-check-input"
+										type="checkbox"
+										value=""
+										id="check4"
+									/>
+									<label class="form-check-label"> 개인 </label>
+									<input
+										class="form-check-input"
+										type="checkbox"
+										value=""
+										id="check5"
+									/>
+									<label class="form-check-label pl-5"> 법인 </label>
+								</div>
 							</div>
 							<div class="row">
 								<div class="col-12">
@@ -101,14 +101,24 @@
 									<small class="font-weight-bold">유효기간</small>
 									<div class="input-group input-group-outline my-1">
 										<label class="form-label">월</label>
-										<input type="number" class="form-control" v-model="cardExpirationMonth" min="1" max="12"/>
+										<input
+											type="number"
+											class="form-control"
+											v-model="cardExpirationMonth"
+											min="1"
+											max="12"
+										/>
 									</div>
 								</div>
 								<div class="col-6">
 									<small class="font-weight-bold">&nbsp;</small>
 									<div class="input-group input-group-outline my-1">
 										<label class="form-label">년</label>
-										<input type="number" class="form-control" v-model="cardExpirationYear" />
+										<input
+											type="number"
+											class="form-control"
+											v-model="cardExpirationYear"
+										/>
 									</div>
 								</div>
 							</div>
@@ -122,7 +132,8 @@
 											class="form-control"
 											id="cardPassword"
 											v-model="cardPassword"
-											min="0" max="99"
+											min="0"
+											max="99"
 											maxlength="2"
 										/>
 									</div>
@@ -198,7 +209,7 @@
 								<table class="pay">
 									<tr class="paytr">
 										<th class="payth">총결제금액</th>
-										<td class="paytd">{{totalSeatPrice}}</td>
+										<td class="paytd">{{ totalSeatPrice }}원</td>
 									</tr>
 								</table>
 								<MaterialButton
@@ -251,18 +262,18 @@ const cardExpirationMonth = ref('');
 const cardExpirationYear = ref('');
 
 const updateCardExpiration = () => {
-  const month = String(cardExpirationMonth.value).padStart(2, '0');
-  const year = String(cardExpirationYear.value).slice(-2);
-  return month + year;
-}
+	const month = String(cardExpirationMonth.value).padStart(2, '0');
+	const year = String(cardExpirationYear.value).slice(-2);
+	return month + year;
+};
 
 const cardExpiration = ref(updateCardExpiration());
 
 watch([cardExpirationMonth, cardExpirationYear], () => {
-  cardExpiration.value = updateCardExpiration();
+	cardExpiration.value = updateCardExpiration();
 });
-watch(cardExpirationMonth, (value) => {
-  if (value < 1 || value > 12) cardExpirationMonth.value = '';
+watch(cardExpirationMonth, value => {
+	if (value < 1 || value > 12) cardExpirationMonth.value = '';
 });
 // const member = ref({
 // 	id: null,
@@ -274,8 +285,8 @@ watch(cardExpirationMonth, (value) => {
 console.log(schedule.value);
 console.log(seatInfo.value);
 let totalSeatPrice = 0;
-seatInfo.value.forEach((seat) => {
-  totalSeatPrice += seat.price;
+seatInfo.value.forEach(seat => {
+	totalSeatPrice += seat.price;
 });
 console.log('좌석 가격: ' + totalSeatPrice);
 
@@ -331,27 +342,27 @@ setLoginInfo();
 
 //승차권정보 가져오기
 const ticket = async () => {
-   const response = await axios.get(
-      `/api/schedule/find/${schedule.value.id}/${schedule.value.routeId}`,
-   );
-   scheduleInfo.value = response.data;
-console.log('결제확인' + scheduleInfo.value.price);
+	const response = await axios.get(
+		`/api/schedule/find/${schedule.value.id}/${schedule.value.routeId}`,
+	);
+	scheduleInfo.value = response.data;
+	console.log('결제확인' + scheduleInfo.value.price);
 };
 ticket();
 
 //예매테이블에 저장하기
 const savePay = async () => {
-	  const check1 = document.getElementById("check1");
-  const check2 = document.getElementById("check2");
-  const check3 = document.getElementById("check3");
+	const check1 = document.getElementById('check1');
+	const check2 = document.getElementById('check2');
+	const check3 = document.getElementById('check3');
 
-  if (!check1.checked || !check2.checked || !check3.checked) {
-    Swal.fire({
-      title: '이용약관에 동의해주세요.',
-      icon: 'error',
-    });
-    return;
-  }
+	if (!check1.checked || !check2.checked || !check3.checked) {
+		Swal.fire({
+			title: '이용약관에 동의해주세요.',
+			icon: 'error',
+		});
+		return;
+	}
 	const bookingList = [];
 	for (const seat of seatInfo.value) {
 		bookingList.push({
@@ -362,7 +373,7 @@ const savePay = async () => {
 			ageId: seat.ageId,
 			seatNum: seat.seatNum,
 			state: '결제완료',
-			price: totalSeatPrice,
+			price: seat.price,
 			bookingDate: new Date().toISOString(),
 		});
 	}
@@ -373,7 +384,7 @@ const savePay = async () => {
 				cardExpiration: cardExpiration.value,
 				cardPassword: cardPassword.value,
 				birth: cardBirth.value,
-				totalPrice: totalPrice.value,
+				totalPrice: totalSeatPrice,
 			},
 			nonMember: {
 				phone: nonMemPhone.value,
@@ -476,7 +487,7 @@ const savePay = async () => {
 	font-weight: bold;
 	width: 50%;
 }
-.form-check{
+.form-check {
 	padding-left: 0;
 }
 .form-check-label {
@@ -484,8 +495,7 @@ const savePay = async () => {
 	padding-right: 20px;
 }
 .form-check-input:checked {
-  background-color: #59b55c !important;
-  border-color: #59b55c !important;
+	background-color: #59b55c !important;
+	border-color: #59b55c !important;
 }
-
 </style>
