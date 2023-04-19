@@ -129,6 +129,7 @@
 									<template v-if="getMember != null">
 										<tr>
 											<td>1</td>
+											<td>{{ getMember.id }}</td>
 											<td>{{ getMember.loginId }}</td>
 											<td>{{ getMember.name }}</td>
 											<td>{{ getMember.email }}</td>
