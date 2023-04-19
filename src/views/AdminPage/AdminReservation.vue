@@ -35,14 +35,14 @@
 											<td>{{ pay.cardNumber }}</td>
 											<td>
 												{{
-													pay.bookingDTOList[0].memberDTO.loginId != null
+													pay.bookingDTOList[0].memberDTO != null
 														? pay.bookingDTOList[0].memberDTO.loginId
-														: 비회원
+														: '비회원'
 												}}
 											</td>
 											<td>
 												{{
-													pay.bookingDTOList[0].memberDTO.phone != null
+													pay.bookingDTOList[0].memberDTO != null
 														? pay.bookingDTOList[0].memberDTO.phone
 														: pay.bookingDTOList[0].nonMemberDTO.phone
 												}}
