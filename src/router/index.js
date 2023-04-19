@@ -56,7 +56,7 @@ const router = createRouter({
 			component: MypageBookingView,
 		},
 		{
-			path: '/mypage/booking/ticket',
+			path: '/mypage/booking/ticket/:id',
 			name: 'TicketView',
 			component: TicketView,
 		},
