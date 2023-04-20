@@ -17,13 +17,13 @@
 			</ul>
 			<p class="btnBox">
 				<button type="button" @click="printPage" style="padding: 0">
-					<img src="/src/assets/img/btn_print_blue.gif" alt="프린트버튼" />
+					<img src="/src/assets/img/print_btn.gif" alt="프린트버튼" />
 				</button>
 			</p>
 		</div>
 
 		<div class="ticketArea">
-			<img src="/src/assets/img/img_ticket.gif" class="ticket-image" />
+			<img src="/src/assets/img/ticket_white.gif" class="ticket-image" />
 			<strong class="title">시외버스 승차권</strong>
 			<div class="ticket-info-section sec01">
 				<ul>
@@ -43,12 +43,11 @@
 			</div>
 			<div class="ticket-info-section sec02">
 				<span class="qrCode">
-					<canvas width="76" height="76"></canvas>
+					<canvas width="90" height="90"></canvas>
 				</span>
 				<span class="qrCodeNum">
-					202304129945634
+					{{ code }}
 					<br />
-					01092834
 				</span>
 			</div>
 			<div class="ticket-info-section sec03">
@@ -68,8 +67,9 @@
 				</ul>
 				<div class="schedule-info">
 					<span class="f1"
-						>{{ ticket.routeDTO.startTerminal.name }}&nbsp;08:10출발 /
-						{{ ticket.routeDTO.endTerminal.name }}행</span
+						>{{ ticket.routeDTO.startTerminal.name }}&nbsp;{{
+							moment(ticket.scheduleDTO.startTime).format('HH:mm')
+						}}출발 / {{ ticket.routeDTO.endTerminal.name }}행</span
 					>
 				</div>
 				<p class="price-info">
@@ -101,7 +101,7 @@
 					<li>
 						<span class="txt_sml fl">운송회사<br />Express Co</span>
 						<span class="txt_large15 fr">{{
-							ticket.scheduleDTO.busDTO.companyDTO.name
+							ticket.scheduleDTO.busDTO.companyDTO.name.slice(3, 5)
 						}}</span>
 					</li>
 
@@ -134,8 +134,24 @@ import axios from 'axios';
 import { ref } from 'vue';
 import moment from 'moment';
 import 'moment/locale/ko';
-
 import { useRoute } from 'vue-router';
+import qrcode from 'qrcode';
+import { onMounted } from 'vue';
+
+const bookingNo = ref('');
+
+const bookingDate = ref('');
+
+const code = ref('');
+
+const generateQRCode = async () => {
+	const canvas = document.querySelector('canvas');
+	await qrcode.toCanvas(canvas, code.value, { width: 90, height: 90 });
+};
+
+onMounted(() => {
+	generateQRCode();
+});
 
 const route = useRoute();
 
@@ -146,6 +162,11 @@ const getTicket = async () => {
 	const res = await axios.get(`/api/booking/find/findTicketByBookingId/${id}`);
 	ticket.value = res.data;
 	console.log(ticket.value);
+	bookingNo.value = ticket.value.id;
+	bookingDate.value = moment(ticket.value.bookingDate).format('YYYYMMDDHHMM');
+
+	code.value = bookingDate.value.toString() + bookingNo.value.toString();
+	console.log(code.value);
 };
 getTicket();
 
@@ -214,8 +235,16 @@ p {
 	margin-top: 12px;
 }
 
+.ticket-container .ticketArea .sec04 {
+	margin-top: 15px;
+}
+
 .ticket-container .ticketArea .sec05 {
 	margin-top: 100px;
+}
+.ticket-container .ticketArea .sec02 {
+	margin-top: 10px;
+	margin-bottom: 10px;
 }
 
 .ticket-container .ticketArea .sec02 .qrCodeNum {
@@ -314,6 +343,13 @@ a {
 	padding-top: 20px;
 	text-align: center;
 }
+.ticket-container .ticketArea .sec02 .qrCode {
+	display: block;
+	width: 90px;
+	height: 80px;
+
+	margin: 0 auto;
+}
 
 .ticket-container .ticketArea .sec03 ul li span {
 	display: block;
@@ -331,7 +367,17 @@ a {
 	float: left;
 	width: 50%;
 	height: 37px;
-	padding: 10px;
+	padding: 0 10px;
 	box-sizing: border-box;
+}
+
+@media print {
+	.ticketArea {
+		display: block;
+	}
+
+	.print_head {
+		display: none;
+	}
 }
 </style>
