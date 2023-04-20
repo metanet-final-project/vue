@@ -48,7 +48,7 @@
 									</th>
 									<th style="width: 50%">
 										<div class="price">
-											<span style="font-weight: lighter">총 결제금액</span>
+											<span style="font-weight: lighter">결제금액</span>
 											<span
 												style="
 													font-weight: bold;
@@ -151,16 +151,16 @@
 											@click="openTicketWindow(item.id)"
 											:id="item.id"
 										>
-											홈티켓 출력
+											티켓 출력
 										</button>
 									</td>
 								</tr>
 							</tbody>
 						</table>
 						<div class="btn-area">
-							<button type="button" class="btn-booking-list">
+							<!-- <button type="button" class="btn-booking-list">
 								예매내역 변경
-							</button>
+							</button> -->
 							<button
 								type="button"
 								class="btn-booking-list"
@@ -174,7 +174,7 @@
 								class="btn-print2"
 								@click="openTicketWindow(item.id)"
 							>
-								홈티켓 출력
+								티켓 출력
 							</button>
 						</div>
 					</div>
@@ -282,6 +282,7 @@
 										</div>
 									</td>
 								</tr>
+								<tr></tr>
 							</tbody>
 						</table>
 					</div>

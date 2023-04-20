@@ -27,7 +27,7 @@
 			<div class="card text-center mx-3" style="width: 23rem">
 				<div class="card-body">
 					<h5 class="card-title">내 정보 수정</h5>
-					<p class="card-text">비밀번호 변경</p>
+					<p class="card-text">회원정보 수정</p>
 					<a href="/mypage/modify" class="btn btn-dark">수정</a>
 				</div>
 			</div>
