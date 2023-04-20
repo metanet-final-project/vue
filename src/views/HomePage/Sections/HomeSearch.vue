@@ -157,7 +157,7 @@ const goNonMemberBooking = async () => {
 			router.push({
 				name: 'NonMemBooking',
 				query: {
-					nonMemberId: result.data.id,
+					nonMemberId: result.data,
 				},
 			});
 		}

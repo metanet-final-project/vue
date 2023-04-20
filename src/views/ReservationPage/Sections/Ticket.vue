@@ -487,6 +487,7 @@ const savePay = async () => {
 			nonMember: {
 				phone: nonMemPhone.value,
 				birth: nonMemBirth.value,
+				birthStr: nonMemBirth.value,
 			},
 			bookingList,
 		});

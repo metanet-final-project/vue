@@ -166,7 +166,6 @@ const payList = ref([]);
 const showDropdown = ref(0);
 
 const showDetail = payId => {
-	console.log(payId);
 	showDropdown.value == payId
 		? (showDropdown.value = 0)
 		: (showDropdown.value = payId);

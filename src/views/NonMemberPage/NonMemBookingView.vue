@@ -9,10 +9,7 @@
 			<div class="container">
 				<div class="row justify-content-center">
 					<div class="col-lg-8 text-center mx-auto my-auto">
-						<h1 class="text-white">
-							<span class="text-white" id="typed"></span>
-						</h1>
-						<p class="lead mb-4 text-white">결제내역 조회</p>
+						<h1 class="text-white">결제내역 조회</h1>
 					</div>
 				</div>
 			</div>
@@ -48,16 +45,13 @@
 						닫기
 					</MaterialBadge>
 				</div>
-				<div
-					v-for="bookingDeatil in getDetailBookingList"
-					:key="bookingDeatil.id"
-				>
+				<div v-for="booking in bookingList" :key="booking.id">
 					<div class="modal-body">
 						<table class="tickettb">
 							<tr>
 								<th colspan="2">
 									{{
-										moment(bookingDeatil.scheduleDTO.startTime).format(
+										moment(booking.scheduleDTO.scheduleDTO).format(
 											'YYYY년 MM월 DD일 HH:mm',
 										)
 									}}
@@ -67,12 +61,12 @@
 							<tr>
 								<td class="start" rowspan="2">
 									<img class="startimg" src="@/assets/img/출발.png" alt="" />
-									{{ bookingDeatil.routeDTO.startTerminal.name }}
+									{{ booking.routeDTO.startTerminal.name }}
 								</td>
 								<td>
 									<span class="ssub1">회사</span>
 									<span class="ssub2">{{
-										bookingDeatil.scheduleDTO.busDTO.companyDTO.name
+										booking.scheduleDTO.busDTO.companyDTO.name
 									}}</span>
 								</td>
 							</tr>
@@ -80,24 +74,24 @@
 								<td>
 									<span class="ssub1">등급</span>
 									<span class="ssub2">{{
-										bookingDeatil.scheduleDTO.busDTO.grade
+										booking.scheduleDTO.busDTO.grade
 									}}</span>
 								</td>
 							</tr>
 							<tr>
 								<td class="end" rowspan="2">
 									<img class="endimg" src="@/assets/img/도착.png" alt="" />
-									{{ bookingDeatil.routeDTO.endTerminal.name }}
+									{{ booking.routeDTO.endTerminal.name }}
 								</td>
 								<td>
 									<span class="ssub1">매수</span>
-									<span class="ssub2">{{ bookingDeatil.ageDTO.name }} 1명</span>
+									<span class="ssub2">{{ booking.ageDTO.name }} 1명</span>
 								</td>
 							</tr>
 							<tr>
 								<td>
 									<span class="ssub1">좌석</span>
-									<span class="ssub2">{{ bookingDeatil.seatNum }}</span>
+									<span class="ssub2">{{ booking.seatNum }}</span>
 								</td>
 							</tr>
 						</table>
@@ -111,8 +105,8 @@
 										variant="contained"
 										color="dark"
 										class="cancelBut mb-0"
-										@click="CancelBooking(bookingDeatil.id)"
-										:id="bookingDeatil.id"
+										@click="CancelBooking(booking.id)"
+										:id="booking.id"
 									>
 										좌석취소
 									</MaterialButton>
@@ -162,43 +156,32 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr
-										v-for="(booking, index) in myBookingList"
-										:key="booking.id"
-									>
+									<tr v-for="(pay, index) in payList" :key="pay.id">
 										<td>{{ index + 1 }}</td>
-
 										<td>편도</td>
 										<td>
 											<div class="d-flex">
-												<div>
-													<p class="m-0">
-														{{ booking.routeDTO.startTerminal.name }}
-													</p>
-													<p class="m-0 mt-2">
-														{{ booking.routeDTO.endTerminal.name }}
-													</p>
-												</div>
+												{{ pay.bookingDTOList[0].routeDTO.startTerminal.name }}
+												-> {{ pay.bookingDTOList[0].routeDTO.endTerminal.name }}
 											</div>
 										</td>
 										<td>
 											{{
-												moment(booking.scheduleDTO.startTime).format(
-													'YYYY년 MM월 DD일 HH:mm',
-												)
+												moment(
+													pay.bookingDTOList[0].scheduleDTO.startTime,
+												).format('YYYY년 MM월 DD일 HH:mm')
 											}}
 										</td>
-										<td>총{{ totalNum }}명</td>
-										<td>{{ totalPrice }}원</td>
+										<td>총 {{ pay.bookingDTOList.length }}명</td>
+										<td>{{ pay.totalPrice }}원</td>
 										<td>
 											<MaterialButton
-												class="mb-2 col-12"
+												class="m-auto"
 												variant="contained"
 												color="dark"
-												fullWidth
-												@click="showModal = true"
+												@click="showDetail(index)"
 											>
-												조회
+												예매정보
 											</MaterialButton>
 										</td>
 									</tr>
@@ -223,12 +206,13 @@ import { ref } from 'vue';
 import axios from 'axios';
 import MaterialBadge from '@/components/MaterialBadge.vue';
 import moment from 'moment';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 const nonMember = ref({
 	id: 123,
 	phone: 2323,
 });
 
+const route = useRoute();
 const router = useRouter();
 const showModal = ref(false);
 const totalPrice = ref('');
@@ -236,6 +220,31 @@ const totalNum = ref('');
 const myBookingList = ref('');
 const getDetailBookingList = ref('');
 const NonMember = ref('');
+
+const nonMemberId = ref();
+const payList = ref([]);
+const bookingList = ref([]);
+
+const getPayList = async () => {
+	try {
+		nonMemberId.value = route.query.nonMemberId;
+		const result = await axios.get(
+			`/api/pay/findByNonMember/${nonMemberId.value}`,
+		);
+		if (result.data != null) {
+			payList.value = result.data;
+			console.log(result.data);
+		}
+	} catch (error) {
+		console.error(error);
+	}
+};
+getPayList();
+
+const showDetail = index => {
+	showModal.value = true;
+	bookingList.value = payList.value[index].bookingDTOList;
+};
 
 const openReceiptPage = async () => {
 	const receiptPage = window.open('영수증 페이지 URL', '_blank');
