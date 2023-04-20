@@ -45,7 +45,12 @@
 						</div>
 					</div>
 					<div class="date_select">
-						<input type="date" class="form-control" v-model="date" />
+						<input
+							type="date"
+							class="form-control"
+							v-model="selectedDate"
+							@change="compareDates"
+						/>
 					</div>
 				</div>
 			</div>
@@ -166,6 +171,23 @@ const scheduleInfo = ref([
 		date: null,
 	},
 ]);
+
+const selectedDate = ref();
+
+const compareDates = () => {
+	const inputDate = new Date(selectedDate.value); // 입력된 날짜를 Date 객체로 변환
+	const currentDate = new Date(); // 현재 날짜와 시간을 가져옴
+
+	if (inputDate < currentDate) {
+		Swal.fire({
+			title: '이전 날짜는 선택할 수 없습니다!',
+			icon: 'error',
+		});
+		selectedDate.value = null;
+	} else {
+		date.value = selectedDate.value;
+	}
+};
 
 const selectDate = () => {
 	schedule.value.date = date.value;
