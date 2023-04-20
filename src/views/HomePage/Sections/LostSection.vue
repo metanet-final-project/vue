@@ -29,10 +29,10 @@ import TransparentBlogCard from '@/examples/cards/blogCards/TransparentBlogCard.
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import moment from 'moment';
-
+import { useRouter } from 'vue-router';
 // const filename = '2111560_547394_1907.jpg';
 const lostList = ref();
-
+const router = useRouter();
 const imageUrl = ref('');
 onMounted(() => {
 	getImage();
@@ -60,5 +60,9 @@ const getImage = async () => {
 	} catch (error) {
 		console.error(error);
 	}
+};
+
+const LostItemMem = lost => {
+	router.push({ path: '/board/LostItemMem', query: { id: lost.id } });
 };
 </script>
