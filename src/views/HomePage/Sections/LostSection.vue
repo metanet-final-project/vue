@@ -7,8 +7,8 @@
 				</div>
 			</div>
 			<div class="row">
-				<template v-for="lost in lostList" :key="lost.id">
-					<div class="col-lg-3 col-sm-6">
+				<template v-for="(lost, index) in lostList" :key="lost.id">
+					<div class="col-lg-3 col-sm-6" v-if="index < 4">
 						<TransparentBlogCard
 							:image="`http://localhost:8084/api/getImage/${lost.fileName}`"
 							:title="`${lost.title}`"
@@ -44,10 +44,6 @@ const getImage = async () => {
 		if (response.data != null) {
 			lostList.value = response.data;
 			console.log(lostList.value);
-			console.log('==========================');
-			console.log(lostList.value[0].fileName);
-			console.log(lostList.value[1].fileName);
-			console.log(lostList.value[4].fileName);
 		}
 
 		for (let i = 0; i < lostList.value.length; i++) {

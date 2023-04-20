@@ -46,10 +46,10 @@
 							</div>
 							<div class="modal-body">
 								<form role="form" class="text-start p-3">
-									<label>번호</label>
+									<!-- <label>번호</label>
 									<div class="input-group input-group-outline mb-2">
 										<input type="text" class="form-control" v-model="lost.id" />
-									</div>
+									</div> -->
 									<label>제목</label>
 									<div class="input-group input-group-outline mb-2">
 										<input
