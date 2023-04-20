@@ -7,34 +7,16 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-lg-3 col-sm-6">
-					<TransparentBlogCard
-						:image="post4"
-						title="(동서울) 지갑"
-						description="2023-04-19(수) 동서울 터미널에서 분실물이 발생하였습니다. 분실물이 있으신 고객께서는 해당 터미널로 연락주시기 바랍니다."
-					/>
-				</div>
-				<div class="col-lg-3 col-sm-6">
-					<TransparentBlogCard
-						:image="post4"
-						title="(서울고속버스) 에어팟, 화장품"
-						description="2023-04-01 서울고속버스터미널에서 에어팟, 화장품 등의 분실물이 발생하였습니다. "
-					/>
-				</div>
-				<div class="col-lg-3 col-sm-6">
-					<TransparentBlogCard
-						:image="post4"
-						title="(서울고속버스) 에어팟, 화장품"
-						description="2023-04-01 서울고속버스터미널에서 에어팟, 화장품 등의 분실물이 발생하였습니다. "
-					/>
-				</div>
-				<div class="col-lg-3 col-sm-6">
-					<TransparentBlogCard
-						:image="post4"
-						title="(서울고속버스) 에어팟, 화장품"
-						description="2023-04-01 서울고속버스터미널에서 에어팟, 화장품 등의 분실물이 발생하였습니다. "
-					/>
-				</div>
+				<template v-for="lost in getLostItem" :key="lost.id">
+					<div class="col-lg-3 col-sm-6">
+						<TransparentBlogCard
+							:image="post4"
+							:title="lost.title"
+							:description="lost.contents"
+							@click="LostItemMem(lost)"
+						/>
+					</div>
+				</template>
 			</div>
 		</div>
 	</section>
@@ -42,4 +24,25 @@
 <script setup>
 import TransparentBlogCard from '@/examples/cards/blogCards/TransparentBlogCard.vue';
 import post4 from '@/assets/img/분실물.webp';
+import axios from 'axios';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+const getLostItem = ref([]);
+const router = useRouter();
+const getlost = async () => {
+	try {
+		const res = await axios.get(`/api/lost/findAll`);
+		if (res.data) getLostItem.value = res.data;
+		//console.log(res.data[0].title);
+		console.log(getLostItem.value[0].title);
+	} catch (error) {
+		console.error(error);
+	}
+};
+getlost();
+
+const LostItemMem = lost => {
+	router.push({ path: '/board/LostItemMem', query: { id: lost.id } });
+};
 </script>
