@@ -20,7 +20,9 @@
 					<p class="date" id="satsDeprDtm">
 						{{
 							scheduleInfo[0].startTime != null
-								? scheduleInfo[0].startTime.slice(0, 10)
+								? moment(scheduleInfo[0].startTime)
+										.locale('ko')
+										.format('YYYY년 MM월 DD일')
 								: ''
 						}}
 					</p>
@@ -42,8 +44,13 @@
 							>
 						</div>
 					</div>
-					<div class="calendar">
-						<DatePicker v-model="date" mode="date" />
+					<div class="date_select">
+						<input
+							type="date"
+							class="form-control"
+							v-model="selectedDate"
+							@change="compareDates"
+						/>
 					</div>
 				</div>
 			</div>
@@ -54,7 +61,9 @@
 				<div class="date_box">
 					<span>{{
 						scheduleInfo[0].startTime != null
-							? scheduleInfo[0].startTime.slice(0, 10)
+							? moment(scheduleInfo[0].startTime)
+									.locale('ko')
+									.format('YYYY년 MM월 DD일')
 							: ''
 					}}</span>
 				</div>
@@ -84,7 +93,9 @@
 										<td>
 											{{
 												schedule.startTime != null
-													? schedule.startTime.slice(10, 16)
+													? moment(schedule.startTime)
+															.locale('ko')
+															.format('HH:MM')
 													: ''
 											}}
 										</td>
@@ -112,12 +123,16 @@ import Footer from '@/layouts/Footer.vue';
 import image from '@/assets/img/busimage.png';
 import 'v-calendar/style.css';
 
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import axios from 'axios';
-import { DatePicker } from 'v-calendar';
 import { useRoute, useRouter } from 'vue-router';
+import Swal from 'sweetalert2';
+import moment from 'moment';
+import 'moment/locale/ko';
+moment.locale('ko');
 const route = useRoute();
 const router = useRouter();
+const date = ref(new Date());
 const schedule = ref({
 	routeId: route.query.routeId,
 	date: route.query.date,
@@ -156,6 +171,32 @@ const scheduleInfo = ref([
 		date: null,
 	},
 ]);
+
+const selectedDate = ref();
+
+const compareDates = () => {
+	const inputDate = new Date(selectedDate.value); // 입력된 날짜를 Date 객체로 변환
+	const currentDate = new Date(); // 현재 날짜와 시간을 가져옴
+
+	if (inputDate < currentDate) {
+		Swal.fire({
+			title: '이전 날짜는 선택할 수 없습니다!',
+			icon: 'error',
+		});
+		selectedDate.value = null;
+	} else {
+		date.value = selectedDate.value;
+	}
+};
+
+const selectDate = () => {
+	schedule.value.date = date.value;
+	router.push({
+		query: { routeId: route.query.routeId, date: date.value },
+	});
+	getSchedule();
+};
+
 const getSchedule = async () => {
 	console.log(schedule.value);
 
@@ -163,18 +204,21 @@ const getSchedule = async () => {
 		`/api/schedule/find/seat/${schedule.value.routeId}/${schedule.value.date}`,
 	);
 	if (result.data == null || result.data.length == 0) {
-		alert('조회된 배차가 없습니다.');
+		Swal.fire({
+			title: '조회된 배차가 없습니다.',
+			icon: 'error',
+		});
 		router.push({
 			name: 'Home',
 		});
 	}
 	scheduleInfo.value = result.data;
+	console.log(scheduleInfo.value);
 }; // 배차 정보
 
-getSchedule();
+watch(date, selectDate);
 
-const date = ref(new Date());
-console.log(date.value);
+getSchedule();
 </script>
 
 <style scoped>
@@ -241,12 +285,32 @@ console.log(date.value);
 	position: relative;
 	min-height: 35px;
 	padding-left: 67px;
-	font-size: 22px;
+	font-size: 20px;
 	color: #f7f7f7;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.form-control {
+	background-color: white;
+	width: 150px;
+	margin: auto;
+	padding: 5px 10px;
+}
+
+.form-control:hover {
+	background-color: white;
 }
 
 .infoBox {
 	width: 100%;
+}
+
+.date_select {
+	width: 100%;
+	height: 100%;
+	margin: 10px auto;
+	text-align: center;
 }
 
 .box {
@@ -319,12 +383,20 @@ console.log(date.value);
 	height: 93%;
 	border: 1px solid black;
 	padding: 0px 5px;
+	margin: auto;
 }
+
+.bustime_title {
+	width: 97%;
+	margin: auto;
+}
+
 .bustime_wrap {
 	max-height: 93%; /* 최대 높이 설정 */
 	overflow-y: auto; /* 세로 스크롤바 추가 */
-	width: 100%;
 	height: 93%;
+	width: 97%;
+	margin: auto;
 }
 
 .table_box {

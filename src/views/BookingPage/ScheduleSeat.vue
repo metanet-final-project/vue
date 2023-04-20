@@ -20,7 +20,9 @@
 					<p class="date" id="satsDeprDtm">
 						{{
 							scheduleInfo.startTime != null
-								? scheduleInfo.startTime.slice(0, 16)
+								? moment(scheduleInfo.startTime)
+										.locale('ko')
+										.format('YYYY년 MM월 DD일')
 								: ''
 						}}
 					</p>
@@ -58,7 +60,15 @@
 									</tr>
 									<tr>
 										<th scope="row">출발</th>
-										<td>12:00</td>
+										<td>
+											{{
+												scheduleInfo.startTime != null
+													? moment(scheduleInfo.startTime)
+															.locale('ko')
+															.format('HH:MM')
+													: ''
+											}}
+										</td>
 									</tr>
 								</tbody>
 							</table>
@@ -311,6 +321,10 @@ import image from '@/assets/img/busimage.png';
 import { computed, ref } from 'vue';
 import axios from 'axios';
 import { useRoute, useRouter } from 'vue-router';
+import Swal from 'sweetalert2';
+import moment from 'moment';
+import 'moment/locale/ko';
+moment.locale('ko');
 
 const route = useRoute();
 const router = useRouter();
@@ -416,7 +430,10 @@ const add = age => {
 			seat.value.child.count++;
 		}
 	} else {
-		alert('좌석을 먼저 선택해주세요.');
+		Swal.fire({
+			title: '좌석을 먼저 선택해주세요.',
+			icon: 'error',
+		});
 	}
 };
 
@@ -426,7 +443,7 @@ const minus = age => {
 		seat.value.teen.count == seat.value.teen.selectCount &&
 		seat.value.child.count == seat.value.child.selectCount
 	) {
-		alert('좌석을 먼저 취소해주세요.');
+		return;
 	} else {
 		if (age === 1 && seat.value.adlt.count != 0) {
 			console.log(age);
@@ -480,7 +497,10 @@ const seatSelected = idx => {
 			seatSelectInfo.value.push({ idx: idx, age: '아동' });
 		}
 	} else if (on) {
-		alert('매수를 먼저 선택해주세요.');
+		Swal.fire({
+			title: '매수를 먼저 선택해주세요.',
+			icon: 'error',
+		});
 	}
 
 	console.log(seatSelectInfo.value);
@@ -502,6 +522,13 @@ const totalPrice = computed(() => {
 
 // 좌석 선택완료 페이지 이동 이벤트
 const bookgingPage = () => {
+	if (seatSelectInfo.value.length == 0) {
+		Swal.fire({
+			title: '좌석을 선택해주세요.',
+			icon: 'error',
+		});
+		return;
+	}
 	const seatInfo = [];
 	seatSelectInfo.value.forEach(seat => {
 		const ageId = ref();
@@ -599,8 +626,10 @@ const bookgingPage = () => {
 	position: relative;
 	min-height: 35px;
 	padding-left: 67px;
-	font-size: 22px;
+	font-size: 20px;
 	color: #f7f7f7;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
 
 .infoBox {
