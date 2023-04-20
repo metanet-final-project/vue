@@ -83,6 +83,7 @@
 							<td style="background-color: #f8f9fb; padding: 15px">생년월일</td>
 							<td style="padding: 15px">{{ birthOnly }}</td>
 						</tr>
+						<tr></tr>
 					</tbody>
 				</table>
 				<div class="btn-area">
@@ -151,6 +152,7 @@ const UpdateMember = async (loginId, name, phone, email) => {
 		}
 	} catch (error) {
 		alert('회원정보 저장에 실패했습니다. 정보를 다시 확인해주세요.');
+		router.go(0);
 		console.log(error);
 	}
 };

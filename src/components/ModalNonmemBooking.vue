@@ -1,119 +1,100 @@
 <template>
 	<div class="col-6">
 		<!--	Modal	-->
-										<div v-if="showModal" class="modal" style="display: flex">
-											<div class="modal-dialog">
-												<div
-													class="modal-content"
-													style="
-														box-shadow: 0 2px 2px rgba(0, 0, 0, 0.25),
-															0 1px 1px rgba(0, 0, 0, 0.22);
-													"
-												>
-													<div class="modal-header">
-														<h5 class="modal-title">결제내역 상세조회</h5>
-														<MaterialBadge
-															color="light"
-															rounded
-															class="text-dark"
-															@click.prevent="showModal = false"
-															style="cursor: pointer"
-														>
-															닫기
-														</MaterialBadge>
-													</div>
-													<div
-														v-for="bookingDeatil in getDetailBookingList"
-														:key="bookingDeatil.id"
-													>
-														<div class="modal-body">
-															<table class="tickettb">
-																<tr>
-																	<th colspan="2">
-																		{{
-																			moment(
-																				bookingDeatil.scheduleDTO.startTime,
-																			).format('YYYY년 MM월 DD일 HH:mm')
-																		}}
-																	</th>
-																</tr>
-																<tr>
-																	<td class="start" rowspan="2">
-																		<img
-																			class="startimg"
-																			src="@/assets/img/출발.png"
-																			alt=""
-																		/>
-																		{{
-																			bookingDeatil.routeDTO.startTerminal.name
-																		}}
-																	</td>
-																	<td>
-																		<span class="ssub1">회사</span>
-																		<span class="ssub2">{{
-																			bookingDeatil.scheduleDTO.busDTO
-																				.companyDTO.name
-																		}}</span>
-																	</td>
-																</tr>
-																<tr>
-																	<td>
-																		<span class="ssub1">등급</span>
-																		<span class="ssub2">{{
-																			bookingDeatil.scheduleDTO.busDTO.grade
-																		}}</span>
-																	</td>
-																</tr>
-																<tr>
-																	<td class="end" rowspan="2">
-																		<img
-																			class="endimg"
-																			src="@/assets/img/도착.png"
-																			alt=""
-																		/>
-																		{{
-																			bookingDeatil.routeDTO.endTerminal.name
-																		}}
-																	</td>
-																	<td>
-																		<span class="ssub1">매수</span>
-																		<span class="ssub2"
-																			>{{ bookingDeatil.ageDTO.name }} 1명</span
-																		>
-																	</td>
-																</tr>
-																<tr>
-																	<td>
-																		<span class="ssub1">좌석</span>
-																		<span class="ssub2">{{
-																			bookingDeatil.seatNum
-																		}}</span>
-																	</td>
-																</tr>
-															</table>
-														</div>
-														<div class="modal-footer justify-content-between">
-															<MaterialButton
-																variant="contained"
-																color="dark"
-																class="mb-0"
-																@click="CancelBooking(bookingDeatil.id)"
-																:id="bookingDeatil.id"
-															>
-																삭제하기
-															</MaterialButton>
-															<MaterialButton
-																variant="contained"
-																color="dark"
-																class="mb-0"
-															>
-																영수증 발행
-															</MaterialButton>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
+		<div v-if="showModal" class="modal" style="display: flex">
+			<div class="modal-dialog">
+				<div
+					class="modal-content"
+					style="
+						box-shadow: 0 2px 2px rgba(0, 0, 0, 0.25),
+							0 1px 1px rgba(0, 0, 0, 0.22);
+					"
+				>
+					<div class="modal-header">
+						<h5 class="modal-title">결제내역 상세조회</h5>
+						<MaterialBadge
+							color="light"
+							rounded
+							class="text-dark"
+							@click.prevent="showModal = false"
+							style="cursor: pointer"
+						>
+							닫기
+						</MaterialBadge>
+					</div>
+					<div
+						v-for="bookingDeatil in getDetailBookingList"
+						:key="bookingDeatil.id"
+					>
+						<div class="modal-body">
+							<table class="tickettb">
+								<tr>
+									<th colspan="2">
+										{{
+											moment(bookingDeatil.scheduleDTO.startTime).format(
+												'YYYY년 MM월 DD일 HH:mm',
+											)
+										}}
+									</th>
+								</tr>
+								<tr>
+									<td class="start" rowspan="2">
+										<img class="startimg" src="@/assets/img/출발.png" alt="" />
+										{{ bookingDeatil.routeDTO.startTerminal.name }}
+									</td>
+									<td>
+										<span class="ssub1">회사</span>
+										<span class="ssub2">{{
+											bookingDeatil.scheduleDTO.busDTO.companyDTO.name
+										}}</span>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<span class="ssub1">등급</span>
+										<span class="ssub2">{{
+											bookingDeatil.scheduleDTO.busDTO.grade
+										}}</span>
+									</td>
+								</tr>
+								<tr>
+									<td class="end" rowspan="2">
+										<img class="endimg" src="@/assets/img/도착.png" alt="" />
+										{{ bookingDeatil.routeDTO.endTerminal.name }}
+									</td>
+									<td>
+										<span class="ssub1">매수</span>
+										<span class="ssub2"
+											>{{ bookingDeatil.ageDTO.name }} 1명</span
+										>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<span class="ssub1">좌석</span>
+										<span class="ssub2">{{ bookingDeatil.seatNum }}</span>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<div class="modal-footer justify-content-between">
+							<MaterialButton
+								variant="contained"
+								color="dark"
+								class="mb-0"
+								@click="CancelBooking(bookingDeatil.id)"
+								:id="bookingDeatil.id"
+							>
+								삭제하기
+							</MaterialButton>
+							<MaterialButton variant="contained" color="dark" class="mb-0">
+								영수증 발행
+							</MaterialButton>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
 

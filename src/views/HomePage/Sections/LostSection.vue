@@ -7,39 +7,62 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-lg-3 col-sm-6">
-					<TransparentBlogCard
-						:image="post4"
-						title="(동서울) 지갑"
-						description="2023-04-19(수) 동서울 터미널에서 분실물이 발생하였습니다. 분실물이 있으신 고객께서는 해당 터미널로 연락주시기 바랍니다."
-					/>
-				</div>
-				<div class="col-lg-3 col-sm-6">
-					<TransparentBlogCard
-						:image="post4"
-						title="(서울고속버스) 에어팟, 화장품"
-						description="2023-04-01 서울고속버스터미널에서 에어팟, 화장품 등의 분실물이 발생하였습니다. "
-					/>
-				</div>
-				<div class="col-lg-3 col-sm-6">
-					<TransparentBlogCard
-						:image="post4"
-						title="(서울고속버스) 에어팟, 화장품"
-						description="2023-04-01 서울고속버스터미널에서 에어팟, 화장품 등의 분실물이 발생하였습니다. "
-					/>
-				</div>
-				<div class="col-lg-3 col-sm-6">
-					<TransparentBlogCard
-						:image="post4"
-						title="(서울고속버스) 에어팟, 화장품"
-						description="2023-04-01 서울고속버스터미널에서 에어팟, 화장품 등의 분실물이 발생하였습니다. "
-					/>
-				</div>
+				<template v-for="lost in lostList" :key="lost.id">
+					<div class="col-lg-3 col-sm-6">
+						<TransparentBlogCard
+							:image="`http://localhost:8084/api/getImage/${lost.fileName}`"
+							:title="`${lost.title}`"
+							:description="`${moment(lost.findDate).format(
+								'YYYY년 MM월 DD일 HH:mm',
+							)} / ${lost.contents}`"
+							@click="LostItemMem(lost)"
+						/>
+					</div>
+				</template>
 			</div>
 		</div>
 	</section>
 </template>
 <script setup>
 import TransparentBlogCard from '@/examples/cards/blogCards/TransparentBlogCard.vue';
-import post4 from '@/assets/img/분실물.webp';
+//import post4 from '@/assets/img/분실물.webp';
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
+import moment from 'moment';
+
+// const filename = '2111560_547394_1907.jpg';
+const lostList = ref();
+
+const imageUrl = ref('');
+onMounted(() => {
+	getImage();
+});
+
+const getImage = async () => {
+	try {
+		const response = await axios.get('/api/lost/findAll');
+		if (response.data != null) {
+			lostList.value = response.data;
+			console.log(lostList.value);
+			console.log('==========================');
+			console.log(lostList.value[0].fileName);
+			console.log(lostList.value[1].fileName);
+			console.log(lostList.value[4].fileName);
+		}
+
+		for (let i = 0; i < lostList.value.length; i++) {
+			const result = await axios.get(
+				`/api/getImage/${lostList.value[i].fileName}`,
+				{
+					responseType: 'arraybuffer',
+				},
+			);
+			const blob = new Blob([result.data], { type: 'image/jpeg' });
+			imageUrl.value = URL.createObjectURL(blob);
+			console.log(imageUrl);
+		}
+	} catch (error) {
+		console.error(error);
+	}
+};
 </script>

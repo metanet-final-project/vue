@@ -71,10 +71,8 @@
 import Navbar from '@/layouts/Navbar.vue';
 import Sidebar from './Sections/SideBar.vue';
 import MaterialButton from '@/components/MaterialButton.vue';
-import axios from 'axios';
 import setMaterialInput from '@/assets/js/material-input';
 import { onMounted } from 'vue';
-import moment from 'moment';
 
 onMounted(() => {
 	setMaterialInput();

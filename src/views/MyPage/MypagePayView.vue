@@ -27,8 +27,12 @@
 			<tbody>
 				<tr v-for="item in myPayList" :key="item.id">
 					<td>
-						<div class="value">2023.04.12</div>
-						<div class="value">16:56</div>
+						<div class="value">
+							{{ moment(item.bookingDate).format('YYYY.MM.DD') }}
+						</div>
+						<div class="value">
+							{{ moment(item.bookingDate).format('hh:mm') }}
+						</div>
 					</td>
 					<td class="value" style="color: #5691bd">편도</td>
 					<td>
@@ -50,7 +54,7 @@
 					</td>
 					<td class="value">{{ item.ageDTO.name }} 1</td>
 					<td
-						class="value"
+						class="value table-bordered"
 						v-bind:class="{
 							bg_payment_cancel: item.state == '예매취소',
 							bg_payment_com: item.state != '예매취소',
@@ -60,11 +64,9 @@
 						{{ item.price.toLocaleString() }}원
 					</td>
 				</tr>
+				<tr></tr>
 			</tbody>
 		</table>
-		<ul class="desc-list">
-			<li>결제 내역은 현재일 날짜기준 과거 3개월까지 조회 가능합니다.</li>
-		</ul>
 	</div>
 	<Footer />
 </template>
