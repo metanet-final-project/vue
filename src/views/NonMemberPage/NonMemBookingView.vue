@@ -25,7 +25,10 @@
 		class="modal"
 		style="display: flex; justify-content: center; align-items: center"
 	>
-		<div class="modal-dialog justify-content-center align-items-center">
+		<div
+			class="modal-dialog justify-content-center align-items-center"
+			style="width: 80%; max-width: 850px"
+		>
 			<div
 				class="modal-content"
 				style="
@@ -98,15 +101,27 @@
 								</td>
 							</tr>
 						</table>
+						<div class="seat_detail">
+							좌석
+							<ul class="seat_info">
+								<li>
+									<span>14</span>
+									<span>초등학생</span>
+									<MaterialButton
+										variant="contained"
+										color="dark"
+										class="cancelBut mb-0"
+										@click="CancelBooking(bookingDeatil.id)"
+										:id="bookingDeatil.id"
+									>
+										좌석취소
+									</MaterialButton>
+								</li>
+							</ul>
+						</div>
 					</div>
-					<div class="modal-footer justify-content-between">
-						<MaterialButton
-							variant="contained"
-							color="dark"
-							class="mb-0"
-							@click="CancelBooking(bookingDeatil.id)"
-							:id="bookingDeatil.id"
-						>
+					<div class="modal-footer d-flex justify-content-center">
+						<MaterialButton variant="contained" color="dark" class="mb-0">
 							예매 취소
 						</MaterialButton>
 						<MaterialButton
@@ -202,20 +217,18 @@
 import Navbar from '@/layouts/Navbar.vue';
 import Header from '@/examples/Header.vue';
 import Footer from '@/layouts/Footer.vue';
-import BookingOk from './Sections/BookingOkView.vue';
 import image from '@/assets/img/busimage.png';
 import MaterialButton from '@/components/MaterialButton.vue';
 import { ref } from 'vue';
 import axios from 'axios';
 import MaterialBadge from '@/components/MaterialBadge.vue';
 import moment from 'moment';
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 const nonMember = ref({
 	id: 123,
 	phone: 2323,
 });
 
-const route = useRoute();
 const router = useRouter();
 const showModal = ref(false);
 const totalPrice = ref('');
@@ -223,10 +236,6 @@ const totalNum = ref('');
 const myBookingList = ref('');
 const getDetailBookingList = ref('');
 const NonMember = ref('');
-
-const nonMemberParam = ref({
-	nonMemberId: route.query.id,
-});
 
 const openReceiptPage = async () => {
 	const receiptPage = window.open('영수증 페이지 URL', '_blank');
@@ -242,17 +251,15 @@ const openReceiptPage = async () => {
 
 const getNonMem = async () => {
 	const resp = await axios.get(
-		`/api/non-member/findByPhone/${nonMember.value.phone}`,
+		`/api/non-member/findById/${nonMember.value.id}`,
 	);
-	//비회원 전화번호
 	NonMember.value = resp.data;
-	console.log(nonMember.value.phone);
+	console.log(nonMember.value.id);
 };
 getNonMem();
 
 const getMyBookingList = async () => {
-	const res = await axios.get(`/api/booking/find/findByNonMemId/21`);
-	//비회원전화번호로 찾은 id
+	const res = await axios.get(`/api/booking/find/findByNonMemId/81`);
 	myBookingList.value = res.data;
 	console.log(myBookingList.value);
 };
@@ -260,8 +267,7 @@ getMyBookingList();
 
 const getNonDetailBookingList = async () => {
 	const response = await axios.get(
-		`/api/booking/find/findByNonMemPayId/21/21`,
-		//비회원전화번호로 찾은 id와 해당 payid
+		`/api/booking/find/findByNonMemPayId/81/181`,
 	);
 	getDetailBookingList.value = response.data;
 	const prices = response.data.map(booking => booking.price);
@@ -365,7 +371,29 @@ thead {
 body {
 	border-bottom: 3px solid #b1b2b5;
 }
+
 .modal-dialog {
 	width: 200%;
+}
+.seat_detail {
+	display: flex;
+	align-items: center;
+}
+
+.seat_detail span {
+	margin-right: 10px;
+}
+
+ul.seat_info {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+.modal-footer {
+	display: flex;
+}
+
+.justify-content-center {
+	justify-content: center;
 }
 </style>

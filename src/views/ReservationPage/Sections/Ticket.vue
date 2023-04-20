@@ -8,7 +8,7 @@
 					</div>
 					<div class="row pt-4">
 						<h3 class="mb-0">승차권 정보</h3>
-						<template v-for="seat in seatInfo" :key="seat.id">
+						<template v-if="seatInfo">
 							<table class="tickettb">
 								<tr>
 									<th colspan="2">
@@ -17,6 +17,7 @@
 												.locale('ko')
 												.format('YYYY년 MM월 DD일 HH:mm')
 										}}
+										출발
 									</th>
 								</tr>
 								<tr>
@@ -44,13 +45,20 @@
 									</td>
 									<td>
 										<span class="ssub1">구분</span>
-										<span class="ssub2">{{ seat.ageName }}</span>
+										<span
+											class="ssub2"
+											v-for="seat in seatInfo"
+											:key="seat.id"
+											>{{ seat.ageName }}</span
+										>
 									</td>
 								</tr>
 								<tr>
 									<td>
 										<span class="ssub1">좌석</span>
-										<span class="ssub2">{{ seat.seatNum }} 번</span>
+										<span class="ssub2" v-for="seat in seatInfo" :key="seat.id"
+											>{{ seat.seatNum }} 번</span
+										>
 									</td>
 								</tr>
 							</table>
@@ -64,7 +72,7 @@
 
 						<div class="bundle col-12">
 							<div class="col-12">
-								<small class="font-weight-bold">카드선택</small>
+								<small class="font-weight-bold">카드종류</small>
 								<div class="form-check">
 									<input
 										class="form-check-input"
@@ -88,10 +96,15 @@
 									<div class="input-group input-group-outline my-1">
 										<label class="form-label">카드번호</label>
 										<input
-											type="number"
+											type="text"
 											class="form-control"
-											id="carnumber"
+											id="card-number-input"
 											v-model="cardNumber"
+											@input="handleInput"
+											maxlength="19"
+											:placeholder="isFocused ? 'XXX-XXXX-XXXX-XXXX' : ''"
+											@focus="isFocused = true"
+											@blur="isFocused = false"
 										/>
 									</div>
 								</div>
@@ -100,10 +113,11 @@
 								<div class="col-6">
 									<small class="font-weight-bold">유효기간</small>
 									<div class="input-group input-group-outline my-1">
-										<label class="form-label">월</label>
+										<label class="form-label">2자리 입력(MM)</label>
 										<input
 											type="number"
 											class="form-control"
+											id="cardExpirationMonth"
 											v-model="cardExpirationMonth"
 											min="1"
 											max="12"
@@ -113,11 +127,14 @@
 								<div class="col-6">
 									<small class="font-weight-bold">&nbsp;</small>
 									<div class="input-group input-group-outline my-1">
-										<label class="form-label">년</label>
+										<label class="form-label">2자리 입력(YY)</label>
 										<input
 											type="number"
 											class="form-control"
+											id="cardExpirationYear"
 											v-model="cardExpirationYear"
+											min="23"
+											max="99"
 										/>
 									</div>
 								</div>
@@ -132,9 +149,8 @@
 											class="form-control"
 											id="cardPassword"
 											v-model="cardPassword"
-											min="0"
+											min="10"
 											max="99"
-											maxlength="2"
 										/>
 									</div>
 								</div>
@@ -180,10 +196,15 @@
 											<div class="input-group input-group-outline my-1">
 												<label class="form-label">번호</label>
 												<input
-													type="number"
+													type="tel"
 													class="form-control"
 													id="nonMemPhone"
 													v-model="nonMemPhone"
+													@input="formatPhone"
+													maxlength="13"
+													:placeholder="isFocused ? 'XXX-XXXX-XXXX' : ''"
+													@focus="isFocused = true"
+													@blur="isFocused = false"
 												/>
 											</div>
 										</div>
@@ -209,7 +230,9 @@
 								<table class="pay">
 									<tr class="paytr">
 										<th class="payth">총결제금액</th>
-										<td class="paytd">{{ totalSeatPrice }}원</td>
+										<td class="paytd">
+											{{ totalSeatPrice.toLocaleString() }}원
+										</td>
 									</tr>
 								</table>
 								<MaterialButton
@@ -245,50 +268,77 @@ const cardPassword = ref('');
 const cardBirth = ref();
 const nonMemPhone = ref(null);
 const nonMemBirth = ref(null);
-const totalPrice = ref();
 const memlogInId = ref();
 const payId = ref();
 const route = useRoute();
-
-onMounted(() => {
-	setMaterialInput();
-});
+const isFocused = ref(false);
+const seatInfo = ref(JSON.parse(route.query.seat));
+const cardExpirationMonth = ref('');
+const cardExpirationYear = ref('');
 const schedule = ref({
 	id: route.query.id,
 	routeId: route.query.routeId,
 });
-const seatInfo = ref(JSON.parse(route.query.seat));
-const cardExpirationMonth = ref('');
-const cardExpirationYear = ref('');
 
+onMounted(() => {
+	setMaterialInput();
+});
+
+//카드만료기간->두개의 폼을 하나의 cardExpiration으로 저장
 const updateCardExpiration = () => {
 	const month = String(cardExpirationMonth.value).padStart(2, '0');
-	const year = String(cardExpirationYear.value).slice(-2);
+	const year = String(cardExpirationYear.value).padStart(2, '0');
 	return month + year;
 };
-
 const cardExpiration = ref(updateCardExpiration());
-
 watch([cardExpirationMonth, cardExpirationYear], () => {
 	cardExpiration.value = updateCardExpiration();
 });
 watch(cardExpirationMonth, value => {
 	if (value < 1 || value > 12) cardExpirationMonth.value = '';
 });
-// const member = ref({
-// 	id: null,
-// 	loginId: null,
-// 	name: null,
-// 	password: null,
-// 	phone: null,
-// });
-console.log(schedule.value);
-console.log(seatInfo.value);
+watch(cardExpirationYear, value => {
+	if (value < 1 || value > 99) cardExpirationYear.value = '';
+});
+watch(cardPassword, value => {
+	if (value < 1 || value > 99) cardPassword.value = '';
+});
+
+//카드번호 4자리 입력하면 다음으로 넘어가도록
+const handleInput = event => {
+	let input = event.target.value.replace(/-/g, '').replace(/\D/g, '');
+	let formattedInput = '';
+	for (let i = 0; i < input.length; i += 4) {
+		formattedInput += input.slice(i, i + 4) + '-';
+	}
+	formattedInput = formattedInput.slice(0, -1);
+	event.target.value = formattedInput;
+	cardNumber.value = formattedInput;
+};
+
+//비회원 핸드폰번호 3-4-4형식
+const formatPhone = event => {
+	let input = event.target.value.replace(/-/g, '').replace(/\D/g, '');
+	let formattedInput = '';
+	if (input.length > 3) {
+		formattedInput += input.slice(0, 3) + '-';
+		if (input.length > 7) {
+			formattedInput += input.slice(3, 7) + '-';
+			formattedInput += input.slice(7, 11);
+		} else {
+			formattedInput += input.slice(3, 7);
+		}
+	} else {
+		formattedInput += input;
+	}
+	event.target.value = formattedInput;
+};
+
+//총결제금액 계산
 let totalSeatPrice = 0;
 seatInfo.value.forEach(seat => {
 	totalSeatPrice += seat.price;
 });
-console.log('좌석 가격: ' + totalSeatPrice);
 
 const scheduleInfo = ref({
 	id: null,
@@ -321,8 +371,8 @@ const scheduleInfo = ref({
 	price: null,
 });
 
-let login = ref();
 //로그인한 회원정보 가져오기
+let login = ref();
 const isLogin = async () => {
 	const result = await axios.get(
 		`/api/member/findByLoginId/${localStorage.getItem('loginId')}`,
@@ -333,6 +383,7 @@ const isLogin = async () => {
 	} else login.value = false;
 };
 isLogin();
+
 const setLoginInfo = async () => {
 	if (isLogin.value) {
 		memlogInId.value = (await isLogin()).id;
@@ -346,16 +397,15 @@ const ticket = async () => {
 		`/api/schedule/find/${schedule.value.id}/${schedule.value.routeId}`,
 	);
 	scheduleInfo.value = response.data;
-	console.log('결제확인' + scheduleInfo.value.price);
 };
 ticket();
 
 //예매테이블에 저장하기
 const savePay = async () => {
+	//체크되지 않았으면 경고창뜨기
 	const check1 = document.getElementById('check1');
 	const check2 = document.getElementById('check2');
 	const check3 = document.getElementById('check3');
-
 	if (!check1.checked || !check2.checked || !check3.checked) {
 		Swal.fire({
 			title: '이용약관에 동의해주세요.',
@@ -363,6 +413,54 @@ const savePay = async () => {
 		});
 		return;
 	}
+	// 체크박스 검사
+	if (
+		!document.getElementById('check4').checked &&
+		!document.getElementById('check5').checked
+	) {
+		Swal.fire({
+			title: '카드종류를 선택해주세요.',
+			icon: 'error',
+		});
+		return;
+	}
+	// 카드 정보 미입력 검사
+	if (
+		document.getElementById('card-number-input').value === '' ||
+		document.getElementById('cardExpirationMonth').value === '' ||
+		document.getElementById('cardExpirationYear').value === '' ||
+		document.getElementById('cardPassword').value === '' ||
+		document.getElementById('cardBirth').value === ''
+	) {
+		Swal.fire({
+			title: '카드정보를 입력해주세요.',
+			icon: 'error',
+		});
+		return;
+	}
+	// 카드만료일 검사
+	if (
+		parseInt(document.getElementById('cardExpirationYear').value) < 23 ||
+		parseInt(document.getElementById('cardExpirationYear').value) > 99 ||
+		isNaN(parseInt(document.getElementById('cardExpirationYear').value))
+	) {
+		Swal.fire({
+			title: '카드만료일을 확인해주세요.',
+			icon: 'error',
+		});
+		return;
+	}
+	if (
+		document.getElementById('nonMemPhone').value === '' ||
+		document.getElementById('nonbinonMemBirthrth').value === ''
+	) {
+		Swal.fire({
+			title: '예매 조회정보를 입력해주세요.',
+			icon: 'error',
+		});
+		return;
+	}
+
 	const bookingList = [];
 	for (const seat of seatInfo.value) {
 		bookingList.push({
@@ -392,11 +490,11 @@ const savePay = async () => {
 			},
 			bookingList,
 		});
-		console.log(response.data);
 		payId.value = response.data;
 	} catch (error) {
 		console.error(error);
 	}
+	//BookingConfirm에 보내주기
 	router.push({
 		name: 'BookingConfirm',
 		query: {
@@ -425,7 +523,6 @@ const savePay = async () => {
 .tickettb td {
 	width: 50%;
 }
-
 .tickettb tr:nth-child(1) {
 	color: white;
 	background-color: #344767;

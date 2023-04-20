@@ -15,6 +15,7 @@
 							:description="`${moment(lost.findDate).format(
 								'YYYY년 MM월 DD일 HH:mm',
 							)} / ${lost.contents}`"
+							@click="LostItemMem(lost)"
 						/>
 					</div>
 				</template>

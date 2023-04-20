@@ -10,6 +10,7 @@ import AdminTerminalView from '../views/AdminPage/AdminTerminal.vue';
 import AdminRouteView from '../views/AdminPage/AdminRoute.vue';
 import AdminScheduleView from '../views/AdminPage/AdminSchedule.vue';
 import AdminReservationView from '../views/AdminPage/AdminReservation.vue';
+import AdminLostDetailView from '../views/AdminPage/AdminLostDetail.vue';
 import AdminHelpView from '../views/AdminPage/AdminHelp.vue';
 import ScheduleSearchView from '../views/BookingPage/ScheduleSearch.vue';
 import ScheduleSeatView from '../views/BookingPage/ScheduleSeat.vue';
@@ -20,7 +21,7 @@ import NonMemBookingView from '../views/NonMemberPage/NonMemBookingView.vue';
 import TicketView from '../views/MyPage/TicketView.vue';
 import MypagePayView from '../views/MyPage/MypagePayView.vue';
 import LostItemDetailView from '../views/Board/LostItemDetail.vue';
-import ModalExample from '@/components/ModalExample.vue';
+import LostItemMemView from '../views/Board/LostItemMem.vue';
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
@@ -77,6 +78,11 @@ const router = createRouter({
 			component: LostItemDetailView,
 		},
 		{
+			path: '/board/LostItemMem',
+			name: 'LostItemMem',
+			component: LostItemMemView,
+		},
+		{
 			path: '/booking',
 			name: 'Booking',
 			component: BookingView,
@@ -112,6 +118,11 @@ const router = createRouter({
 			component: AdminReservationView,
 		},
 		{
+			path: '/admin/AdminLostDetail',
+			name: 'AdminLostDetail',
+			component: AdminLostDetailView,
+		},
+		{
 			path: '/admin/help',
 			name: 'AdminHelp',
 			component: AdminHelpView,
@@ -130,11 +141,6 @@ const router = createRouter({
 			path: '/nonmember/booking',
 			name: 'NonMemBooking',
 			component: NonMemBookingView,
-		},
-		{
-			path: '/modalExample',
-			name: 'ModalExample',
-			component: ModalExample,
 		},
 	],
 });

@@ -8,7 +8,7 @@
 					</div>
 					<div class="row py-4">
 						<h3 class="mb-0">승차권 정보</h3>
-						<template v-for="seat in seatInfo" :key="seat.id">
+						<template v-if="seatInfo">
 							<table class="tickettb">
 								<tr>
 									<th colspan="2">
@@ -44,13 +44,20 @@
 									</td>
 									<td>
 										<span class="ssub1">구분</span>
-										<span class="ssub2">{{ seat.ageName }}</span>
+										<span
+											class="ssub2"
+											v-for="seat in seatInfo"
+											:key="seat.id"
+											>{{ seat.ageName }}</span
+										>
 									</td>
 								</tr>
 								<tr>
 									<td>
 										<span class="ssub1">좌석</span>
-										<span class="ssub2">{{ seat.seatNum }} 번</span>
+										<span class="ssub2" v-for="seat in seatInfo" :key="seat.id"
+											>{{ seat.seatNum }} 번</span
+										>
 									</td>
 								</tr>
 							</table>
@@ -64,7 +71,7 @@
 								<th>결제수단</th>
 								<td>신용카드</td>
 								<th>결제금액</th>
-								<td>{{ totalSeatPrice }}원</td>
+								<td>{{ totalSeatPrice.toLocaleString() }}원</td>
 							</tr>
 						</table>
 					</div>
@@ -89,8 +96,8 @@ const booking = ref({
 });
 const seatInfo = ref(JSON.parse(route.query.seat));
 let totalSeatPrice = 0;
-seatInfo.value.forEach((seat) => {
-  totalSeatPrice += seat.price;
+seatInfo.value.forEach(seat => {
+	totalSeatPrice += seat.price;
 });
 console.log('좌석 가격: ' + totalSeatPrice);
 const scheduleInfo = ref({
@@ -136,9 +143,6 @@ const payConfirm = async () => {
 		`/api/booking/find/bypayid/${booking.value.payId}`,
 	);
 	console.log(response.data);
-	const prices = response.data.map(booking => booking.price);
-	const sum = prices.reduce((acc, curr) => acc + curr, 0);
-	console.log(response.data[0].id);
 };
 payConfirm();
 </script>
