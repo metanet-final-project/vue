@@ -10,6 +10,7 @@ import AdminTerminalView from '../views/AdminPage/AdminTerminal.vue';
 import AdminRouteView from '../views/AdminPage/AdminRoute.vue';
 import AdminScheduleView from '../views/AdminPage/AdminSchedule.vue';
 import AdminReservationView from '../views/AdminPage/AdminReservation.vue';
+import AdminLostDetailView from '../views/AdminPage/AdminLostDetail.vue';
 import AdminHelpView from '../views/AdminPage/AdminHelp.vue';
 import ScheduleSearchView from '../views/BookingPage/ScheduleSearch.vue';
 import ScheduleSeatView from '../views/BookingPage/ScheduleSeat.vue';
@@ -110,6 +111,11 @@ const router = createRouter({
 			path: '/admin/reservation',
 			name: 'AdminResvation',
 			component: AdminReservationView,
+		},
+		{
+			path: '/admin/AdminLostDetail',
+			name: 'AdminLostDetail',
+			component: AdminLostDetailView,
 		},
 		{
 			path: '/admin/help',

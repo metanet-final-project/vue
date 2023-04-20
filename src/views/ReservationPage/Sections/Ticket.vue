@@ -8,7 +8,7 @@
 					</div>
 					<div class="row pt-4">
 						<h3 class="mb-0">승차권 정보</h3>
-						<template v-for="seat in seatInfo" :key="seat.id">
+						<template v-if="seatInfo">
 							<table class="tickettb">
 								<tr>
 									<th colspan="2">
@@ -45,13 +45,20 @@
 									</td>
 									<td>
 										<span class="ssub1">구분</span>
-										<span class="ssub2">{{ seat.ageName }}</span>
+										<span
+											class="ssub2"
+											v-for="seat in seatInfo"
+											:key="seat.id"
+											>{{ seat.ageName }}</span
+										>
 									</td>
 								</tr>
 								<tr>
 									<td>
 										<span class="ssub1">좌석</span>
-										<span class="ssub2">{{ seat.seatNum }} 번</span>
+										<span class="ssub2" v-for="seat in seatInfo" :key="seat.id"
+											>{{ seat.seatNum }} 번</span
+										>
 									</td>
 								</tr>
 							</table>
@@ -65,7 +72,7 @@
 
 						<div class="bundle col-12">
 							<div class="col-12">
-								<small class="font-weight-bold">카드선택</small>
+								<small class="font-weight-bold">카드종류</small>
 								<div class="form-check">
 									<input
 										class="form-check-input"
@@ -95,7 +102,7 @@
 											v-model="cardNumber"
 											@input="handleInput"
 											maxlength="19"
-											:placeholder="isFocused ? 'XXXX-XXXX-XXXX-XXXX' : ''"
+											:placeholder="isFocused ? 'XXX-XXXX-XXXX-XXXX' : ''"
 											@focus="isFocused = true"
 											@blur="isFocused = false"
 										/>
@@ -189,10 +196,15 @@
 											<div class="input-group input-group-outline my-1">
 												<label class="form-label">번호</label>
 												<input
-													type="number"
+													type="tel"
 													class="form-control"
 													id="nonMemPhone"
 													v-model="nonMemPhone"
+													@input="formatPhone"
+													maxlength="13"
+													:placeholder="isFocused ? 'XXX-XXXX-XXXX' : ''"
+													@focus="isFocused = true"
+													@blur="isFocused = false"
 												/>
 											</div>
 										</div>
@@ -218,7 +230,9 @@
 								<table class="pay">
 									<tr class="paytr">
 										<th class="payth">총결제금액</th>
-										<td class="paytd">{{ totalSeatPrice }}원</td>
+										<td class="paytd">
+											{{ totalSeatPrice.toLocaleString() }}원
+										</td>
 									</tr>
 								</table>
 								<MaterialButton
@@ -300,6 +314,24 @@ const handleInput = event => {
 	formattedInput = formattedInput.slice(0, -1);
 	event.target.value = formattedInput;
 	cardNumber.value = formattedInput;
+};
+
+//비회원 핸드폰번호 3-4-4형식
+const formatPhone = event => {
+	let input = event.target.value.replace(/-/g, '').replace(/\D/g, '');
+	let formattedInput = '';
+	if (input.length > 3) {
+		formattedInput += input.slice(0, 3) + '-';
+		if (input.length > 7) {
+			formattedInput += input.slice(3, 7) + '-';
+			formattedInput += input.slice(7, 11);
+		} else {
+			formattedInput += input.slice(3, 7);
+		}
+	} else {
+		formattedInput += input;
+	}
+	event.target.value = formattedInput;
 };
 
 //총결제금액 계산
@@ -414,6 +446,16 @@ const savePay = async () => {
 	) {
 		Swal.fire({
 			title: '카드만료일을 확인해주세요.',
+			icon: 'error',
+		});
+		return;
+	}
+	if (
+		document.getElementById('nonMemPhone').value === '' ||
+		document.getElementById('nonbinonMemBirthrth').value === ''
+	) {
+		Swal.fire({
+			title: '예매 조회정보를 입력해주세요.',
 			icon: 'error',
 		});
 		return;
