@@ -16,7 +16,7 @@
 			<span class="mask bg-gradient-dark opacity-8"></span>
 		</div>
 	</Header>
-	<!--	Modal	-->
+	<!--   Modal   -->
 	<div
 		v-if="showModal"
 		class="modal"
@@ -45,13 +45,13 @@
 						닫기
 					</MaterialBadge>
 				</div>
-				<div v-for="booking in bookingList" :key="booking.id">
+				<div v-if="bookingList">
 					<div class="modal-body">
 						<table class="tickettb">
 							<tr>
 								<th colspan="2">
 									{{
-										moment(booking.scheduleDTO.scheduleDTO).format(
+										moment(bookingList[0].scheduleDTO.scheduleDTO).format(
 											'YYYY년 MM월 DD일 HH:mm',
 										)
 									}}
@@ -61,12 +61,12 @@
 							<tr>
 								<td class="start" rowspan="2">
 									<img class="startimg" src="@/assets/img/출발.png" alt="" />
-									{{ booking.routeDTO.startTerminal.name }}
+									{{ bookingList[0].routeDTO.startTerminal.name }}
 								</td>
 								<td>
 									<span class="ssub1">회사</span>
 									<span class="ssub2">{{
-										booking.scheduleDTO.busDTO.companyDTO.name
+										bookingList[0].scheduleDTO.busDTO.companyDTO.name
 									}}</span>
 								</td>
 							</tr>
@@ -74,59 +74,85 @@
 								<td>
 									<span class="ssub1">등급</span>
 									<span class="ssub2">{{
-										booking.scheduleDTO.busDTO.grade
+										bookingList[0].scheduleDTO.busDTO.grade
 									}}</span>
 								</td>
 							</tr>
 							<tr>
 								<td class="end" rowspan="2">
 									<img class="endimg" src="@/assets/img/도착.png" alt="" />
-									{{ booking.routeDTO.endTerminal.name }}
+									{{ bookingList[0].routeDTO.endTerminal.name }}
 								</td>
 								<td>
-									<span class="ssub1">매수</span>
-									<span class="ssub2">{{ booking.ageDTO.name }} 1명</span>
+									<span class="ssub1">구분</span>
+									<span
+										class="ssub2"
+										v-for="booking in bookingList"
+										:key="booking.id"
+										>{{ booking.ageDTO.name }}
+									</span>
 								</td>
 							</tr>
 							<tr>
 								<td>
 									<span class="ssub1">좌석</span>
-									<span class="ssub2">{{ booking.seatNum }}</span>
+									<span
+										class="ssub2"
+										v-for="booking in bookingList"
+										:key="booking.id"
+										>{{ booking.seatNum }}</span
+									>
 								</td>
 							</tr>
 						</table>
 						<div class="seat_detail">
-							좌석
-							<ul class="seat_info">
-								<li>
-									<span>14</span>
-									<span>초등학생</span>
-									<MaterialButton
-										variant="contained"
-										color="dark"
-										class="cancelBut mb-0"
-										@click="CancelBooking(booking.id)"
-										:id="booking.id"
-									>
-										좌석취소
-									</MaterialButton>
-								</li>
-							</ul>
+							<span class="detailTicket">승차권</span>
+							<table class="table detailtable">
+								<thead class="table-light">
+									<tr>
+										<th>좌석번호</th>
+										<th>구분</th>
+										<th>출발지</th>
+										<th>도착지</th>
+										<th>취소</th>
+										<th>발권</th>
+									</tr>
+								</thead>
+								<tbody v-for="booking in bookingList" :key="booking.id">
+									<tr :class="{ 'table-danger': booking.isCancelled }">
+										<td>{{ booking.seatNum }}</td>
+										<td>{{ booking.ageDTO.name }}</td>
+										<td>{{ booking.routeDTO.startTerminal.name }}</td>
+										<td>{{ booking.routeDTO.endTerminal.name }}</td>
+										<td>
+											<MaterialButton
+												variant="contained"
+												color="dark"
+												class="cancelBut mb-0"
+												@click="CancelBooking(booking)"
+												:disabled="booking.isCancelled"
+												:id="booking.id"
+											>
+												좌석취소
+											</MaterialButton>
+										</td>
+										<td>
+											<MaterialButton
+												variant="contained"
+												color="dark"
+												class="mb-0"
+												:disabled="booking.isCancelled"
+												@click="openTicketWindow(booking.id)"
+											>
+												티켓 출력
+											</MaterialButton>
+										</td>
+									</tr>
+								</tbody>
+							</table>
 						</div>
 					</div>
-					<div class="modal-footer d-flex justify-content-center">
-						<MaterialButton variant="contained" color="dark" class="mb-0">
-							예매 취소
-						</MaterialButton>
-						<MaterialButton
-							variant="contained"
-							color="dark"
-							class="mb-0"
-							@click="openReceiptPage"
-						>
-							홈 티켓 출력
-						</MaterialButton>
-					</div>
+					<div class="modal-footer d-flex justify-content-center"></div>
 				</div>
 			</div>
 		</div>
@@ -144,9 +170,9 @@
 								<h3 class="mb-0"></h3>
 							</div>
 							<table class="table">
-								<thead>
+								<thead class="table-light">
 									<tr>
-										<th>번호</th>
+										<th>결제일시</th>
 										<th>구분</th>
 										<th>노선</th>
 										<th>배차정보</th>
@@ -157,15 +183,26 @@
 								</thead>
 								<tbody>
 									<tr v-for="(pay, index) in payList" :key="pay.id">
-										<td>{{ index + 1 }}</td>
-										<td>편도</td>
 										<td>
+											{{
+												moment(pay.bookingDTOList[0].bookingDate).format(
+													'YYYY년 MM월 DD일',
+												)
+											}}<br />{{
+												moment(pay.bookingDTOList[0].bookingDate).format(
+													'HH:mm',
+												)
+											}}
+										</td>
+										<td class="go">편도</td>
+										<td class="routeInfo">
 											<div class="d-flex">
-												{{ pay.bookingDTOList[0].routeDTO.startTerminal.name }}
+												{{ pay.bookingDTOList[0].routeDTO.startTerminal.name
+												}}<br />
 												-> {{ pay.bookingDTOList[0].routeDTO.endTerminal.name }}
 											</div>
 										</td>
-										<td>
+										<td class="scheduleInfo">
 											{{
 												moment(
 													pay.bookingDTOList[0].scheduleDTO.startTime,
@@ -173,7 +210,9 @@
 											}}
 										</td>
 										<td>총 {{ pay.bookingDTOList.length }}명</td>
-										<td>{{ pay.totalPrice }}원</td>
+										<td class="totalPrice">
+											{{ pay.totalPrice.toLocaleString() }}원
+										</td>
 										<td>
 											<MaterialButton
 												class="m-auto"
@@ -206,14 +245,13 @@ import { ref } from 'vue';
 import axios from 'axios';
 import MaterialBadge from '@/components/MaterialBadge.vue';
 import moment from 'moment';
-import { useRouter, useRoute } from 'vue-router';
+import { useRoute } from 'vue-router';
 const nonMember = ref({
 	id: 123,
 	phone: 2323,
 });
 
 const route = useRoute();
-const router = useRouter();
 const showModal = ref(false);
 const totalPrice = ref('');
 const totalNum = ref('');
@@ -224,6 +262,10 @@ const NonMember = ref('');
 const nonMemberId = ref();
 const payList = ref([]);
 const bookingList = ref([]);
+
+const openTicketWindow = async id => {
+	window.open(`/nonMember/booking/ticket/${id}`, '_blank');
+};
 
 const getPayList = async () => {
 	try {
@@ -244,18 +286,6 @@ getPayList();
 const showDetail = index => {
 	showModal.value = true;
 	bookingList.value = payList.value[index].bookingDTOList;
-};
-
-const openReceiptPage = async () => {
-	const receiptPage = window.open('영수증 페이지 URL', '_blank');
-	// 영수증 페이지 로딩 완료 이벤트 처리
-	receiptPage.onload = () => {
-		// 영수증 페이지에서 프린트 이벤트 발생 시 처리할 함수 등록
-		receiptPage.window.addEventListener('beforeprint', () => {
-			// 프린트 처리할 코드 작성
-			receiptPage.window.print();
-		});
-	};
 };
 
 const getNonMem = async () => {
@@ -288,21 +318,21 @@ const getNonDetailBookingList = async () => {
 };
 getNonDetailBookingList();
 
-//예매삭제
-const CancelBooking = async id => {
+//좌석삭제
+const CancelBooking = async booking => {
 	try {
 		const res = await axios.put(`/api/booking/changeBookingState`, {
-			id: id,
+			id: booking.id,
 			state: '예매취소',
 		});
 
 		if (res != null) {
 			alert(' 취소 완료');
-			router.go(0);
+			booking.isCancelled = true;
 		}
 	} catch (error) {
 		console.log(error);
-		console.log(id);
+		console.log(booking.id);
 	}
 };
 </script>
@@ -384,16 +414,8 @@ body {
 .modal-dialog {
 	width: 200%;
 }
-.seat_detail {
-	display: flex;
-	align-items: center;
-}
 
-.seat_detail span {
-	margin-right: 10px;
-}
-
-ul.seat_info {
+.seat_info {
 	list-style: none;
 	margin: 0;
 	padding: 0;
@@ -404,5 +426,27 @@ ul.seat_info {
 
 .justify-content-center {
 	justify-content: center;
+}
+.table th,
+.table td {
+	text-align: center;
+	vertical-align: middle;
+}
+.go {
+	color: #59b55c;
+}
+.routeInfo {
+	font-size: 22px;
+	font-weight: bold;
+}
+.totalPrice {
+	color: rgba(200, 0, 0, 0.826);
+}
+.detailTicket {
+	color: #344767;
+	font-size: 20px;
+}
+.seat_detail {
+	padding-top: 60px;
 }
 </style>

@@ -22,11 +22,11 @@
 	<div class="card card-body blur shadow-blur mx-3 mx-md-4 mt-n6 mb-4">
 		<section class="py-sm-7 py-5 position-relative">
 			<div class="container">
-				<div class="row">
-					<div class="col-lg-6">
-						<img src="@/assets/img/ivana-square.jpg" alt="" />
+				<div class="row justify-content-center">
+					<div class="col-lg-4">
+						<img :src="getImageUrl" alt="" />
 					</div>
-					<div class="col-lg-6">
+					<div class="col-lg-4">
 						<h3 class="m-1 p-2">{{ getLostItem.title }}</h3>
 						<ul class="m-1 p-2">
 							<li>
@@ -56,8 +56,8 @@
 						</ul>
 					</div>
 				</div>
-				<div class="row">
-					<div class="col-lg-12 pt-5">
+				<div class="row justify-content-center">
+					<div class="col-lg-8 pt-5">
 						<p class="p1">내용</p>
 						<p class="p2 content">
 							{{ getLostItem.contents }}
@@ -109,6 +109,12 @@ const LostItemMem = () => {
 		}
 	};
 	getLostById();
+	const getImageUrl = async () => {
+		return getLostItem.value
+			? `@/assets/img/${getLostItem.value.fileName}`
+			: '';
+	};
+	getImageUrl();
 };
 LostItemMem();
 </script>
@@ -123,7 +129,7 @@ ul {
 }
 .p1 {
 	display: inline-block;
-	width: 200px;
+	width: 160px;
 	color: #000;
 	font-size: 20px;
 	font-weight: bold;

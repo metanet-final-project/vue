@@ -2,7 +2,7 @@
 	<section class="py-sm-7 py-5 position-relative">
 		<div class="container">
 			<div class="row">
-				<div class="col-12 mx-auto">
+				<div class="col-9 mx-auto">
 					<div class="mt-n8 mt-md-n9 text-center">
 						<div class="blur-shadow-avatar"></div>
 					</div>
@@ -66,7 +66,7 @@
 					</div>
 					<div class="row pt-7">
 						<h3 class="mb-0">카드정보 입력</h3>
-						<div class="col-12">
+						<div class="col-12 card4">
 							<img class="cardimg" src="@/assets/img/card1.png" alt="" />
 						</div>
 
@@ -185,8 +185,8 @@
 						<section v-if="!login" class="pt-4 position-relative">
 							<div class="row pt-7">
 								<h3 class="mb-0">예매 조회정보 입력</h3>
-								<div class="col-12">
-									<img class="cardimg" src="@/assets/img/nonmem.png" alt="" />
+								<div class="col-12 card4">
+									<img class="card2img" src="@/assets/img/nonmem.png" alt="" />
 								</div>
 
 								<div class="bundle">
@@ -533,11 +533,13 @@ const savePay = async () => {
 	border-bottom: 2px solid #dddddd;
 }
 .tickettb .start {
-	font-size: 30px;
+	font-size: 23px;
+	font-weight: bold;
 	padding: 0 20px;
 }
 .tickettb .end {
-	font-size: 30px;
+	font-size: 23px;
+	font-weight: bold;
 	padding: 0 20px;
 }
 .tickettb .ssub1 {
@@ -557,15 +559,22 @@ const savePay = async () => {
 	width: 50px;
 }
 .cardimg {
+	position: relative;
 	width: 20%;
 	margin: auto;
-	z-index: 2;
+	z-index: 999;
+}
+.card2img {
+	position: relative;
+	width: 16%;
+	margin: auto;
+	z-index: 999;
 }
 .bundle {
 	border: 2px solid #344767;
 	padding: 77px 15px 15px 15px;
 	box-shadow: 12px 12px 2px 1px #344767;
-	margin-top: -75px; /* 아랫부분과 겹치도록 조정 */
+	margin-top: -60px; /* 아랫부분과 겹치도록 조정 */
 }
 .paytr {
 	height: 50px;
