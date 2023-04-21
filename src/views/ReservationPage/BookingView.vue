@@ -19,7 +19,7 @@
 			<span class="mask bg-gradient-dark opacity-8"></span>
 		</div>
 	</Header>
-	<div class="card card-body blur shadow-blur mx-3 mx-md-4 mt-n6 mb-4">
+	<div class="card card-body blur shadow-blur mx-3 mx-md- mt-n6 mb-4">
 		<Agree />
 		<Ticket />
 	</div>

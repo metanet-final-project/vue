@@ -19,6 +19,7 @@ import MypageBookingView from '../views/MyPage/MypageBookingView.vue';
 import MypageBookingModifyView from '../views/MyPage/MypageBookingModifyView.vue';
 import NonMemBookingView from '../views/NonMemberPage/NonMemBookingView.vue';
 import TicketView from '../views/MyPage/TicketView.vue';
+import NonMemTicketView from '../views/NonMemberPage/TicketView.vue';
 import MypagePayView from '../views/MyPage/MypagePayView.vue';
 import LostItemDetailView from '../views/Board/LostItemDetail.vue';
 import LostItemMemView from '../views/Board/LostItemMem.vue';
@@ -61,6 +62,11 @@ const router = createRouter({
 			path: '/mypage/booking/ticket/:id',
 			name: 'TicketView',
 			component: TicketView,
+		},
+		{
+			path: '/nonMember/booking/ticket/:id',
+			name: 'NonMemTicketView',
+			component: NonMemTicketView,
 		},
 		{
 			path: '/mypage/pay',
