@@ -141,10 +141,7 @@ const goSchedule = async () => {
 		endId.value == undefined ||
 		searchInfo.value.stDate == undefined
 	) {
-		Swal.fire({
-			title: '검색 조건을 선택해주세요.',
-			icon: 'error',
-		});
+		showToast('warning', '검색조건을 선택해주세요.');
 		return;
 	}
 	const result = await axios.get(
@@ -178,6 +175,21 @@ const goNonMemberBooking = async () => {
 		}
 	} catch (error) {
 		console.error(error);
+		showToast('warning', '올바른 정보를 입력해주세요.');
 	}
+};
+
+const Toast = Swal.mixin({
+	toast: true,
+	position: 'bottom-end',
+	showConfirmButton: false,
+	timer: 2000,
+});
+
+const showToast = (icon, title) => {
+	Toast.fire({
+		icon: icon,
+		title: title,
+	});
 };
 </script>

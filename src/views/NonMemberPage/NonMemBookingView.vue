@@ -208,7 +208,7 @@
 											<div class="d-flex">
 												{{ pay.bookingDTOList[0].routeDTO.startTerminal.name
 												}}<br />
-												-> {{ pay.bookingDTOList[0].routeDTO.endTerminal.name }}
+												→ {{ pay.bookingDTOList[0].routeDTO.endTerminal.name }}
 											</div>
 										</td>
 										<td class="scheduleInfo">

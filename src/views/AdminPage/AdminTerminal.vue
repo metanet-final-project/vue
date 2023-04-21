@@ -271,6 +271,7 @@ const saveTerminal = async () => {
 		const result = await axios.post('/api/terminal/save', terminalValue.value);
 		if (result != null) {
 			showToast('success', '등록 성공했습니다');
+			showModal2.value = false;
 			findAllTerminal();
 		}
 	} catch (error) {
