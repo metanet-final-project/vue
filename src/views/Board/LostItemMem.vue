@@ -24,7 +24,11 @@
 			<div class="container">
 				<div class="row">
 					<div class="col-lg-6">
-						<img src="@/assets/img/ivana-square.jpg" alt="" />
+						<img
+							:src="`http://localhost:8084/api/getImage/${getLostItem.fileName}`"
+							alt=""
+							style="width: 60%"
+						/>
 					</div>
 					<div class="col-lg-6">
 						<h3 class="m-1 p-2">{{ getLostItem.title }}</h3>
