@@ -2,8 +2,6 @@
 import { RouterLink, useRouter } from 'vue-router';
 import { ref, watch } from 'vue';
 import { useWindowsWidth } from '@/assets/js/useWindowsWidth';
-import ArrDark from '@/assets/img/down-arrow-dark.svg';
-import DownArrWhite from '@/assets/img/down-arrow-white.svg';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
@@ -39,17 +37,6 @@ const props = defineProps({
 		default: false,
 	},
 });
-
-// set arrow  color
-function getArrowColor() {
-	if (props.transparent && textDark.value) {
-		return ArrDark;
-	} else if (props.transparent) {
-		return DownArrWhite;
-	} else {
-		return ArrDark;
-	}
-}
 
 // set text color
 const getTextColor = () => {
@@ -89,23 +76,36 @@ watch(
 
 const router = useRouter();
 const goToMyPage = () => router.push({ name: 'Mypage' });
+const goToAdminPage = () => router.push({ name: 'AdminMember' });
 
 let login = ref();
 const member = ref(null);
 const isLogin = async () => {
 	const result = await axios.get(
 		`/api/member/findByLoginId/${localStorage.getItem('loginId')}`,
+		{
+			headers: {
+				Authorization: 'Bearer ' + localStorage.getItem('token'),
+			},
+		},
 	);
 	if (result.data.loginId != null) {
 		member.value = result.data;
 		login.value = true;
 	} else login.value = false;
-	console.log('로그인' + login.value);
 };
-isLogin();
+
+const signUp = () => {
+	if (localStorage.getItem('loginId') != null) {
+		isLogin();
+	}
+};
+signUp();
 
 const doLogout = () => {
 	localStorage.removeItem('loginId');
+	localStorage.removeItem('token');
+	localStorage.removeItem('auth');
 	router.replace({ name: 'Home' });
 	showToast('info', '잠시 후, 로그아웃됩니다');
 	setTimeout(() => router.go(0), 2000);
@@ -117,10 +117,6 @@ const Toast = Swal.mixin({
 	showConfirmButton: false,
 	timer: 2000,
 	timerProgressBar: true,
-	// didOpen: toast => {
-	// 	toast.addEventListener('mouseenter', Swal.stopTimer);
-	// 	toast.addEventListener('mouseleave', Swal.resumeTimer);
-	// },
 });
 
 const showToast = (icon, title) => {
@@ -182,68 +178,27 @@ const showToast = (icon, title) => {
 				id="navigation"
 			>
 				<ul class="navbar-nav navbar-nav-hover ms-auto">
-					<!-- Nav Dropdown menu Pages Start -->
-					<li class="nav-item dropdown dropdown-hover mx-2">
+					<li v-if="login" class="nav-item dropdown dropdown-hover mx-2">
 						<a
 							role="button"
 							class="nav-link ps-2 d-flex cursor-pointer align-items-center"
 							:class="getTextColor()"
-							id="dropdownMenuPages"
+							id="dropdownMenuBlocks"
 							data-bs-toggle="dropdown"
 							aria-expanded="false"
+							@click.prevent="goToAdminPage"
 						>
 							<i
 								class="material-icons opacity-6 me-2 text-md"
 								:class="getTextColor()"
 								>dashboard</i
 							>
-							서비스
-							<img
-								:src="getArrowColor()"
-								alt="down-arrow"
-								class="arrow ms-2 d-lg-block d-none"
-							/>
-							<img
-								:src="getArrowColor()"
-								alt="down-arrow"
-								class="arrow ms-1 d-lg-none d-block ms-auto"
-							/>
+							관리자페이지
 						</a>
-						<div
-							class="dropdown-menu dropdown-menu-animation ms-n3 dropdown-md p-3 border-radius-xl mt-0 mt-lg-3"
-							aria-labelledby="dropdownMenuPages"
-						>
-							<div class="row d-none d-lg-block">
-								<div class="col-12 px-4 py-2">
-									<div class="row">
-										<div class="position-relative">
-											<div
-												class="dropdown-header text-dark font-weight-bolder d-flex align-items-center px-1"
-											>
-												개발 페이지 목록
-											</div>
-											<RouterLink
-												:to="{ name: 'AdminMember' }"
-												class="dropdown-item border-radius-md"
-											>
-												<span>관리자 페이지</span>
-											</RouterLink>
-											<RouterLink
-												:to="{ name: 'Booking' }"
-												class="dropdown-item border-radius-md"
-											>
-												<span>예약 페이지</span>
-											</RouterLink>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
 					</li>
-					<!-- Nav Dropdown menu Pages End -->
-					<!--	Nav MyPage start	-->
 					<li class="nav-item dropdown dropdown-hover mx-2">
 						<a
+							v-if="login"
 							role="button"
 							class="nav-link ps-2 d-flex cursor-pointer align-items-center"
 							:class="getTextColor()"

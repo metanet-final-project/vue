@@ -99,6 +99,7 @@ const loginRequest = ref({});
 const goRegisterView = () => router.push({ name: 'Register' });
 const saveToken = token => localStorage.setItem('token', token);
 const saveLoginId = loginId => localStorage.setItem('loginId', loginId);
+const saveAuth = auth => localStorage.setItem('auth', auth);
 
 const tryLogin = async () => {
 	try {
@@ -106,13 +107,12 @@ const tryLogin = async () => {
 		if (result.data.loginId != null) {
 			saveToken(result.data.token);
 			saveLoginId(result.data.loginId);
-
+			saveAuth(result.data.roles);
 			showToast('success', '로그인되었습니다');
 			router.go(-1);
 		}
 	} catch (error) {
 		showToast('error', '올바른 정보를 입력해주세요');
-
 		console.error(error);
 	}
 };

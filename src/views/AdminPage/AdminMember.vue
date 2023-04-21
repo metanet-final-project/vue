@@ -300,21 +300,39 @@ import setMaterialInput from '@/assets/js/material-input';
 import { onMounted } from 'vue';
 import MaterialBadge from '@/components/MaterialBadge.vue';
 import Swal from 'sweetalert2';
-
-onMounted(() => {
-	setMaterialInput();
-});
+import { useRouter } from 'vue-router';
 
 const member = ref();
 const memberSave = ref({});
-const memberList = ref();
+const memberList = ref([]);
 const getMember = ref(null);
 const showModal = ref(false);
 const showModal2 = ref(false);
+const router = useRouter();
+
+onMounted(() => {
+	setMaterialInput();
+	adminCheck();
+});
+
+//관리자 권한 확인
+const adminCheck = () => {
+	if (
+		localStorage.getItem('loginId') === null ||
+		!localStorage.getItem('auth').includes('ADMIN')
+	) {
+		router.go(-1);
+		showToast('error', '접근 권한이 없습니다.');
+	}
+};
 
 const findAllMember = async () => {
 	try {
-		const result = await axios.get('/api/member/findAllMember');
+		const result = await axios.get('/api/member/findAllMember', {
+			headers: {
+				Authorization: 'Bearer ' + localStorage.getItem('token'),
+			},
+		});
 		if (result.data != null) {
 			memberList.value = result.data;
 		}

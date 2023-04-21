@@ -134,7 +134,7 @@ const saveMember = async () => {
 		const result = await axios.post('/api/save', member.value);
 		if (result != null) {
 			showToast('success', '회원가입에 성공했습니다');
-			router.push({ name: 'Login' });
+			router.push({ name: 'Home' });
 		}
 	} catch (error) {
 		showToast('error', '올바른 정보를 입력하세요');

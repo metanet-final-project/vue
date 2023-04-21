@@ -48,24 +48,32 @@ import Typed from 'typed.js';
 import Search from './Sections/HomeSearch.vue';
 import LostSection from './Sections/LostSection.vue';
 
+let typed;
+function initTyped() {
+	typed = new Typed('#typed', {
+		stringsElement: '#typed-strings',
+		typeSpeed: 90,
+		backSpeed: 90,
+		backDelay: 200,
+		startDelay: 500,
+		loop: true,
+	});
+}
+
 //hooks
 const body = document.getElementsByTagName('body')[0];
 onMounted(() => {
 	body.classList.add('bg-gray-200');
 
 	if (document.getElementById('typed')) {
-		new Typed('#typed', {
-			stringsElement: '#typed-strings',
-			typeSpeed: 90,
-			backSpeed: 90,
-			backDelay: 200,
-			startDelay: 500,
-			loop: true,
-		});
+		initTyped();
 	}
 });
 
 onUnmounted(() => {
 	body.classList.remove('bg-gray-200');
+	if (typed) {
+		typed.destroy();
+	}
 });
 </script>
