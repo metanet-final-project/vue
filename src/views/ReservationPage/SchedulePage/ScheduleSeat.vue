@@ -507,13 +507,17 @@ const seatSelected = idx => {
 };
 
 const adltPrice = computed(() => {
-	return seat.value.adlt.selectCount * scheduleInfo.value.price;
+	return Math.floor(seat.value.adlt.selectCount * scheduleInfo.value.price);
 });
 const teenPrice = computed(() => {
-	return seat.value.teen.selectCount * 0.8 * scheduleInfo.value.price;
+	return Math.floor(
+		seat.value.teen.selectCount * 0.8 * scheduleInfo.value.price,
+	);
 });
 const childPrice = computed(() => {
-	return seat.value.child.selectCount * 0.5 * scheduleInfo.value.price;
+	return Math.floor(
+		seat.value.child.selectCount * 0.5 * scheduleInfo.value.price,
+	);
 });
 
 const totalPrice = computed(() => {
@@ -876,7 +880,7 @@ span.last_seat:nth-child(3n + 3) {
 	text-align: center;
 	background-color: #5754b5;
 	color: #ffffff;
-	margin-top: 250px;
+	margin-top: 200px;
 	cursor: pointer;
 }
 .taR {

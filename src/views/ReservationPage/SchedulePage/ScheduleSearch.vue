@@ -82,31 +82,30 @@
 					</div>
 					<div class="bustime_wrap">
 						<template v-for="schedule in scheduleInfo" :key="schedule.id">
-							<router-link
-								:to="{
-									name: 'ScheduleSeat',
-									query: { id: schedule.id, routeId: schedule.routeDTO.id },
-								}"
+							<table
+								class="table_box"
+								:class="schedule.countSeat == 22 ? 'sold_out' : ''"
 							>
-								<table class="table_box">
-									<tr class="table_body">
-										<td>
-											{{
-												schedule.startTime != null
-													? moment(schedule.startTime)
-															.locale('ko')
-															.format('HH:MM')
-													: ''
-											}}
-										</td>
-										<td>{{ schedule.busDTO.companyDTO.name }}</td>
-										<td>{{ schedule.busDTO.grade }}</td>
-										<td>{{ schedule.price }} 원</td>
-										<td>{{ 22 - schedule.countSeat }} 석</td>
-										<td class="btn_arrow">선택</td>
-									</tr>
-								</table>
-							</router-link>
+								<tr class="table_body" @click="pageMove(schedule)">
+									<td>
+										{{
+											schedule.startTime != null
+												? moment(schedule.startTime)
+														.locale('ko')
+														.format('HH:MM')
+												: ''
+										}}
+									</td>
+									<td>{{ schedule.busDTO.companyDTO.name }}</td>
+									<td>{{ schedule.busDTO.grade }}</td>
+									<td>{{ schedule.price }} 원</td>
+									<td>{{ 22 - schedule.countSeat }} 석</td>
+									<td v-if="schedule.countSeat != 22" class="btn_arrow">
+										선택
+									</td>
+									<td v-if="schedule.countSeat == 22">매진</td>
+								</tr>
+							</table>
 						</template>
 					</div>
 				</div>
@@ -233,6 +232,18 @@ watch(date, selectDate);
 
 getSchedule();
 
+const pageMove = schedule => {
+	console.log(schedule);
+	if (schedule.countSeat == 22) {
+		return;
+	} else {
+		router.push({
+			name: 'ScheduleSeat',
+			query: { id: schedule.id, routeId: schedule.routeDTO.id },
+		});
+	}
+};
+
 const Toast = Swal.mixin({
 	toast: true,
 	position: 'bottom-end',
@@ -289,6 +300,10 @@ const showToast = (icon, title) => {
 
 .route_wrap .arrive:before {
 	content: '도착지';
+}
+
+.sold_out tr td {
+	color: #ccc;
 }
 
 .route_wrap .roundBox:before {
@@ -445,6 +460,10 @@ const showToast = (icon, title) => {
 .table_body {
 	height: 40px;
 	border-bottom: 1px solid #e6e6e6;
+}
+
+.table_body:hover {
+	cursor: pointer;
 }
 
 .table_body td:nth-child(6) {
