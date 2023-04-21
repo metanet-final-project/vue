@@ -119,10 +119,7 @@
 									</tr>
 								</thead>
 								<tbody v-for="booking in bookingList" :key="booking.id">
-									<tr
-										v-if="!booking.isCancelled"
-										:class="{ 'table-danger': booking.isCancelled }"
-									>
+									<tr :class="{ 'table-danger': booking.isCancelled }">
 										<td>{{ booking.seatNum }}</td>
 										<td>{{ booking.ageDTO.name }}</td>
 										<td>{{ booking.routeDTO.startTerminal.name }}</td>
@@ -164,7 +161,7 @@
 		<section class="py-sm-7 py-5 position-relative">
 			<div class="container">
 				<div class="row">
-					<div class="col-9 mx-auto">
+					<div class="col-12 mx-auto">
 						<div class="mt-n8 mt-md-n9 text-center">
 							<div class="blur-shadow-avatar"></div>
 						</div>
@@ -248,14 +245,13 @@ import { ref } from 'vue';
 import axios from 'axios';
 import MaterialBadge from '@/components/MaterialBadge.vue';
 import moment from 'moment';
-import { useRouter, useRoute } from 'vue-router';
+import { useRoute } from 'vue-router';
 const nonMember = ref({
 	id: 123,
 	phone: 2323,
 });
 
 const route = useRoute();
-const router = useRouter();
 const showModal = ref(false);
 const totalPrice = ref('');
 const totalNum = ref('');
@@ -322,7 +318,7 @@ const getNonDetailBookingList = async () => {
 };
 getNonDetailBookingList();
 
-//예매삭제
+//좌석삭제
 const CancelBooking = async booking => {
 	try {
 		const res = await axios.put(`/api/booking/changeBookingState`, {
@@ -332,11 +328,11 @@ const CancelBooking = async booking => {
 
 		if (res != null) {
 			alert(' 취소 완료');
-			router.go(0);
 			booking.isCancelled = true;
 		}
 	} catch (error) {
 		console.log(error);
+		console.log(booking.id);
 	}
 };
 </script>
@@ -440,7 +436,7 @@ body {
 	color: #59b55c;
 }
 .routeInfo {
-	font-size: 18px;
+	font-size: 22px;
 	font-weight: bold;
 }
 .totalPrice {
