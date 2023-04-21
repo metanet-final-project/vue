@@ -77,6 +77,7 @@ watch(
 const router = useRouter();
 const goToMyPage = () => router.push({ name: 'Mypage' });
 const goToAdminPage = () => router.push({ name: 'AdminMember' });
+const goToHome = () => router.push({ name: 'Home' });
 
 let login = ref();
 const member = ref(null);
@@ -116,7 +117,6 @@ const Toast = Swal.mixin({
 	position: 'bottom-end',
 	showConfirmButton: false,
 	timer: 2000,
-	timerProgressBar: true,
 });
 
 const showToast = (icon, title) => {
@@ -152,11 +152,11 @@ const showToast = (icon, title) => {
 						? 'text-dark font-weight-bolder ms-sm-3'
 						: 'text-white font-weight-bolder ms-sm-3',
 				]"
-				:to="{ name: 'Home' }"
 				rel="tooltip"
 				title="버스타요"
 				data-placement="bottom"
-				href="/"
+				@click.prevent="goToHome"
+				style="cursor: pointer"
 			>
 				<img
 					v-if="props.transparent"
@@ -193,7 +193,7 @@ const showToast = (icon, title) => {
 								:class="getTextColor()"
 								>dashboard</i
 							>
-							관리자페이지
+							관리자
 						</a>
 					</li>
 					<li class="nav-item dropdown dropdown-hover mx-2">

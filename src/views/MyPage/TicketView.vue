@@ -128,6 +128,7 @@
 			</div>
 		</div>
 	</div>
+	<MemberAuth />
 </template>
 <script setup>
 import axios from 'axios';
@@ -137,11 +138,10 @@ import 'moment/locale/ko';
 import { useRoute } from 'vue-router';
 import qrcode from 'qrcode';
 import { onMounted } from 'vue';
+import MemberAuth from '@/layouts/Auth/MemberAuth.vue';
 
 const bookingNo = ref('');
-
 const bookingDate = ref('');
-
 const code = ref('');
 
 const generateQRCode = async () => {
@@ -161,12 +161,9 @@ const ticket = ref('');
 const getTicket = async () => {
 	const res = await axios.get(`/api/booking/find/findTicketByBookingId/${id}`);
 	ticket.value = res.data;
-	console.log(ticket.value);
 	bookingNo.value = ticket.value.id;
 	bookingDate.value = moment(ticket.value.bookingDate).format('YYYYMMDDHHMM');
-
 	code.value = bookingDate.value.toString() + bookingNo.value.toString();
-	console.log(code.value);
 };
 getTicket();
 

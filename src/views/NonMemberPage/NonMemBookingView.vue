@@ -111,6 +111,7 @@
 								<thead class="table-light">
 									<tr>
 										<th>좌석번호</th>
+										<th>상태</th>
 										<th>구분</th>
 										<th>출발지</th>
 										<th>도착지</th>
@@ -119,8 +120,16 @@
 									</tr>
 								</thead>
 								<tbody v-for="booking in bookingList" :key="booking.id">
-									<tr :class="{ 'table-danger': booking.isCancelled }">
+									<tr
+										:class="{
+											'table-danger': booking.state == '예매취소',
+											'table-warning': booking.state == '기간만료',
+										}"
+									>
 										<td>{{ booking.seatNum }}</td>
+										<td>
+											<b>{{ booking.state }}</b>
+										</td>
 										<td>{{ booking.ageDTO.name }}</td>
 										<td>{{ booking.routeDTO.startTerminal.name }}</td>
 										<td>{{ booking.routeDTO.endTerminal.name }}</td>
@@ -130,10 +139,10 @@
 												color="dark"
 												class="cancelBut mb-0"
 												@click="CancelBooking(booking)"
-												:disabled="booking.isCancelled"
+												:disabled="booking.state != '결제완료'"
 												:id="booking.id"
 											>
-												좌석취소
+												예매취소
 											</MaterialButton>
 										</td>
 										<td>
@@ -141,7 +150,7 @@
 												variant="contained"
 												color="dark"
 												class="mb-0"
-												:disabled="booking.isCancelled"
+												:disabled="booking.state != '결제완료'"
 												@click="openTicketWindow(booking.id)"
 											>
 												티켓 출력

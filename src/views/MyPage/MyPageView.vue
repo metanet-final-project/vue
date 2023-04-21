@@ -41,20 +41,18 @@
 		</div>
 	</div>
 	<Footer />
+	<MemberAuth />
 </template>
 
 <script setup>
 import Navbar from '@/layouts/Navbar.vue';
 import Header from '@/examples/Header.vue';
 import Footer from '@/layouts/Footer.vue';
-// import Profile from './Sections/Profile.vue';
 import image from '@/assets/img/busimage.png';
 import axios from 'axios';
 import { ref } from 'vue';
+import MemberAuth from '@/layouts/Auth/MemberAuth.vue';
 
-// import { useRouter } from 'vue-router';
-
-// const router = useRouter();
 let myBookingList = ref('');
 
 const getMyBookingList = async () => {
@@ -62,7 +60,12 @@ const getMyBookingList = async () => {
 		`/api/booking/find/findValidByLoginId/${localStorage.getItem('loginId')}`,
 	);
 	myBookingList.value = res.data;
-	console.log(myBookingList.value);
+	console.log(
+		'myBookingList' +
+			myBookingList.value +
+			' ' +
+			localStorage.getItem('loginId'),
+	);
 };
 getMyBookingList();
 </script>

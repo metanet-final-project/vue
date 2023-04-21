@@ -290,8 +290,8 @@
 			</div>
 		</div>
 	</div>
-
 	<Footer />
+	<MemberAuth />
 </template>
 
 <script setup>
@@ -303,6 +303,7 @@ import { useRouter } from 'vue-router';
 import moment from 'moment';
 import 'moment/locale/ko';
 import { onMounted } from 'vue';
+import MemberAuth from '@/layouts/Auth/MemberAuth.vue';
 
 // nav-pill
 import setNavPills from '@/assets/js/nav-pills.js';

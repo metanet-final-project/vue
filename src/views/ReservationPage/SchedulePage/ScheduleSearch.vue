@@ -121,6 +121,7 @@ import Navbar from '@/layouts/Navbar.vue';
 import Header from '@/examples/Header.vue';
 import Footer from '@/layouts/Footer.vue';
 import image from '@/assets/img/busimage.png';
+import { onMounted } from 'vue';
 import 'v-calendar/style.css';
 
 import { ref, watch } from 'vue';
@@ -172,6 +173,18 @@ const scheduleInfo = ref([
 	},
 ]);
 
+//흐름
+onMounted(() => {
+	stream();
+});
+
+const stream = () => {
+	if (route.query.routeId == null || route.query.date == null) {
+		showToast('warning', '올바른 접근이 아닙니다.');
+		router.push({ name: 'Home' });
+	}
+};
+
 const selectedDate = ref();
 
 const compareDates = () => {
@@ -219,6 +232,20 @@ const getSchedule = async () => {
 watch(date, selectDate);
 
 getSchedule();
+
+const Toast = Swal.mixin({
+	toast: true,
+	position: 'bottom-end',
+	showConfirmButton: false,
+	timer: 2000,
+});
+
+const showToast = (icon, title) => {
+	Toast.fire({
+		icon: icon,
+		title: title,
+	});
+};
 </script>
 
 <style scoped>

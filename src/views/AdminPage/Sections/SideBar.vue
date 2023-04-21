@@ -44,9 +44,9 @@
 				</li>
 				<li class="nav-item">
 					<router-link
-						to="/admin/help"
+						to="/admin/lost"
 						class="nav-link text-center"
-						:class="{ active: currentPath == '/admin/help' }"
+						:class="{ active: currentPath == '/admin/lost' }"
 						>분실물</router-link
 					>
 				</li>

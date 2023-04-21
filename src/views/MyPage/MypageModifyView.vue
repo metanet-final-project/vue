@@ -99,6 +99,7 @@
 		</div>
 	</div>
 	<Footer />
+	<MemberAuth />
 </template>
 
 <script setup>
@@ -106,8 +107,9 @@ import Navbar from '@/layouts/Navbar.vue';
 import Footer from '@/layouts/Footer.vue';
 import axios from 'axios';
 import { ref } from 'vue';
-
 import { useRouter } from 'vue-router';
+import MemberAuth from '@/layouts/Auth/MemberAuth.vue';
+import Swal from 'sweetalert2';
 
 const router = useRouter();
 
@@ -122,6 +124,11 @@ const birthOnly = ref('');
 const getMemberInfo = async () => {
 	const res = await axios.get(
 		`/api/member/findByLoginId/${localStorage.getItem('loginId')}`,
+		{
+			headers: {
+				Authorization: 'Bearer ' + localStorage.getItem('token'),
+			},
+		},
 	);
 	DataTransfer.value = res.data;
 	console.log(res.data);
@@ -139,22 +146,43 @@ getMemberInfo();
 
 const UpdateMember = async (loginId, name, phone, email) => {
 	try {
-		const res = await axios.put(`/api/member/update`, {
-			loginId: localStorage.getItem('loginId'),
-			name: name,
-			phone: phone,
-			email: email,
-		});
+		const res = await axios.put(
+			`/api/member/update`,
+			{
+				loginId: localStorage.getItem('loginId'),
+				name: name,
+				phone: phone,
+				email: email,
+			},
+			{
+				headers: {
+					Authorization: 'Bearer ' + localStorage.getItem('token'),
+				},
+			},
+		);
 
-		if (res != null) {
-			alert('회원정보가 수정되었습니다.');
+		if (res.data != null) {
+			showToast('success', '회원정보가 수정되었습니다.');
 			router.push({ name: 'Mypage' });
 		}
 	} catch (error) {
-		alert('회원정보 저장에 실패했습니다. 정보를 다시 확인해주세요.');
-		router.go(0);
+		showToast('warning', '올바른 정보를 입력해주세요.');
 		console.log(error);
 	}
+};
+
+const Toast = Swal.mixin({
+	toast: true,
+	position: 'bottom-end',
+	showConfirmButton: false,
+	timer: 2000,
+});
+
+const showToast = (icon, title) => {
+	Toast.fire({
+		icon: icon,
+		title: title,
+	});
 };
 </script>
 <style scoped>

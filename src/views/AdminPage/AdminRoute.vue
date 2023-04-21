@@ -156,6 +156,7 @@
 			</div>
 		</div>
 	</div>
+	<AdminAuth />
 </template>
 
 <script setup>
@@ -170,15 +171,16 @@ import setMaterialInput from '@/assets/js/material-input';
 import { onMounted } from 'vue';
 import Swal from 'sweetalert2';
 import MaterialBadge from '@/components/MaterialBadge.vue';
-
-onMounted(() => {
-	setMaterialInput();
-});
+import AdminAuth from '@/layouts/Auth/AdminAuth.vue';
 
 const route = ref({});
 const routeList = ref([]);
 const terminalList = ref('');
 const showModal = ref(false);
+
+onMounted(() => {
+	setMaterialInput();
+});
 
 const insertRoute = async () => {
 	try {
@@ -245,8 +247,7 @@ const Toast = Swal.mixin({
 	toast: true,
 	position: 'bottom-end',
 	showConfirmButton: false,
-	timer: 3000,
-	timerProgressBar: true,
+	timer: 2000,
 });
 
 const showToast = (icon, title) => {
@@ -256,3 +257,9 @@ const showToast = (icon, title) => {
 	});
 };
 </script>
+
+<style scoped>
+.table tbody tr:hover {
+	background-color: rgba(0, 0, 0, 0.025);
+}
+</style>

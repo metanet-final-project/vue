@@ -145,6 +145,7 @@
 			</div>
 		</div>
 	</div>
+	<AdminAuth />
 </template>
 
 <script setup>
@@ -158,6 +159,7 @@ import MaterialPaginationItem from '@/components/MaterialPaginationItem.vue';
 import setMaterialInput from '@/assets/js/material-input';
 import { onMounted } from 'vue';
 import moment from 'moment';
+import AdminAuth from '@/layouts/Auth/AdminAuth.vue';
 
 const formatDate = (value, format) => {
 	return moment(value).format(format);
@@ -208,5 +210,11 @@ onMounted(() => {
 .fade-enter,
 .fade-leave-to {
 	opacity: 0;
+}
+</style>
+
+<style scoped>
+.table tbody tr:hover {
+	background-color: rgba(0, 0, 0, 0.025);
 }
 </style>

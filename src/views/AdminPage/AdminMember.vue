@@ -286,6 +286,7 @@
 			</div>
 		</div>
 	</div>
+	<AdminAuth />
 </template>
 
 <script setup>
@@ -300,7 +301,7 @@ import setMaterialInput from '@/assets/js/material-input';
 import { onMounted } from 'vue';
 import MaterialBadge from '@/components/MaterialBadge.vue';
 import Swal from 'sweetalert2';
-import { useRouter } from 'vue-router';
+import AdminAuth from '@/layouts/Auth/AdminAuth.vue';
 
 const member = ref();
 const memberSave = ref({});
@@ -308,23 +309,10 @@ const memberList = ref([]);
 const getMember = ref(null);
 const showModal = ref(false);
 const showModal2 = ref(false);
-const router = useRouter();
 
 onMounted(() => {
 	setMaterialInput();
-	adminCheck();
 });
-
-//관리자 권한 확인
-const adminCheck = () => {
-	if (
-		localStorage.getItem('loginId') === null ||
-		!localStorage.getItem('auth').includes('ADMIN')
-	) {
-		router.go(-1);
-		showToast('error', '접근 권한이 없습니다.');
-	}
-};
 
 const findAllMember = async () => {
 	try {
@@ -345,7 +333,11 @@ findAllMember();
 const goManageMember = async memberId => {
 	try {
 		showModal.value = true;
-		const result = await axios.get(`/api/member/findById/${memberId}`);
+		const result = await axios.get(`/api/member/findById/${memberId}`, {
+			headers: {
+				Authorization: 'Bearer ' + localStorage.getItem('token'),
+			},
+		});
 		if (result.data != null) {
 			member.value = result.data;
 		}
@@ -369,7 +361,11 @@ const saveMember = async () => {
 
 const updateMember = async () => {
 	try {
-		await axios.put(`/api/member/update`, member.value);
+		await axios.put(`/api/member/update`, member.value, {
+			headers: {
+				Authorization: 'Bearer ' + localStorage.getItem('token'),
+			},
+		});
 		showToast('success', '회원수정을 완료했습니다.');
 		showModal.value = false;
 		findAllMember();
@@ -381,7 +377,11 @@ const updateMember = async () => {
 
 const deleteMember = async memberId => {
 	try {
-		await axios.delete(`/api/member/delete/${memberId}`);
+		await axios.delete(`/api/member/delete/${memberId}`, {
+			headers: {
+				Authorization: 'Bearer ' + localStorage.getItem('token'),
+			},
+		});
 		showToast('success', '회원삭제를 완료했습니다.');
 		findAllMember();
 		showModal.value = false;
@@ -407,8 +407,7 @@ const Toast = Swal.mixin({
 	toast: true,
 	position: 'bottom-end',
 	showConfirmButton: false,
-	timer: 3000,
-	timerProgressBar: true,
+	timer: 2000,
 });
 
 const showToast = (icon, title) => {
@@ -418,3 +417,9 @@ const showToast = (icon, title) => {
 	});
 };
 </script>
+
+<style scoped>
+.table tbody tr:hover {
+	background-color: rgba(0, 0, 0, 0.025);
+}
+</style>

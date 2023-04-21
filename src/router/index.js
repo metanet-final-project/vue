@@ -10,10 +10,9 @@ import AdminTerminalView from '../views/AdminPage/AdminTerminal.vue';
 import AdminRouteView from '../views/AdminPage/AdminRoute.vue';
 import AdminScheduleView from '../views/AdminPage/AdminSchedule.vue';
 import AdminReservationView from '../views/AdminPage/AdminReservation.vue';
-import AdminLostDetailView from '../views/AdminPage/AdminLostDetail.vue';
-import AdminHelpView from '../views/AdminPage/AdminHelp.vue';
-import ScheduleSearchView from '../views/BookingPage/ScheduleSearch.vue';
-import ScheduleSeatView from '../views/BookingPage/ScheduleSeat.vue';
+import AdminLostView from '../views/AdminPage/AdminLost.vue';
+import ScheduleSearchView from '../views/ReservationPage/SchedulePage/ScheduleSearch.vue';
+import ScheduleSeatView from '../views/ReservationPage/SchedulePage/ScheduleSeat.vue';
 import MypageModifyView from '../views/MyPage/MypageModifyView.vue';
 import MypageBookingView from '../views/MyPage/MypageBookingView.vue';
 import MypageBookingModifyView from '../views/MyPage/MypageBookingModifyView.vue';
@@ -21,7 +20,6 @@ import NonMemBookingView from '../views/NonMemberPage/NonMemBookingView.vue';
 import TicketView from '../views/MyPage/TicketView.vue';
 import NonMemTicketView from '../views/NonMemberPage/TicketView.vue';
 import MypagePayView from '../views/MyPage/MypagePayView.vue';
-import LostItemDetailView from '../views/Board/LostItemDetail.vue';
 import LostItemMemView from '../views/Board/LostItemMem.vue';
 
 const router = createRouter({
@@ -79,11 +77,6 @@ const router = createRouter({
 			component: MypageBookingModifyView,
 		},
 		{
-			path: '/board/LostItemDetail',
-			name: 'LostItemDetail',
-			component: LostItemDetailView,
-		},
-		{
 			path: '/board/LostItemMem',
 			name: 'LostItemMem',
 			component: LostItemMemView,
@@ -124,14 +117,9 @@ const router = createRouter({
 			component: AdminReservationView,
 		},
 		{
-			path: '/admin/AdminLostDetail',
-			name: 'AdminLostDetail',
-			component: AdminLostDetailView,
-		},
-		{
-			path: '/admin/help',
-			name: 'AdminHelp',
-			component: AdminHelpView,
+			path: '/admin/lost',
+			name: 'AdminLost',
+			component: AdminLostView,
 		},
 		{
 			path: '/schedule/search',
@@ -150,5 +138,28 @@ const router = createRouter({
 		},
 	],
 });
+
+// router.beforeEach((to, from, next) => {
+// 	if (to.path === '/booking' && from.path !== '/booking') {
+// 		router.push({ name: 'Home' });
+// 		showToast('warning', '올바른 접근이 아닙니다.');
+// 	} else {
+// 		next();
+// 	}
+// });
+
+// const Toast = Swal.mixin({
+// 	toast: true,
+// 	position: 'bottom-end',
+// 	showConfirmButton: false,
+// 	timer: 2000,
+// });
+
+// const showToast = (icon, title) => {
+// 	Toast.fire({
+// 		icon: icon,
+// 		title: title,
+// 	});
+// };
 
 export default router;

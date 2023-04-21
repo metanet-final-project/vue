@@ -376,6 +376,11 @@ let login = ref();
 const isLogin = async () => {
 	const result = await axios.get(
 		`/api/member/findByLoginId/${localStorage.getItem('loginId')}`,
+		{
+			headers: {
+				Authorization: 'Bearer ' + localStorage.getItem('token'),
+			},
+		},
 	);
 	if (result.data.loginId != null) {
 		memlogInId.value = result.data.id;

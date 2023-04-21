@@ -69,6 +69,7 @@
 		</table>
 	</div>
 	<Footer />
+	<MemberAuth />
 </template>
 
 <script setup>
@@ -78,6 +79,7 @@ import axios from 'axios';
 import { ref } from 'vue';
 import moment from 'moment';
 import 'moment/locale/ko';
+import MemberAuth from '@/layouts/Auth/MemberAuth.vue';
 
 moment.locale('ko');
 

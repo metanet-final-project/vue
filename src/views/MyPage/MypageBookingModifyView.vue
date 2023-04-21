@@ -63,11 +63,13 @@
 		</div>
 	</div>
 	<Footer />
+	<MemberAuth />
 </template>
 
 <script setup>
 import Navbar from '@/layouts/Navbar.vue';
 import Footer from '@/layouts/Footer.vue';
+import MemberAuth from '@/layouts/Auth/MemberAuth.vue';
 </script>
 <style scoped>
 .routeBody {

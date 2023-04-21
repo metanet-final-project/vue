@@ -161,6 +161,7 @@
 			</div>
 		</div>
 	</div>
+	<AdminAuth />
 </template>
 
 <script setup>
@@ -174,18 +175,14 @@ import MaterialPaginationItem from '@/components/MaterialPaginationItem.vue';
 import setMaterialInput from '@/assets/js/material-input';
 import { onMounted } from 'vue';
 import MaterialBadge from '@/components/MaterialBadge.vue';
-import moment from 'moment';
+import AdminAuth from '@/layouts/Auth/AdminAuth.vue';
 
-const formatDate = (value, format) => {
-	return moment(value).format(format);
-};
+const scheduleSave = ref();
+const scheduleList = ref([]);
 
 onMounted(() => {
 	setMaterialInput();
 });
-
-const scheduleSave = ref();
-const scheduleList = ref([]);
 
 const findAllSchedule = async () => {
 	try {
@@ -212,3 +209,9 @@ const paginatedItems = computed(() => {
 	return scheduleList.value.slice(startIndex, startIndex + pageSize.value);
 });
 </script>
+
+<style scoped>
+.table tbody tr:hover {
+	background-color: rgba(0, 0, 0, 0.025);
+}
+</style>

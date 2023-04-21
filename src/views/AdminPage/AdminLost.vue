@@ -46,10 +46,6 @@
 							</div>
 							<div class="modal-body">
 								<form role="form" class="text-start p-3">
-									<!-- <label>번호</label>
-									<div class="input-group input-group-outline mb-2">
-										<input type="text" class="form-control" v-model="lost.id" />
-									</div> -->
 									<label>제목</label>
 									<div class="input-group input-group-outline mb-2">
 										<input
@@ -97,9 +93,6 @@
 										첨부
 										<input type="file" @change="onFileChange" />
 									</div>
-
-									<!-- <MaterialButton type="file">첨부</MaterialButton> -->
-
 									<div class="">
 										<MaterialButton
 											variant="contained"
@@ -117,7 +110,7 @@
 				<div class="container mt-4">
 					<div class="row">
 						<div class="col-lg-12">
-							<table class="table">
+							<table class="table table-hover">
 								<thead>
 									<tr class="text-center">
 										<th class="col-1">순번</th>
@@ -257,11 +250,10 @@
 			</div>
 		</div>
 	</div>
-	<Footer />
+	<AdminAuth />
 </template>
 
 <script setup>
-import Footer from '@/layouts/Footer.vue';
 import Navbar from '@/layouts/Navbar.vue';
 import Sidebar from './Sections/SideBar.vue';
 import MaterialButton from '@/components/MaterialButton.vue';
@@ -273,9 +265,11 @@ import setMaterialInput from '@/assets/js/material-input';
 import { onMounted } from 'vue';
 import MaterialBadge from '@/components/MaterialBadge.vue';
 import Swal from 'sweetalert2';
+import AdminAuth from '@/layouts/Auth/AdminAuth.vue';
 
 const file = ref(null);
 let getFile = null;
+
 onMounted(() => {
 	setMaterialInput();
 });
@@ -364,3 +358,9 @@ const saveLost = () => {
 	}
 };
 </script>
+
+<style scoped>
+.table tbody tr:hover {
+	background-color: rgba(0, 0, 0, 0.025);
+}
+</style>
