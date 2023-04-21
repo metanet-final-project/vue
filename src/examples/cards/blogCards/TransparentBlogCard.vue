@@ -30,7 +30,7 @@ defineProps({
 		<div class="card-header p-0 position-relative">
 			<a class="d-block blur-shadow-image">
 				<img
-					style="width: 250px; height: 180px"
+					style="height: 250px; width: 300px"
 					:src="image"
 					:alt="title"
 					class="img-fluid shadow border-radius-lg"
