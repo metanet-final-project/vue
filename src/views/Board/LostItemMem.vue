@@ -22,9 +22,13 @@
 	<div class="card card-body blur shadow-blur mx-3 mx-md-4 mt-n6 mb-4">
 		<section class="py-sm-7 py-5 position-relative">
 			<div class="container">
-				<div class="row justify-content-center">
-					<div class="col-lg-4">
-						<img :src="getImageUrl" alt="" />
+				<div class="row">
+					<div class="col-lg-6">
+						<img
+							:src="`http://localhost:8084/api/getImage/${getLostItem.fileName}`"
+							alt=""
+							style="width: 60%"
+						/>
 					</div>
 					<div class="col-lg-4">
 						<h3 class="m-1 p-2">{{ getLostItem.title }}</h3>
