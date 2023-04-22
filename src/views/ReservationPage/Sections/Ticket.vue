@@ -455,16 +455,6 @@ const savePay = async () => {
 		});
 		return;
 	}
-	if (
-		document.getElementById('nonMemPhone').value === '' ||
-		document.getElementById('nonbinonMemBirthrth').value === ''
-	) {
-		Swal.fire({
-			title: '예매 조회정보를 입력해주세요.',
-			icon: 'error',
-		});
-		return;
-	}
 
 	const bookingList = [];
 	for (const seat of seatInfo.value) {
