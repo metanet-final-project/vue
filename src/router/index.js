@@ -15,7 +15,6 @@ import ScheduleSearchView from '../views/ReservationPage/SchedulePage/ScheduleSe
 import ScheduleSeatView from '../views/ReservationPage/SchedulePage/ScheduleSeat.vue';
 import MypageModifyView from '../views/MyPage/MypageModifyView.vue';
 import MypageBookingView from '../views/MyPage/MypageBookingView.vue';
-import MypageBookingModifyView from '../views/MyPage/MypageBookingModifyView.vue';
 import NonMemBookingView from '../views/NonMemberPage/NonMemBookingView.vue';
 import TicketView from '../views/MyPage/TicketView.vue';
 import NonMemTicketView from '../views/NonMemberPage/TicketView.vue';
@@ -70,11 +69,6 @@ const router = createRouter({
 			path: '/mypage/pay',
 			name: 'MyPagePay',
 			component: MypagePayView,
-		},
-		{
-			path: '/mypage/booking/modify',
-			name: 'MypageBookingModify',
-			component: MypageBookingModifyView,
 		},
 		{
 			path: '/board/LostItemMem',
