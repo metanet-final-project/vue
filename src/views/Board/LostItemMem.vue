@@ -22,12 +22,12 @@
 	<div class="card card-body blur shadow-blur mx-3 mx-md-4 mt-n6 mb-4">
 		<section class="py-sm-7 py-5 position-relative">
 			<div class="container">
-				<div class="row">
-					<div class="col-lg-6">
+				<div class="row justify-content-center">
+					<div class="col-lg-4">
 						<img
 							:src="`http://localhost:8084/api/getImage/${getLostItem.fileName}`"
 							alt=""
-							style="width: 60%"
+							style="width: 100%"
 						/>
 					</div>
 					<div class="col-lg-4">
@@ -124,6 +124,9 @@ LostItemMem();
 </script>
 
 <style scoped>
+img {
+	float: right;
+}
 .lead {
 	font-size: 50px;
 	font-weight: bold;

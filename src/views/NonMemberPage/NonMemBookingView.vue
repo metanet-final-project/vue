@@ -249,25 +249,22 @@ import Navbar from '@/layouts/Navbar.vue';
 import Header from '@/examples/Header.vue';
 import Footer from '@/layouts/Footer.vue';
 import image from '@/assets/img/busimage.png';
+import Swal from 'sweetalert2';
 import MaterialButton from '@/components/MaterialButton.vue';
 import { ref } from 'vue';
 import axios from 'axios';
 import MaterialBadge from '@/components/MaterialBadge.vue';
 import moment from 'moment';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 const nonMember = ref({
 	id: 123,
 	phone: 2323,
 });
 
+const router = useRouter();
 const route = useRoute();
 const showModal = ref(false);
-const totalPrice = ref('');
-const totalNum = ref('');
-const myBookingList = ref('');
-const getDetailBookingList = ref('');
 const NonMember = ref('');
-
 const nonMemberId = ref();
 const payList = ref([]);
 const bookingList = ref([]);
@@ -306,27 +303,6 @@ const getNonMem = async () => {
 };
 getNonMem();
 
-const getMyBookingList = async () => {
-	const res = await axios.get(`/api/booking/find/findByNonMemId/81`);
-	myBookingList.value = res.data;
-	console.log(myBookingList.value);
-};
-getMyBookingList();
-
-const getNonDetailBookingList = async () => {
-	const response = await axios.get(
-		`/api/booking/find/findByNonMemPayId/81/181`,
-	);
-	getDetailBookingList.value = response.data;
-	const prices = response.data.map(booking => booking.price);
-	const sum = prices.reduce((acc, curr) => acc + curr, 0);
-	totalPrice.value = sum;
-	totalNum.value = getDetailBookingList.value.length;
-	console.log('결제확인' + totalPrice.value);
-	console.log(getDetailBookingList.value.length);
-};
-getNonDetailBookingList();
-
 //좌석삭제
 const CancelBooking = async booking => {
 	try {
@@ -336,7 +312,10 @@ const CancelBooking = async booking => {
 		});
 
 		if (res != null) {
-			alert(' 취소 완료');
+			Swal.fire({
+				title: '취소가 완료되었습니다',
+			});
+			router.go(0);
 			booking.isCancelled = true;
 		}
 	} catch (error) {

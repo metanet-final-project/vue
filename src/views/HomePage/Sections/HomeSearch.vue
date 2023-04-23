@@ -50,9 +50,15 @@
 							<div class="input-group input-group-static">
 								<label>전화번호</label>
 								<input
-									type="text"
+									type="tel"
 									class="form-control"
+									id="nonMemPhone"
 									v-model="nonMember.phone"
+									@input="formatPhone"
+									maxlength="13"
+									:placeholder="isFocused ? 'XXX-XXXX-XXXX' : ''"
+									@focus="isFocused = true"
+									@blur="isFocused = false"
 								/>
 							</div>
 						</div>
@@ -109,6 +115,23 @@ let parentVariable = stId; // 출발지 정보 props 전달
 const searchInfo = ref({}); // 배차조회에 사용될 검색 조건
 const routeId = ref();
 const nonMember = ref({});
+
+const formatPhone = event => {
+	let input = event.target.value.replace(/-/g, '').replace(/\D/g, '');
+	let formattedInput = '';
+	if (input.length > 3) {
+		formattedInput += input.slice(0, 3) + '-';
+		if (input.length > 7) {
+			formattedInput += input.slice(3, 7) + '-';
+			formattedInput += input.slice(7, 11);
+		} else {
+			formattedInput += input.slice(3, 7);
+		}
+	} else {
+		formattedInput += input;
+	}
+	event.target.value = formattedInput;
+};
 
 const startingTerminal = async id => {
 	const result = await axios.get(`/api/terminal/findById/${id}`);
