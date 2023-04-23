@@ -348,9 +348,8 @@ const saveLost = () => {
 		console.log('formData : ' + formData.toString());
 		const result = axios.post('/api/saveUploadFile', formData);
 		console.log(result);
-
+		showToast('success', '등록 성공했습니다');
 		if (result.data != null) {
-			showToast('success', '등록 성공했습니다');
 			showModal2.value = false;
 		}
 	} catch (error) {
